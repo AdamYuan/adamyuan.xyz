@@ -10,8 +10,11 @@ hasCJKLanguage = true
 paginate = 5
 pygmentsCodeFences = true
 pygmentsUseClasses = true
-#disqusShortname = ""      # disqus_shortname
 copyright = "&copy; 2018. All rights reserved."
+googleAnalytics = "UA-122304331-1"
+dateFormat = "02 Jan 2006, 15:04"
+
+disqusShortname = "adamyuan-blog"
 
 [author]
   name = "AdamYuan"
@@ -22,10 +25,6 @@ copyright = "&copy; 2018. All rights reserved."
   changefreq = "weekly"
   priority = 0.5
   filename = "sitemap.xml"
-
-[params]
-  googleAnalytics = "UA-122304331-1"
-  dateFormat = "02 Jan 2006, 15:04"
 
 [[menu.main]]
   weight = 1 
