@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on AdamYuan-&gt;Blog</title>
+    <link>https://adamyuan.xyz/categories/linux/</link>
+    <description>Recent content in Linux on AdamYuan-&gt;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>y13916619121@126.com (AdamYuan)</managingEditor>
+    <webMaster>y13916619121@126.com (AdamYuan)</webMaster>
+    <copyright>&amp;copy; 2018. All rights reserved.</copyright>
+    <lastBuildDate>Sat, 14 Jul 2018 10:10:17 +0800</lastBuildDate>
+    
+	<atom:link href="https://adamyuan.xyz/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>NetworkManager使用resolv.conf中设置的dns</title>
+      <link>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</link>
+      <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
+      <author>y13916619121@126.com (AdamYuan)</author>
+      <guid>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</guid>
+      <description>NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/et</description>
+    </item>
+    
+  </channel>
+</rss>

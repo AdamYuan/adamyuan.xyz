@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Code Test</title>
+  <meta property="og:title" content="Code Test" />
+  <meta name="twitter:title" content="Code Test" />
+  <meta name="description" content="">
+  <meta property="og:description" content="">
+  <meta name="twitter:description" content="">
+  <meta name="author" content="AdamYuan"/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://adamyuan.xyz/post/code_test/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AdamYuan-&gt;Blog" />
+
+  <meta name="generator" content="Hugo 0.44" />
+  <link rel="canonical" href="https://adamyuan.xyz/post/code_test/" />
+  <link rel="alternate" href="https://adamyuan.xyz/index.xml" type="application/rss+xml" title="AdamYuan-&gt;Blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://adamyuan.xyz/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://adamyuan.xyz/css/syntax.css" /><link rel="stylesheet" href="https://adamyuan.xyz/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://adamyuan.xyz/">AdamYuan-&gt;Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Categories" href="/categories/">Categories</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Code Test</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on 15 Jul 2018, 22:04
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p></p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">//
+</span><span class="c1">// Created by adamyuan on 4/1/18.
+</span><span class="c1">//
+</span><span class="c1"></span>
+<span class="cp">#include</span> <span class="cpf">&#34;Application.hpp&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;Config.hpp&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;SceneLoader.hpp&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;stb_image_write.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Application</span><span class="o">::</span><span class="n">read_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">in</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
+	<span class="k">return</span> <span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">istreambuf_iterator</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">istreambuf_iterator</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">()};</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">check_gl</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;OpenGL version: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">glGetString</span><span class="p">(</span><span class="n">GL_VERSION</span><span class="p">));</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;GLSL version: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">glGetString</span><span class="p">(</span><span class="n">GL_SHADING_LANGUAGE_VERSION</span><span class="p">));</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;renderer: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">glGetString</span><span class="p">(</span><span class="n">GL_RENDERER</span><span class="p">));</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;vendor: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">glGetString</span><span class="p">(</span><span class="n">GL_VENDOR</span><span class="p">));</span>
+
+	<span class="kt">int</span> <span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_COUNT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_COUNT</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_COUNT</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;max global (total) work group size x:%i y:%i z:%i</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span>
+		   <span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">work_grp_cnt</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+	<span class="kt">int</span> <span class="n">work_grp_size</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_SIZE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">glGetIntegeri_v</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_SIZE</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;max local (in one shader) work group sizes x:%i y:%i z:%i</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span>
+		   <span class="n">work_grp_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">work_grp_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">work_grp_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+	<span class="kt">int</span> <span class="n">work_grp_inv</span><span class="p">;</span>
+	<span class="n">glGetIntegerv</span><span class="p">(</span><span class="n">GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">work_grp_inv</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;max local work group invocations %i</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">work_grp_inv</span><span class="p">);</span>
+
+	<span class="c1">//printf(&#34;\ncurrent size x:%u y:%u\ncurrent group count x:%u y:%u\ncurrent window size w:%u h:%u\n&#34;,
+</span><span class="c1"></span>	<span class="c1">//	   kInvocationX, kInvocationY, kGroupX, kGroupY, kWidth, kHeight);
+</span><span class="c1"></span>	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;current window size w:%u h:%u</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">init_window</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">gl3wInit</span><span class="p">();</span>
+
+	<span class="n">glfwInit</span><span class="p">();</span>
+	<span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_RESIZABLE</span><span class="p">,</span> <span class="n">GLFW_FALSE</span><span class="p">);</span>
+	<span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_OPENGL_PROFILE</span><span class="p">,</span> <span class="n">GLFW_OPENGL_CORE_PROFILE</span><span class="p">);</span>
+	<span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_CONTEXT_VERSION_MAJOR</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+	<span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_CONTEXT_VERSION_MINOR</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+	<span class="n">glfwWindowHint</span><span class="p">(</span><span class="n">GLFW_DECORATED</span><span class="p">,</span> <span class="n">GLFW_TRUE</span><span class="p">);</span>
+	<span class="n">window_</span> <span class="o">=</span> <span class="n">glfwCreateWindow</span><span class="p">(</span><span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">,</span> <span class="s">&#34;&#34;</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+	<span class="n">glfwMakeContextCurrent</span><span class="p">(</span><span class="n">window_</span><span class="p">);</span>
+
+	<span class="n">glfwSetWindowUserPointer</span><span class="p">(</span><span class="n">window_</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="n">glfwSetKeyCallback</span><span class="p">(</span><span class="n">window_</span><span class="p">,</span> <span class="n">key_callback</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">init_buffers</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">constexpr</span> <span class="n">GLfloat</span> <span class="n">quad_vertices</span><span class="p">[]</span> <span class="p">{</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span>
+										<span class="mf">1.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span>
+										<span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span>
+										<span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span>
+										<span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span>
+										<span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">};</span>
+	<span class="n">glGenBuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vbo_</span><span class="p">);</span>
+	<span class="n">glGenVertexArrays</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vao_</span><span class="p">);</span>
+
+	<span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vao_</span><span class="p">);</span>
+	<span class="n">glBindBuffer</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="n">vbo_</span><span class="p">);</span>
+	<span class="n">glBufferData</span><span class="p">(</span><span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">quad_vertices</span><span class="p">),</span> <span class="n">quad_vertices</span><span class="p">,</span> <span class="n">GL_STATIC_DRAW</span><span class="p">);</span>
+
+	<span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GL_FLOAT</span><span class="p">),</span> <span class="k">nullptr</span><span class="p">);</span><span class="c1">//position
+</span><span class="c1"></span>	<span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GL_FLOAT</span><span class="p">),</span> <span class="p">(</span><span class="n">GLvoid</span><span class="o">*</span><span class="p">)(</span><span class="mi">2</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">GL_FLOAT</span><span class="p">)));</span><span class="c1">//texcoord
+</span><span class="c1"></span>	<span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">init_texture</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">auto</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GLfloat</span><span class="p">[</span><span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">4</span><span class="p">];</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span> <span class="o">+</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+	<span class="n">glCreateTextures</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">quad_tex_</span><span class="p">);</span>
+	<span class="n">glTextureStorage2D</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_RGBA32F</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">);</span>
+	<span class="n">glTextureSubImage2D</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">,</span> <span class="n">GL_RGBA</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_S</span><span class="p">,</span> <span class="n">GL_CLAMP_TO_EDGE</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_T</span><span class="p">,</span> <span class="n">GL_CLAMP_TO_EDGE</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="n">GL_TEXTURE_MAG_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">quad_tex_</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+	<span class="n">glBindImageTexture</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">quad_tex_</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_READ_WRITE</span><span class="p">,</span> <span class="n">GL_RGBA32F</span><span class="p">);</span>
+	<span class="k">delete</span><span class="p">[]</span> <span class="n">data</span><span class="p">;</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">random_device</span> <span class="n">device</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">mt19937</span> <span class="n">generator</span><span class="p">{</span><span class="n">device</span><span class="p">()};</span>
+	<span class="k">auto</span> <span class="o">*</span><span class="n">initial_seeds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GLuint</span><span class="p">[</span><span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">4</span><span class="p">];</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">initial_seeds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLuint</span><span class="p">)</span><span class="n">generator</span><span class="p">();</span>
+	<span class="n">glCreateTextures</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">);</span>
+	<span class="n">glTextureStorage2D</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_RGBA32UI</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">);</span>
+	<span class="n">glTextureSubImage2D</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">,</span> <span class="n">GL_RGBA_INTEGER</span><span class="p">,</span> <span class="n">GL_UNSIGNED_INT</span><span class="p">,</span> <span class="n">initial_seeds</span><span class="p">);</span>
+
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_S</span><span class="p">,</span> <span class="n">GL_CLAMP_TO_EDGE</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="n">GL_TEXTURE_WRAP_T</span><span class="p">,</span> <span class="n">GL_CLAMP_TO_EDGE</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="n">GL_TEXTURE_MAG_FILTER</span><span class="p">,</span> <span class="n">GL_NEAREST</span><span class="p">);</span>
+	<span class="n">glTextureParameteri</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_NEAREST</span><span class="p">);</span>
+	<span class="n">glBindImageTexture</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GL_READ_WRITE</span><span class="p">,</span> <span class="n">GL_RGBA32UI</span><span class="p">);</span>
+
+	<span class="k">delete</span><span class="p">[]</span> <span class="n">initial_seeds</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">init_ray_shader</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">scene_glsl</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ray_shader_str</span> <span class="p">{</span><span class="n">read_file</span><span class="p">(</span><span class="n">RAY_SHADER</span><span class="p">)};</span>
+	<span class="n">ray_shader_str</span> <span class="o">=</span> <span class="n">scene_glsl</span> <span class="o">+</span> <span class="n">ray_shader_str</span><span class="p">;</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ray_shader_src1</span> <span class="o">=</span> <span class="n">ray_shader_str</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+	<span class="kt">char</span> <span class="n">ray_shader_src</span><span class="p">[</span><span class="mi">65536</span><span class="p">];</span>
+	<span class="n">sprintf</span><span class="p">(</span><span class="n">ray_shader_src</span><span class="p">,</span>
+			<span class="s">&#34;#version 430 core</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;layout(local_size_x = %u, local_size_y = %u) in;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;#define SAMPLES %u</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;#define MAX_DEPTH %u</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;%s&#34;</span><span class="p">,</span> <span class="n">kInvocationX</span><span class="p">,</span> <span class="n">kInvocationY</span><span class="p">,</span> <span class="n">kSamplesPerCalculation</span><span class="p">,</span> <span class="n">kMaxDepth</span><span class="p">,</span> <span class="n">ray_shader_src1</span><span class="p">);</span>
+
+	<span class="kt">char</span> <span class="o">*</span><span class="n">real_src</span> <span class="o">=</span> <span class="n">ray_shader_src</span><span class="p">;</span>
+
+	<span class="n">GLuint</span> <span class="n">ray_shader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_COMPUTE_SHADER</span><span class="p">);</span>
+	<span class="n">glShaderSource</span><span class="p">(</span><span class="n">ray_shader</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">real_src</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+	<span class="n">glCompileShader</span><span class="p">(</span><span class="n">ray_shader</span><span class="p">);</span>
+
+	<span class="kt">int</span> <span class="n">success</span><span class="p">;</span> <span class="n">glGetShaderiv</span><span class="p">(</span><span class="n">ray_shader</span><span class="p">,</span> <span class="n">GL_COMPILE_STATUS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">success</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">ray_shader_src</span><span class="p">);</span>
+		<span class="kt">char</span> <span class="n">info_log</span><span class="p">[</span><span class="mi">65536</span><span class="p">];</span> <span class="n">glGetShaderInfoLog</span><span class="p">(</span><span class="n">ray_shader</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">info_log</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n\n\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">info_log</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">ray_</span><span class="p">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">glCreateProgram</span><span class="p">();</span>
+	<span class="n">glAttachShader</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="n">ray_shader</span><span class="p">);</span>
+	<span class="n">glLinkProgram</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+
+	<span class="n">glDeleteShader</span><span class="p">(</span><span class="n">ray_shader</span><span class="p">);</span>
+
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_origin</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_origin&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_forward</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_forward&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_up</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_up&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_right</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_right&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_width</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_width&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_cam_height</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;cam_height&#34;</span><span class="p">);</span>
+	<span class="n">ray_</span><span class="p">.</span><span class="n">unif_last_sample</span> <span class="o">=</span> <span class="n">glGetUniformLocation</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="s">&#34;last_sample&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">init_quad_shader</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">vert_shader_src</span> <span class="o">=</span>
+			<span class="s">&#34;#version 430 core</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;layout(location=0) in vec2 position;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;layout(location=1) in vec2 texcoord;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;out vec2 coord;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;void main()</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;{</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;	gl_Position = vec4(position, 0.0f, 1.0f);</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;	coord = texcoord;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;}</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">frag_shader_src</span> <span class="o">=</span>
+			<span class="s">&#34;#version 430 core</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;layout(binding=0) uniform sampler2D sampler;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;in vec2 coord;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;out vec4 color;</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;void main()</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;{</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;	vec3 color3 = pow(texture(sampler, coord).xyz, vec3(1.0f / 2.2f));</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;	color = vec4(color3, 1.0f);</span><span class="se">\n</span><span class="s">&#34;</span>
+			<span class="s">&#34;}</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+	<span class="n">GLuint</span> <span class="n">vert_shader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_VERTEX_SHADER</span><span class="p">),</span> <span class="n">frag_shader</span> <span class="o">=</span> <span class="n">glCreateShader</span><span class="p">(</span><span class="n">GL_FRAGMENT_SHADER</span><span class="p">);</span>
+
+	<span class="n">glShaderSource</span><span class="p">(</span><span class="n">vert_shader</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vert_shader_src</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+	<span class="n">glCompileShader</span><span class="p">(</span><span class="n">vert_shader</span><span class="p">);</span>
+
+	<span class="n">glShaderSource</span><span class="p">(</span><span class="n">frag_shader</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">frag_shader_src</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+	<span class="n">glCompileShader</span><span class="p">(</span><span class="n">frag_shader</span><span class="p">);</span>
+
+	<span class="c1">//link shaders
+</span><span class="c1"></span>	<span class="n">quad_</span><span class="p">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">glCreateProgram</span><span class="p">();</span>
+	<span class="n">glAttachShader</span><span class="p">(</span><span class="n">quad_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="n">vert_shader</span><span class="p">);</span>
+	<span class="n">glAttachShader</span><span class="p">(</span><span class="n">quad_</span><span class="p">.</span><span class="n">program</span><span class="p">,</span> <span class="n">frag_shader</span><span class="p">);</span>
+	<span class="n">glLinkProgram</span><span class="p">(</span><span class="n">quad_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+
+	<span class="n">glDeleteShader</span><span class="p">(</span><span class="n">vert_shader</span><span class="p">);</span> <span class="n">glDeleteShader</span><span class="p">(</span><span class="n">frag_shader</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">destroy_gl_objects</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">glDeleteVertexArrays</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vao_</span><span class="p">);</span>
+	<span class="n">glDeleteBuffers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">vbo_</span><span class="p">);</span>
+	<span class="n">glDeleteTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">quad_tex_</span><span class="p">);</span>
+	<span class="n">glDeleteTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ray_</span><span class="p">.</span><span class="n">seed_tex</span><span class="p">);</span>
+
+	<span class="n">glDeleteProgram</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+	<span class="n">glDeleteProgram</span><span class="p">(</span><span class="n">quad_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">render_quad</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">glUseProgram</span><span class="p">(</span><span class="n">quad_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+
+	<span class="n">glActiveTexture</span><span class="p">(</span><span class="n">GL_TEXTURE0</span><span class="p">);</span>
+	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">quad_tex_</span><span class="p">);</span>
+
+	<span class="n">glBindVertexArray</span><span class="p">(</span><span class="n">vao_</span><span class="p">);</span>
+	<span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">compute</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">glUseProgram</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">program</span><span class="p">);</span>
+	<span class="n">cam_</span><span class="p">.</span><span class="n">SetUniform</span><span class="p">(</span><span class="n">ray_</span><span class="p">);</span>
+	<span class="n">glUniform1ui</span><span class="p">(</span><span class="n">ray_</span><span class="p">.</span><span class="n">unif_last_sample</span><span class="p">,</span> <span class="n">samples_</span><span class="p">);</span>
+	<span class="n">glDispatchCompute</span><span class="p">(</span><span class="n">kGroupX</span><span class="p">,</span> <span class="n">kGroupY</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+	<span class="c1">// make sure writing to image has finished before read
+</span><span class="c1"></span>	<span class="n">glMemoryBarrier</span><span class="p">(</span><span class="n">GL_SHADER_IMAGE_ACCESS_BARRIER_BIT</span><span class="p">);</span>
+
+	<span class="n">samples_</span> <span class="o">+=</span> <span class="n">kSamplesPerCalculation</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Application</span><span class="o">::</span><span class="n">Application</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">samples_per_calculation</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">max_depth</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">width</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">height</span><span class="p">,</span>
+						 <span class="kt">unsigned</span> <span class="n">invocation_size_x</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">invocation_size_y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">cam_fov</span><span class="p">,</span> <span class="kt">float</span> <span class="n">cam_speed</span><span class="p">,</span> <span class="kt">float</span> <span class="n">cam_angle</span><span class="p">,</span>
+						 <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">scene_filename</span><span class="p">)</span> <span class="c1">//in degrees
+</span><span class="c1"></span>		<span class="o">:</span> <span class="n">kSamplesPerCalculation</span><span class="p">(</span><span class="n">samples_per_calculation</span><span class="p">),</span> <span class="n">kMaxDepth</span><span class="p">(</span><span class="n">max_depth</span><span class="p">),</span>
+		  <span class="n">kInvocationX</span><span class="p">(</span><span class="n">invocation_size_x</span><span class="p">),</span> <span class="n">kInvocationY</span><span class="p">(</span><span class="n">invocation_size_y</span><span class="p">),</span>
+		  <span class="n">kGroupX</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="n">invocation_size_x</span><span class="p">),</span> <span class="n">kGroupY</span><span class="p">(</span><span class="n">height</span> <span class="o">/</span> <span class="n">invocation_size_y</span><span class="p">),</span>
+		  <span class="n">kWidth</span><span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="p">(</span><span class="n">width</span> <span class="o">%</span> <span class="n">invocation_size_x</span><span class="p">)),</span> <span class="n">kHeight</span><span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="p">(</span><span class="n">height</span> <span class="o">%</span> <span class="n">invocation_size_y</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">samples_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">locked_</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">init_window</span><span class="p">();</span>
+	<span class="n">init_buffers</span><span class="p">();</span>
+	<span class="n">init_texture</span><span class="p">();</span>
+	<span class="n">init_quad_shader</span><span class="p">();</span>
+	<span class="k">try</span>
+	<span class="p">{</span>
+		<span class="n">SceneLoader</span> <span class="n">loader</span><span class="p">{</span><span class="n">scene_filename</span><span class="p">};</span>
+		<span class="n">loader</span><span class="p">.</span><span class="n">SetCamera</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cam_</span><span class="p">);</span>
+		<span class="n">init_ray_shader</span><span class="p">(</span><span class="n">loader</span><span class="p">.</span><span class="n">GetGlsl</span><span class="p">());</span>
+	<span class="p">}</span>
+	<span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&#34;scene parse error: %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+	<span class="p">}</span>
+	<span class="n">check_gl</span><span class="p">();</span>
+
+	<span class="n">cam_</span><span class="p">.</span><span class="n">SetFov</span><span class="p">(</span><span class="n">cam_fov</span> <span class="o">*</span> <span class="mf">0.0174532925f</span> <span class="o">*</span> <span class="mf">0.5f</span><span class="p">);</span>
+	<span class="n">cam_</span><span class="p">.</span><span class="n">SetAngle</span><span class="p">(</span><span class="n">cam_angle</span><span class="p">);</span>
+	<span class="n">cam_</span><span class="p">.</span><span class="n">SetSpeed</span><span class="p">(</span><span class="n">cam_speed</span><span class="p">);</span>
+	<span class="n">cam_</span><span class="p">.</span><span class="n">SetAspectRatio</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span><span class="n">kWidth</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">kHeight</span><span class="p">);</span>
+	<span class="n">cam_</span><span class="p">.</span><span class="n">Update</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">Application</span><span class="o">::~</span><span class="n">Application</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">destroy_gl_objects</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">Run</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">char</span> <span class="n">title</span><span class="p">[</span><span class="mi">512</span><span class="p">];</span>
+	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">glfwWindowShouldClose</span><span class="p">(</span><span class="n">window_</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">glfwPollEvents</span><span class="p">();</span>
+
+		<span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span><span class="p">);</span>
+		<span class="n">cam_</span><span class="p">.</span><span class="n">Update</span><span class="p">();</span>
+		<span class="c1">//don&#39;t change the order
+</span><span class="c1"></span>		<span class="n">compute</span><span class="p">();</span>
+		<span class="n">render_quad</span><span class="p">();</span>
+
+		<span class="n">glfwSwapBuffers</span><span class="p">(</span><span class="n">window_</span><span class="p">);</span>
+
+		<span class="n">sprintf</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="s">&#34;%u s/p %luk sp/s %s&#34;</span><span class="p">,</span> <span class="n">samples_</span><span class="p">,</span> <span class="n">get_sps</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000lu</span><span class="p">,</span> <span class="n">locked_</span> <span class="o">?</span> <span class="s">&#34; [locked]&#34;</span> <span class="o">:</span> <span class="s">&#34;&#34;</span><span class="p">);</span>
+		<span class="n">glfwSetWindowTitle</span><span class="p">(</span><span class="n">window_</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">screenshots</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">auto</span> <span class="o">*</span><span class="n">pixels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">uint8_t</span><span class="p">[</span><span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">3</span><span class="p">];</span>
+	<span class="k">auto</span> <span class="o">*</span><span class="k">final</span> <span class="o">=</span> <span class="k">new</span> <span class="n">uint8_t</span><span class="p">[</span><span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="mi">3</span><span class="p">];</span>
+
+	<span class="n">glReadPixels</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">,</span> <span class="n">GL_RGB</span><span class="p">,</span> <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span> <span class="n">pixels</span><span class="p">);</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">kHeight</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">pixels</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">pixels</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="k">final</span> <span class="o">+</span> <span class="p">(</span><span class="n">kHeight</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="mi">3</span><span class="p">);</span>
+
+	<span class="kt">char</span> <span class="n">filename</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+	<span class="n">sprintf</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#34;%uspp.png&#34;</span><span class="p">,</span> <span class="n">samples_</span><span class="p">);</span>
+	<span class="n">stbi_write_png</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">kWidth</span><span class="p">,</span> <span class="n">kHeight</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="k">final</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="k">delete</span><span class="p">[]</span> <span class="n">pixels</span><span class="p">;</span>
+	<span class="k">delete</span><span class="p">[]</span> <span class="k">final</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">key_callback</span><span class="p">(</span><span class="n">GLFWwindow</span> <span class="o">*</span><span class="n">window</span><span class="p">,</span> <span class="kt">int</span> <span class="n">key</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span> <span class="n">action</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">auto</span> <span class="o">*</span><span class="n">app</span> <span class="o">=</span> <span class="p">(</span><span class="n">Application</span><span class="o">*</span><span class="p">)</span><span class="n">glfwGetWindowUserPointer</span><span class="p">(</span><span class="n">window</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="n">GLFW_RELEASE</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">locked_</span> <span class="o">&amp;&amp;</span> <span class="n">app</span><span class="o">-&gt;</span><span class="n">cam_</span><span class="p">.</span><span class="n">Control</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+		<span class="n">app</span><span class="o">-&gt;</span><span class="n">samples_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">action</span> <span class="o">==</span> <span class="n">GLFW_PRESS</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">GLFW_KEY_I</span><span class="p">)</span>
+			<span class="n">app</span><span class="o">-&gt;</span><span class="n">screenshots</span><span class="p">();</span>
+		<span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="n">GLFW_KEY_L</span><span class="p">)</span>
+			<span class="n">app</span><span class="o">-&gt;</span><span class="n">locked_</span> <span class="o">=</span> <span class="o">!</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">locked_</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">Application</span><span class="o">::</span><span class="n">get_sps</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="kt">unsigned</span> <span class="n">last_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">sum</span> <span class="o">+=</span> <span class="n">kWidth</span> <span class="o">*</span> <span class="n">kHeight</span> <span class="o">*</span> <span class="n">kSamplesPerCalculation</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">((</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">glfwGetTime</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">last_time</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">last_time</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">glfwGetTime</span><span class="p">();</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">sum</span><span class="p">;</span>
+		<span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/" data-toggle="tooltip" data-placement="top" title="NetworkManager使用resolv.conf中设置的dns">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:y13916619121@126.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/AdamYuan" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              AdamYuan
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://adamyuan.xyz/">AdamYuan-&gt;Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.44</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://adamyuan.xyz/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://adamyuan.xyz/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
