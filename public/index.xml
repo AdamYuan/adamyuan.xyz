@@ -9,10 +9,19 @@
     <managingEditor>y13916619121@126.com (AdamYuan)</managingEditor>
     <webMaster>y13916619121@126.com (AdamYuan)</webMaster>
     <copyright>&amp;copy; 2018. All rights reserved.</copyright>
-    <lastBuildDate>Sat, 14 Jul 2018 10:10:17 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Jul 2018 14:49:43 +0800</lastBuildDate>
     
 	<atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Auto Upload Test</title>
+      <link>https://adamyuan.xyz/post/auto_upload_test/</link>
+      <pubDate>Mon, 16 Jul 2018 14:49:43 +0800</pubDate>
+      <author>y13916619121@126.com (AdamYuan)</author>
+      <guid>https://adamyuan.xyz/post/auto_upload_test/</guid>
+      <description>233333</description>
+    </item>
     
     <item>
       <title>NetworkManager使用resolv.conf中设置的dns</title>
