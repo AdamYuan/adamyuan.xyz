@@ -11,10 +11,11 @@ paginate = 5
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 copyright = "&copy; 2018. All rights reserved."
-googleAnalytics = "UA-122304331-1"
 dateFormat = "02 Jan 2006, 15:04"
 
-disqusShortname = "adamyuan-blog"
+[params]
+  googleAnalytics = "UA-122304331-1"
+  disqusShortname = "adamyuan-blog"
 
 [author]
   name = "AdamYuan"
