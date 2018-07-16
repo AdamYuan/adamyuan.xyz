@@ -13,9 +13,8 @@ pygmentsUseClasses = true
 copyright = "&copy; 2018. All rights reserved."
 dateFormat = "02 Jan 2006, 15:04"
 
-[params]
-  googleAnalytics = "UA-122304331-1"
-  disqusShortname = "adamyuan-blog"
+googleAnalytics = "UA-122304331-1"
+disqusShortname = "adamyuan-blog"
 
 [author]
   name = "AdamYuan"
