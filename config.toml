@@ -14,7 +14,7 @@ copyright = "&copy; 2018. All rights reserved."
 dateFormat = "02 Jan 2006, 15:04"
 
 googleAnalytics = "UA-122304331-1"
-#disqusShortname = "adamyuan-blog"
+disqusShortname = "adamyuan-blog"
 
 [author]
   name = "AdamYuan"
@@ -25,6 +25,7 @@ googleAnalytics = "UA-122304331-1"
   changefreq = "weekly"
   priority = 0.5
   filename = "sitemap.xml"
+  disqus = "adamyuan-blog"
 
 [[menu.main]]
   weight = 1 

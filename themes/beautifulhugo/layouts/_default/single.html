@@ -38,20 +38,7 @@
         </ul>
       {{ end }}
 
-
-      {{ if (.Params.comments) | or (and (or (not (isset .Params "comments")) (eq .Params.comments nil)) (and .Site.Params.comments (ne .Type "page"))) }}
-        {{ if .Site.DisqusShortname }}
-          <div class="disqus-comments">
-            {{ partial "disqus.html" . }}
-          </div>
-        {{ end }}
-        {{ if .Site.Params.staticman }}
-          <div class="staticman-comments">
-            {{ partial "staticman-comments.html" . }}
-          </div>
-        {{ end }}
-      {{ end }}
-
+      {{ template "_internal/disqus.html" . }}
     </div>
   </div>
 </div>
