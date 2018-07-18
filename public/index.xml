@@ -9,18 +9,18 @@
     <managingEditor>y13916619121@126.com (AdamYuan)</managingEditor>
     <webMaster>y13916619121@126.com (AdamYuan)</webMaster>
     <copyright>&amp;copy; 2018. All rights reserved.</copyright>
-    <lastBuildDate>Mon, 16 Jul 2018 14:49:43 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 18 Jul 2018 15:28:33 +0800</lastBuildDate>
     
 	<atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Auto Upload Test</title>
-      <link>https://adamyuan.xyz/post/auto_upload_test/</link>
-      <pubDate>Mon, 16 Jul 2018 14:49:43 +0800</pubDate>
+      <title>配置GVim</title>
+      <link>https://adamyuan.xyz/post/configurate_gvim/</link>
+      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       <author>y13916619121@126.com (AdamYuan)</author>
-      <guid>https://adamyuan.xyz/post/auto_upload_test/</guid>
-      <description>233333</description>
+      <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
+      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12&amp;#34;字体可随意更改set guioptions=i&amp;#34;只保留图标 消除白色边框 gtk3 编辑 ~</description>
     </item>
     
     <item>

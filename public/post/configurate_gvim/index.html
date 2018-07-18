@@ -5,18 +5,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Tags</title>
-  <meta property="og:title" content="Tags" />
-  <meta name="twitter:title" content="Tags" />
+  <title>配置GVim</title>
+  <meta property="og:title" content="配置GVim" />
+  <meta name="twitter:title" content="配置GVim" />
+  <meta name="description" content="基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12&#34;字体可随意更改set guioptions=i&#34;只保留图标 消除白色边框 gtk3 编辑 ~">
+  <meta property="og:description" content="基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12&#34;字体可随意更改set guioptions=i&#34;只保留图标 消除白色边框 gtk3 编辑 ~">
+  <meta name="twitter:description" content="基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12&#34;字体可随意更改set guioptions=i&#34;只保留图标 消除白色边框 gtk3 编辑 ~">
   <meta name="author" content="AdamYuan"/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://adamyuan.xyz/tags/" />
+  <meta property="og:url" content="https://adamyuan.xyz/post/configurate_gvim/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="AdamYuan-&gt;Blog" />
 
   <meta name="generator" content="Hugo 0.44" />
-  <link rel="canonical" href="https://adamyuan.xyz/tags/" />
-  <link rel="alternate" href="https://adamyuan.xyz/tags/index.xml" type="application/rss+xml" title="AdamYuan-&gt;Blog">
+  <link rel="canonical" href="https://adamyuan.xyz/post/configurate_gvim/" />
+  <link rel="alternate" href="https://adamyuan.xyz/index.xml" type="application/rss+xml" title="AdamYuan-&gt;Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -151,9 +154,20 @@ if (!doNotTrack) {
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="tags-heading">
-              <h1>Tags</h1>
+            <div class="post-heading">
+              <h1>配置GVim</h1>
                 
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on July 18, 2018
+  
+  
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -164,45 +178,66 @@ if (!doNotTrack) {
 
 
     
-
-
-
 <div class="container" role="main">
-  <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"> 
-    <article class="post-preview">
-      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
         
-          <div class="panel panel-default">
-            <a class="collapsed" role="button" data-toggle="collapse" data-target="#collapselinux" data-parent="#accordion"
-               href="#" aria-expanded="false" aria-controls="collapselinux">
-                <div class="panel-heading" role="tab" id="headerlinux">
-                  <h4 class="panel-title">
-                      linux
-                    <span class="badge">2</span>
-                  </h4>
-                </div>
-            </a>
-            <div id="collapselinux" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headinglinux">
-              <div class="panel-body">
-                <a href="https://adamyuan.xyz/tags/linux/" class="list-group-item view-all">
-                View all</a>
-                <div class="list-group">
-                  
-                    <a href="https://adamyuan.xyz/post/configurate_gvim/" class="list-group-item">配置GVim</a>
-                  
-                    <a href="https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/" class="list-group-item">NetworkManager使用resolv.conf中设置的dns</a>
-                  
-                </div>
-              </div>
-            </div>
+
+<h1 id="基本配置">基本配置</h1>
+
+<p>编辑~/.gvimrc
+加入</p>
+<div class="highlight"><pre class="chroma"><code class="language-vim" data-lang="vim"><span class="nx">set</span> <span class="nx">guifont</span><span class="p">=</span><span class="nx">Source</span>\ <span class="nx">Code</span>\ <span class="nx">Pro</span>\ <span class="m">12</span><span class="c"> &#34;字体可随意更改</span><span class="err">
+</span><span class="err"></span><span class="nx">set</span> <span class="nx">guioptions</span><span class="p">=</span><span class="nx">i</span><span class="c"> &#34;只保留图标</span></code></pre></div>
+<h1 id="消除白色边框">消除白色边框</h1>
+
+<p><img src="/img/configurate_gvim/1.png" alt="img1" /></p>
+
+<h2 id="gtk3">gtk3</h2>
+
+<p>编辑 ~/.config/gtk-3.0/gtk.css，加入</p>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css"><span class="nt">window</span><span class="p">#</span><span class="nn">vim-main-window</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#272822</span><span class="p">;</span> <span class="c">/*背景色*/</span>
+<span class="p">}</span></code></pre></div>
+<h2 id="gtk2">gtk2</h2>
+
+<p>编辑 ~/.gtkrc-2.0，加入</p>
+<div class="highlight"><pre class="chroma"><code class="language-gtkrc" data-lang="gtkrc">style &#34;vimfix&#34; {
+    bg[NORMAL] = &#34;#272822&#34; #背景色
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
+}
+widget &#34;vim-main-window.*GtkForm&#34; style &#34;vimfix&#34;</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://adamyuan.xyz//tags/linux/">linux</a>&nbsp;
+            
           </div>
         
-      </div>
-    </article>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/" data-toggle="tooltip" data-placement="top" title="NetworkManager使用resolv.conf中设置的dns">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
   </div>
 </div>
-
-
 
     <footer>
   <div class="container">
