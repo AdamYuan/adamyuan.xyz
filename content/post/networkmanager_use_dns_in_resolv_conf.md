@@ -1,11 +1,10 @@
-+++
-date = "2018-07-14T10:10:17+08:00"
-title = "NetworkManager使用resolv.conf中设置的dns"
-Categories = [ "linux" ]
-Tags = []
-Description = ""
-
-+++
+---
+title: "NetworkManager使用resolv.conf中设置的dns"
+date: 2018-07-14T10:10:17+08:00
+subtitle: ""
+categories: [ "linux" ]
+tags: [ "linux" ]
+---
 
 NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/etc/resolv.conf中dns设置的方法
 
