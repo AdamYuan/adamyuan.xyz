@@ -1,1 +1,2 @@
 User-agent: *
+Sitemap: https://adamyuan.xyz/sitemap.xml

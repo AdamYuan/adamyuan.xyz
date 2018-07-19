@@ -6,30 +6,139 @@
     <description>Recent content on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <managingEditor>y13916619121@126.com (AdamYuan)</managingEditor>
-    <webMaster>y13916619121@126.com (AdamYuan)</webMaster>
     <copyright>&amp;copy; 2018. All rights reserved.</copyright>
     <lastBuildDate>Wed, 18 Jul 2018 15:28:33 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>配置GVim</title>
       <link>https://adamyuan.xyz/post/configurate_gvim/</link>
       <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
-      <author>y13916619121@126.com (AdamYuan)</author>
+      
       <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
-      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12&amp;#34;字体可随意更改set guioptions=i&amp;#34;只保留图标 消除白色边框 gtk3 编辑 ~</description>
+      
+        <description>
+
+&lt;h1 id=&#34;基本配置&#34;&gt;基本配置&lt;/h1&gt;
+
+&lt;p&gt;编辑~/.gvimrc
+加入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-vim&#34; data-lang=&#34;vim&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-vim&#34; data-lang=&#34;vim&#34;&gt;&lt;span class=&#34;nx&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;guifont&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Source&lt;/span&gt;\ &lt;span class=&#34;nx&#34;&gt;Code&lt;/span&gt;\ &lt;span class=&#34;nx&#34;&gt;Pro&lt;/span&gt;\ &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;c&#34;&gt; &amp;#34;字体可随意更改&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;guioptions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;c&#34;&gt; &amp;#34;只保留图标&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;消除白色边框&#34;&gt;消除白色边框&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://adamyuan.xyz/img/configurate_gvim/1.png&#34; alt=&#34;img1&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;gtk3&#34;&gt;gtk3&lt;/h2&gt;
+
+&lt;p&gt;编辑 ~/.config/gtk-3.0/gtk.css，加入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span class=&#34;nt&#34;&gt;window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;vim-main-window&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;background-color&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mh&#34;&gt;#272822&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;/*背景色*/&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;gtk2&#34;&gt;gtk2&lt;/h2&gt;
+
+&lt;p&gt;编辑 ~/.gtkrc-2.0，加入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gtkrc&#34; data-lang=&#34;gtkrc&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gtkrc&#34; data-lang=&#34;gtkrc&#34;&gt;style &amp;#34;vimfix&amp;#34; {
+    bg[NORMAL] = &amp;#34;#272822&amp;#34; #背景色
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
+}
+widget &amp;#34;vim-main-window.*GtkForm&amp;#34; style &amp;#34;vimfix&amp;#34;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+      
     </item>
     
     <item>
       <title>NetworkManager使用resolv.conf中设置的dns</title>
       <link>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</link>
       <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
-      <author>y13916619121@126.com (AdamYuan)</author>
+      
       <guid>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</guid>
-      <description>NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/et</description>
+      
+        <description>
+
+&lt;p&gt;NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/etc/resolv.conf中dns设置的方法&lt;/p&gt;
+
+&lt;h1 id=&#34;修改networkmanager配置&#34;&gt;修改NetworkManager配置&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vim /etc/NetworkManager/NetworkManager.conf&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;在[main]模块中添加&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-config&#34; data-lang=&#34;config&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-config&#34; data-lang=&#34;config&#34;&gt;dns=none&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;删除软链接&#34;&gt;删除软链接&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo systemctl restart NetworkManager&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;重启NetworkManager后发现/etc/resolv.conf变为一个损坏的软链接&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo rm /etc/resolv.conf
+sudo touch /etc/resolv.conf&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;编辑dns&#34;&gt;编辑dns&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vim /etc/resolv.conf&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;之后资料极多，不再赘述&lt;/p&gt;
+</description>
+      
     </item>
     
   </channel>
