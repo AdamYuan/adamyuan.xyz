@@ -37,15 +37,15 @@
   </url>
   
   <url>
-    <loc>https://adamyuan.xyz/categories/linux/</loc>
-    <lastmod>2018-07-14T10:10:17+08:00</lastmod>
+    <loc>https://adamyuan.xyz/tags/linux/</loc>
+    <lastmod>2018-07-18T15:28:33+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://adamyuan.xyz/tags/linux/</loc>
-    <lastmod>2018-07-18T15:28:33+08:00</lastmod>
+    <loc>https://adamyuan.xyz/categories/linux/</loc>
+    <lastmod>2018-07-14T10:10:17+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
