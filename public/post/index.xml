@@ -6,7 +6,6 @@
     <description>Recent content in Posts on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <copyright>AdamYuan</copyright>
     <lastBuildDate>Thu, 30 Aug 2018 14:54:03 +0800</lastBuildDate>
     
 	<atom:link href="https://adamyuan.xyz/post/index.xml" rel="self" type="application/rss+xml" />
@@ -27,7 +26,7 @@
       <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       
       <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
-      <description>基本配置 编辑~/.gvimrc 加入 1 2 set guifont=Source\ Code\ Pro\ 12&amp;#34;字体可随意更改set guioptions=i&amp;#34;只保留图标 消除白色边框 gtk3 编</description>
+      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;quot;字体可随意更改 set guioptions=i &amp;quot;只保留图标 消除白色边框 gtk3 编辑 ~/.config/gtk</description>
     </item>
     
     <item>
