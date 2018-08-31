@@ -1,8 +1,6 @@
 ---
 title: "NetworkManager使用resolv.conf中设置的dns"
 date: 2018-07-14T10:10:17+08:00
-subtitle: ""
-categories: [ "linux" ]
 tags: [ "linux" ]
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: "配置GVim"
 date: 2018-07-18T15:28:33+08:00
-subtitle: ""
 tags: [ "linux" ]
 ---
 

@@ -13,10 +13,10 @@
     
     <item>
       <title>主席树求解静态区间第k大(poj2104)</title>
-      <link>https://adamyuan.xyz/post/kth-number/</link>
+      <link>https://adamyuan.xyz/post/static-kth-number-hjt/</link>
       <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/kth-number/</guid>
+      <guid>https://adamyuan.xyz/post/static-kth-number-hjt/</guid>
       <description>题目概述 给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。 基本思</description>
     </item>
     

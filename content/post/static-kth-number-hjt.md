@@ -1,23 +1,7 @@
 ---
 title: "主席树求解静态区间第k大(poj2104)"
 date: 2018-08-30T14:54:03+08:00
-lastmod: 2018-08-30T14:54:03+08:00
-draft: false
-keywords: []
-description: ""
 tags: [ "oi" ]
-categories: []
-author: ""
-
-# You can also close(false) or open(true) something for this content.
-# P.S. comment can only be closed
-comment: true
-toc: false
-autoCollapseToc: false
-# You can also define another contentCopyright. e.g. contentCopyright: "This is another copyright."
-contentCopyright: false
-reward: false
-mathjax: false
 ---
 
 # 题目概述
