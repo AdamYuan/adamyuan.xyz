@@ -1,7 +1,6 @@
 ---
 title: "文本编辑器editor(splay)"
 date: 2018-09-20T21:26:53+08:00
-draft: true
 tags: [ "oi" ]
 ---
 

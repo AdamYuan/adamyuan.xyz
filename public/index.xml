@@ -6,10 +6,19 @@
     <description>Recent content on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 30 Aug 2018 14:54:03 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 20 Sep 2018 21:26:53 +0800</lastBuildDate>
     
 	<atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>文本编辑器editor(splay)</title>
+      <link>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</link>
+      <pubDate>Thu, 20 Sep 2018 21:26:53 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</guid>
+      <description>题目概述 实现一个文本编辑器，实现下列功能： 例子： 基本思路 （pos代表光标位置） 这题的思路十分简单粗暴，其中基本的操作是通过伸展树的splay</description>
+    </item>
     
     <item>
       <title>poj2104静态区间第k大(主席树)</title>
