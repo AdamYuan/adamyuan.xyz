@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vim on AdamYuan-&gt;Blog</title>
+    <link>https://adamyuan.xyz/tags/vim/</link>
+    <description>Recent content in Vim on AdamYuan-&gt;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 18 Jul 2018 15:28:33 +0800</lastBuildDate>
+    
+	<atom:link href="https://adamyuan.xyz/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>配置GVim</title>
+      <link>https://adamyuan.xyz/post/configurate_gvim/</link>
+      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
+      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;quot;字体可随意更改 set guioptions=i &amp;quot;只保留图标 消除白色边框 gtk3 编辑 ~/.config/gtk</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,7 +1,8 @@
 ---
 title: "配置GVim"
 date: 2018-07-18T15:28:33+08:00
-tags: [ "linux" ]
+tags: [ "vim" ]
+categories: [ "Linux" ]
 ---
 
 # 基本配置

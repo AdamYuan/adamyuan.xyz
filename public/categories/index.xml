@@ -10,5 +10,23 @@
 	<atom:link href="https://adamyuan.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>Linux</title>
+      <link>https://adamyuan.xyz/categories/linux/</link>
+      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OI</title>
+      <link>https://adamyuan.xyz/categories/oi/</link>
+      <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/categories/oi/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

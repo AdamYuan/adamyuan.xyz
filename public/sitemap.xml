@@ -3,6 +3,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://adamyuan.xyz/post/2b-pin-heng-shu/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</loc>
     <lastmod>2018-09-20T21:26:53+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -32,7 +39,7 @@
   
   <url>
     <loc>https://adamyuan.xyz/</loc>
-    <lastmod>2018-09-20T21:26:53+08:00</lastmod>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -44,29 +51,78 @@
   </url>
   
   <url>
-    <loc>https://adamyuan.xyz/tags/linux/</loc>
+    <loc>https://adamyuan.xyz/categories/linux/</loc>
     <lastmod>2018-07-18T15:28:33+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://adamyuan.xyz/tags/oi/</loc>
-    <lastmod>2018-09-20T21:26:53+08:00</lastmod>
+    <loc>https://adamyuan.xyz/tags/networkmanager/</loc>
+    <lastmod>2018-07-14T10:10:17+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/categories/oi/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://adamyuan.xyz/post/</loc>
-    <lastmod>2018-09-20T21:26:53+08:00</lastmod>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/splay/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://adamyuan.xyz/tags/</loc>
+    <lastmod>2018-07-14T10:10:17+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/vector/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/vim/</loc>
     <lastmod>2018-07-18T15:28:33+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/%E4%B8%BB%E5%B8%AD%E6%A0%91/</loc>
+    <lastmod>2018-08-30T14:54:03+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/%E6%A0%91%E5%A5%97%E6%A0%91/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://adamyuan.xyz/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</loc>
+    <lastmod>2018-09-27T21:21:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
