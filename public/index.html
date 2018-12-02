@@ -55,7 +55,7 @@
 
 
 
-<meta property="og:updated_time" content="2018-09-27T21:21:54&#43;08:00"/>
+<meta property="og:updated_time" content="2018-12-02T11:39:34&#43;08:00"/>
 
 
 
@@ -135,6 +135,43 @@
   <section id="posts" class="posts">
     
     
+    
+      <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/big_pow/">计算3的1000000次方</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-12-02 </span>
+      <div class="post-category">
+          
+            <a href="/categories/%E6%97%A5%E5%B8%B8/"> 日常 </a>
+          
+        </div>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>无意间看到 <a href="https://www.bilibili.com/video/av21610235">https://www.bilibili.com/video/av21610235</a> ，闲来无事，便自己实现了一个<br />
+使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解</p>
+
+<p>#结果</p>
+
+<pre><code class="language-sh">$ g++ big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
+0inputs+0outputs (0major+4219minor)pagefaults 0swaps
+</code></pre>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/big_pow/" class="read-more-link">Read more..</a>
+    </div>
+  </div>
+</article>
+
     
       <article class="post">
   <header class="post-header">
@@ -244,36 +281,15 @@
 </article>
 
     
-      <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/networkmanager_use_dns_in_resolv_conf/">NetworkManager使用resolv.conf中设置的dns</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-07-14 </span>
-      <div class="post-category">
-          
-            <a href="/categories/linux/"> Linux </a>
-          
-        </div>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/et
-    </div>
-    <div class="read-more">
-      <a href="/post/networkmanager_use_dns_in_resolv_conf/" class="read-more-link">Read more..</a>
-    </div>
-  </div>
-</article>
-
-    
   </section>
   
   <nav class="pagination">
     
     
+      <a class="next" href="/page/2/">
+        <span class="next-text">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
   </nav>
 
         </div>

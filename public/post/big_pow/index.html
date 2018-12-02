@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>计算3的1000000次方 - AdamYuan-&gt;Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="AdamYuan" />
+  <meta name="description" content="无意间看到 https://www.bilibili.com/video/av21610235 ，闲来无事，便自己实现了一个
+使用了快速幂和NTT，c&#43;&#43;11，-O3优化，0.3秒内可得解
+#结果
+$ g&#43;&#43; big_pow.cpp -o big_pow -O3 $ time ./big_pow 1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001 0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext&#43;0avgdata 19452maxresident)k 0inputs&#43;0outputs (0major&#43;4219minor)pagefaults 0swaps  
+" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.44" />
+
+
+<link rel="canonical" href="https://adamyuan.xyz/post/big_pow/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="计算3的1000000次方" />
+<meta property="og:description" content="无意间看到 https://www.bilibili.com/video/av21610235 ，闲来无事，便自己实现了一个
+使用了快速幂和NTT，c&#43;&#43;11，-O3优化，0.3秒内可得解
+
+#结果
+
+$ g&#43;&#43; big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext&#43;0avgdata 19452maxresident)k
+0inputs&#43;0outputs (0major&#43;4219minor)pagefaults 0swaps
+
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://adamyuan.xyz/post/big_pow/" />
+
+
+
+<meta property="article:published_time" content="2018-12-02T11:39:34&#43;08:00"/>
+
+<meta property="article:modified_time" content="2018-12-02T11:39:34&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="计算3的1000000次方">
+<meta itemprop="description" content="无意间看到 https://www.bilibili.com/video/av21610235 ，闲来无事，便自己实现了一个
+使用了快速幂和NTT，c&#43;&#43;11，-O3优化，0.3秒内可得解
+
+#结果
+
+$ g&#43;&#43; big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext&#43;0avgdata 19452maxresident)k
+0inputs&#43;0outputs (0major&#43;4219minor)pagefaults 0swaps
+
+
+">
+
+
+<meta itemprop="datePublished" content="2018-12-02T11:39:34&#43;08:00" />
+<meta itemprop="dateModified" content="2018-12-02T11:39:34&#43;08:00" />
+<meta itemprop="wordCount" content="633">
+
+
+
+<meta itemprop="keywords" content="NTT," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="计算3的1000000次方"/>
+<meta name="twitter:description" content="无意间看到 https://www.bilibili.com/video/av21610235 ，闲来无事，便自己实现了一个
+使用了快速幂和NTT，c&#43;&#43;11，-O3优化，0.3秒内可得解
+
+#结果
+
+$ g&#43;&#43; big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext&#43;0avgdata 19452maxresident)k
+0inputs&#43;0outputs (0major&#43;4219minor)pagefaults 0swaps
+
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">AdamYuan-&gt;Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">AdamYuan-&gt;Blog</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">计算3的1000000次方</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-02 </span>
+        <div class="post-category">
+            
+              <a href="/categories/%E6%97%A5%E5%B8%B8/"> 日常 </a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>无意间看到 <a href="https://www.bilibili.com/video/av21610235">https://www.bilibili.com/video/av21610235</a> ，闲来无事，便自己实现了一个<br />
+使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解</p>
+
+<p>#结果</p>
+
+<pre><code class="language-sh">$ g++ big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+1797710116675743838039851642017955175542668535689457592096701980448789887005555782501363902453987234517858460840058675631017300078980764788908711207163158453092507420576700326354687989043195055426409953164756466539259367768040........94583860865582743617028689475854552728816316762280811790634172210957948689622380266186186896939896900778464988674017800809943312017921778637005646990599302975876577797469025945665682364998792134410204374775685429165973619874213252676109459171740535758464159433897468478655220000001
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
+0inputs+0outputs (0major+4219minor)pagefaults 0swaps
+</code></pre>
+
+<p></p>
+
+<h1 id="代码">代码</h1>
+
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+typedef long long i64;
+
+constexpr i64 N = 1 &lt;&lt; 19, K = 19, P = 998244353ll;
+
+class NTT {
+	private:
+		static inline i64 qpow(i64 a, i64 x, i64 m) {
+			i64 ret = 1;
+			while(x) { if(x &amp; 1) ret = (ret*a) % m; a = (a*a) % m; x &gt;&gt;= 1; }
+			return ret;
+		}
+		static inline i64 to_pow2(i64 x) {
+			i64 ret = 1; while(ret &lt; x) ret &lt;&lt;= 1;
+			return ret;
+		}
+		static inline i64 get_upper(i64 x) {
+			i64 a = 1, ret = 0; while(a &lt; x) { a &lt;&lt;= 1; ret ++; };
+			return ret;
+		}
+		i64 m_wn[K+1], m_iwn[K+1], m_rev[N], m_inv, m_n = 0;
+		inline void transform(i64 *a, const i64 *wn) const {
+			for(i64 i = 0; i &lt; m_n; ++i) if(i &lt; m_rev[i]) std::swap(a[i], a[m_rev[i]]);
+
+			for(i64 l = 1; (1 &lt;&lt; l) &lt;= m_n; l ++) {
+				i64 m = 1 &lt;&lt; (l-1);
+				for(i64 *p = a; p != a + m_n; p += (1 &lt;&lt; l)) {
+					i64 w = 1;
+					for(i64 i = 0; i &lt; m; ++i) {
+						i64 t = (w * p[m+i]) % P; p[m+i] = (p[i] - t + P) % P; p[i] = (p[i] + t) % P; w = (w * wn[l]) % P;
+					}
+				}
+			}
+		}
+
+	public:
+		inline void Init() {
+			for(i64 l = 1; (1 &lt;&lt; l) &lt;= N; l ++) {
+				m_wn[l] = qpow(3, (P - 1) / (1 &lt;&lt; l), P);
+				m_iwn[l] = qpow(3, P - 1 - (P - 1) / (1 &lt;&lt; l), P);
+			}
+			m_rev[0] = 0; 
+		}
+		inline i64 SetN(i64 n) {
+			n = to_pow2(n); if(n == m_n) return m_n;
+			m_n = n;
+
+			int k = get_upper(n);
+			for(i64 i = 1; i &lt; m_n; ++i) m_rev[i] = (m_rev[i&gt;&gt;1] &gt;&gt; 1) | ( (i&amp;1) &lt;&lt; (k - 1) );
+			m_inv = qpow(m_n, P - 2, P);
+			return m_n;
+		}
+		inline void Dft(i64 *a) const { transform(a, m_wn); }
+		inline void Idft(i64 *a) const { transform(a, m_iwn); for(i64 i = 0; i &lt; m_n; ++i) a[i] = (a[i] * m_inv) % P; }
+} ntt;
+
+i64 buffer[N];
+
+class BigNum {
+	private:
+		i64 m_digits[N] = {}, m_up = 0;
+	public:
+		inline void Set(i64 val)
+		{
+			m_up = 0;
+			while(val) {
+				m_digits[m_up++] = val % 10;
+				val /= 10;
+			}
+			std::fill(m_digits + m_up, m_digits + N, 0);
+		}
+		inline void Mul(const BigNum &amp;bn) {
+			std::copy(bn.m_digits, bn.m_digits + N, buffer);
+			i64 kn = ntt.SetN(m_up + bn.m_up);
+			ntt.Dft(m_digits); ntt.Dft(buffer);
+			for(i64 i = 0; i &lt; kn; ++i) m_digits[i] *= buffer[i];
+			ntt.Idft(m_digits);
+			for(i64 i = 0; i &lt; kn - 1; ++i) { m_digits[i + 1] += m_digits[i] / 10; m_digits[i] %= 10; }
+			for(m_up = kn; m_digits[m_up - 1] == 0; --m_up);
+		}
+		inline void Pow() {
+			i64 kn = ntt.SetN(m_up * 2);
+			ntt.Dft(m_digits);
+			for(i64 i = 0; i &lt; kn; ++i) m_digits[i] *= m_digits[i];
+			ntt.Idft(m_digits);
+			for(i64 i = 0; i &lt; kn - 1; ++i) { m_digits[i + 1] += m_digits[i] / 10; m_digits[i] %= 10; }
+			for(m_up = kn - 1; m_digits[m_up] == 0; --m_up);
+			m_up ++;
+		}
+		inline void Print() const {
+			for(i64 i = m_up - 1; i &gt;= 0; --i)
+				putchar(m_digits[i] + '0');
+			putchar('\n');
+		}
+} base, ans;
+
+int main() {
+	ntt.Init();
+	base.Set(3); ans.Set(1);
+	i64 a = 1000000;
+	while(a) {
+		if(a &amp; 1) ans.Mul(base);
+		a &gt;&gt;= 1; base.Pow();
+	}
+	ans.Print();
+	return 0;
+}
+</code></pre>
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/ntt/">NTT</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/2b-pin-heng-shu/">
+            <span class="next-text nav-default">二逼平衡树(splay / vector &#43; 线段树)</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:y13916619121@126.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/AdamYuan" class="iconfont icon-github" title="github"></a>
+  <a href="https://adamyuan.xyz/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">AdamYuan</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-122304331-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>
