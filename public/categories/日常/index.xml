@@ -1,41 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>日常 on AdamYuan-&gt;Blog</title>
-    <link>https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/</link>
+    <link>/categories/%E6%97%A5%E5%B8%B8/</link>
     <description>Recent content in 日常 on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
     <lastBuildDate>Sun, 02 Dec 2018 11:39:34 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>计算3的1000000次方</title>
-      <link>https://adamyuan.xyz/post/big_pow/</link>
+      <link>/post/big_pow/</link>
       <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/big_pow/</guid>
-      <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br /&gt;
-使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;
-
-&lt;h1 id=&#34;结果&#34;&gt;结果&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ g++ big_pow.cpp -o big_pow -O3
-$ time ./big_pow
-1797710116675743838039851642017955175542668535689457592096701980448789887005555782  
-5013639024539872345178584608400586756310173000789807647889087112071631584530925074  
-20576700326354687989043195055426409953164756466539259367768040........  
-9458386086558274361702868947585455272881631676228081179063417221095794868962238026  
-6186186896939896900778464988674017800809943312017921778637005646990599302975876577  
-7974690259456656823649987921344102043747756854291659736198742132526761094591717405  
-35758464159433897468478655220000001
-0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
-0inputs+0outputs (0major+4219minor)pagefaults 0swaps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>/post/big_pow/</guid>
+      <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br&gt;
+使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;</description>
+      
     </item>
     
   </channel>

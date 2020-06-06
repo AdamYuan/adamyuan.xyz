@@ -3,45 +3,14 @@ title: "计算3的1000000次方"
 date: 2018-12-02T11:39:34+08:00
 lastmod: 2018-12-02T11:39:34+08:00
 draft: false
-keywords: []
-description: ""
 tags: [ "NTT" ]
 categories: [ "日常" ]
-author: ""
-
-# You can also close(false) or open(true) something for this content.
-# P.S. comment can only be closed
-comment: false
-toc: false
-autoCollapseToc: false
-postMetaInFooter: false
-hiddenFromHomePage: false
-# You can also define another contentCopyright. e.g. contentCopyright: "This is another copyright."
-contentCopyright: false
-reward: false
-mathjax: false
-mathjaxEnableSingleDollar: false
-mathjaxEnableAutoNumber: false
-
-# You unlisted posts you might want not want the header or footer to show
-hideHeaderAndFooter: false
-
-# You can enable or disable out-of-date content warning for individual post.
-# Comment this out to use the global config.
-#enableOutdatedInfoWarning: false
-
-flowchartDiagrams:
-  enable: false
-  options: ""
-
-sequenceDiagrams: 
-  enable: false
-  options: ""
-
 ---
 
 无意间看到 https://www.bilibili.com/video/av21610235 ，闲来无事，便自己实现了一个  
 使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解
+
+<!--more-->
 
 # 结果
 
@@ -58,8 +27,6 @@ $ time ./big_pow
 0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
 0inputs+0outputs (0major+4219minor)pagefaults 0swaps
 ```
-
-<!--more-->
 
 # 代码
 ```cpp

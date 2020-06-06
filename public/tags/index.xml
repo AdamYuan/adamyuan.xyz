@@ -1,86 +1,105 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on AdamYuan-&gt;Blog</title>
-    <link>https://adamyuan.xyz/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 02 Dec 2018 11:39:34 +0800</lastBuildDate>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
+    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NP完全问题</title>
+      <link>/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
+      
+      <guid>/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98/</guid>
+      <description></description>
+      
+    </item>
     
     <item>
       <title>NTT</title>
-      <link>https://adamyuan.xyz/tags/ntt/</link>
+      <link>/tags/ntt/</link>
       <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/ntt/</guid>
+      <guid>/tags/ntt/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>Networkmanager</title>
-      <link>https://adamyuan.xyz/tags/networkmanager/</link>
-      <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/networkmanager/</guid>
-      <description></description>
     </item>
     
     <item>
-      <title>Splay</title>
-      <link>https://adamyuan.xyz/tags/splay/</link>
+      <title>splay</title>
+      <link>/tags/splay/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/splay/</guid>
+      <guid>/tags/splay/</guid>
       <description></description>
+      
     </item>
     
     <item>
-      <title>Vector</title>
-      <link>https://adamyuan.xyz/tags/vector/</link>
+      <title>vector</title>
+      <link>/tags/vector/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/vector/</guid>
+      <guid>/tags/vector/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>Vim</title>
-      <link>https://adamyuan.xyz/tags/vim/</link>
-      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/vim/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>主席树</title>
-      <link>https://adamyuan.xyz/tags/%E4%B8%BB%E5%B8%AD%E6%A0%91/</link>
-      <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
-      
-      <guid>https://adamyuan.xyz/tags/%E4%B8%BB%E5%B8%AD%E6%A0%91/</guid>
-      <description></description>
     </item>
     
     <item>
       <title>树套树</title>
-      <link>https://adamyuan.xyz/tags/%E6%A0%91%E5%A5%97%E6%A0%91/</link>
+      <link>/tags/%E6%A0%91%E5%A5%97%E6%A0%91/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/%E6%A0%91%E5%A5%97%E6%A0%91/</guid>
+      <guid>/tags/%E6%A0%91%E5%A5%97%E6%A0%91/</guid>
       <description></description>
+      
     </item>
     
     <item>
       <title>线段树</title>
-      <link>https://adamyuan.xyz/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</link>
+      <link>/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</guid>
+      <guid>/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</guid>
       <description></description>
+      
+    </item>
+    
+    <item>
+      <title>主席树</title>
+      <link>/tags/%E4%B8%BB%E5%B8%AD%E6%A0%91/</link>
+      <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
+      
+      <guid>/tags/%E4%B8%BB%E5%B8%AD%E6%A0%91/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>vim</title>
+      <link>/tags/vim/</link>
+      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
+      
+      <guid>/tags/vim/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>networkmanager</title>
+      <link>/tags/networkmanager/</link>
+      <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
+      
+      <guid>/tags/networkmanager/</guid>
+      <description></description>
+      
     </item>
     
   </channel>

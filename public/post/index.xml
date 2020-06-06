@@ -1,94 +1,117 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on AdamYuan-&gt;Blog</title>
-    <link>https://adamyuan.xyz/post/</link>
+    <link>/post/</link>
     <description>Recent content in Posts on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 02 Dec 2018 11:39:34 +0800</lastBuildDate>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
+    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/post/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>
+      <link>/post/sasat_implementation/</link>
+      <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
+      
+      <guid>/post/sasat_implementation/</guid>
+      <description>&lt;h1 id=&#34;模拟退火求解3-sat的c程序实现&#34;&gt;模拟退火求解3-SAT的C++程序实现&lt;/h1&gt;
+&lt;h2 id=&#34;1-问题概要与求解思路&#34;&gt;1. 问题概要与求解思路&lt;/h2&gt;
+&lt;h3 id=&#34;11-3-sat问题&#34;&gt;1.1 3-SAT问题&lt;/h3&gt;
+&lt;p&gt;对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &amp;hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。&lt;/p&gt;
+&lt;p&gt;将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。&lt;/p&gt;
+&lt;p&gt;定义布尔变量数量为$$N_{var}$$，括号数量为$$N_{clause}$$，3-SAT问题的一个解$$s = (x_1, x_2, &amp;hellip;, x_{N_{var}}), x_k\in{0, 1}$$&lt;/p&gt;
+&lt;p&gt;3-SAT问题即求解一个$$s$$使布尔表达式为真。这是一个NP完全问题，作为Schaefer&amp;rsquo;s dichotomy定理的一个特例被Thomas Jerome Schaefer证明。&lt;/p&gt;
+&lt;h3 id=&#34;12-模拟退火&#34;&gt;1.2 模拟退火&lt;/h3&gt;
+&lt;p&gt;模拟退火是一个用于求解函数全局最大值的随机算法。与寻常的爬山法不同，模拟退火算法会在邻域内选取一个随机解，是否跳往随机解取决于温度和相对原解的函数值增加量。温度高时，跳转的随机程度大，温度降低后则大概率会跳向邻域内的最优，从而趋向局部最优。这种随机性使算法能够跳出局部最优，更可能寻找到全局最优。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>计算3的1000000次方</title>
-      <link>https://adamyuan.xyz/post/big_pow/</link>
+      <link>/post/big_pow/</link>
       <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/big_pow/</guid>
-      <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br /&gt;
-使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;
-
-&lt;h1 id=&#34;结果&#34;&gt;结果&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ g++ big_pow.cpp -o big_pow -O3
-$ time ./big_pow
-1797710116675743838039851642017955175542668535689457592096701980448789887005555782  
-5013639024539872345178584608400586756310173000789807647889087112071631584530925074  
-20576700326354687989043195055426409953164756466539259367768040........  
-9458386086558274361702868947585455272881631676228081179063417221095794868962238026  
-6186186896939896900778464988674017800809943312017921778637005646990599302975876577  
-7974690259456656823649987921344102043747756854291659736198742132526761094591717405  
-35758464159433897468478655220000001
-0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
-0inputs+0outputs (0major+4219minor)pagefaults 0swaps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>/post/big_pow/</guid>
+      <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br&gt;
+使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;</description>
+      
     </item>
     
     <item>
       <title>二逼平衡树(splay / vector &#43; 线段树)</title>
-      <link>https://adamyuan.xyz/post/2b-pin-heng-shu/</link>
+      <link>/post/2b-pin-heng-shu/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
+      <guid>/post/2b-pin-heng-shu/</guid>
       <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
-
-&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;br /&gt;
-1. 查询k在区间内的排名&lt;br /&gt;
-2. 查询区间内排名为k的值&lt;br /&gt;
-3. 修改某一位值上的数值&lt;br /&gt;
-4. 查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;br /&gt;
-5. 查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;br /&gt;
-&lt;/p&gt;</description>
+&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;查询k在区间内的排名&lt;/li&gt;
+&lt;li&gt;查询区间内排名为k的值&lt;/li&gt;
+&lt;li&gt;修改某一位值上的数值&lt;/li&gt;
+&lt;li&gt;查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;/li&gt;
+&lt;li&gt;查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;/li&gt;
+&lt;/ol&gt;</description>
+      
     </item>
     
     <item>
       <title>文本编辑器editor(splay)</title>
-      <link>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</link>
+      <link>/post/wenbenbianjiqi-editor/</link>
       <pubDate>Thu, 20 Sep 2018 21:26:53 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</guid>
-      <description>题目概述 实现一个文本编辑器，实现下列功能： 例子： 基本思路 （pos代表光标位置） 这题的思路十分简单粗暴，其中基本的操作是通过伸展树的splay</description>
+      <guid>/post/wenbenbianjiqi-editor/</guid>
+      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;实现一个文本编辑器，实现下列功能：
+&lt;img  src=&#34;https://adamyuan.xyz/img/wenbenbianjiqi-editor/1.gif&#34;
+        alt=&#34;img1&#34;/&gt;&lt;br&gt;
+例子：&lt;br&gt;
+&lt;img  src=&#34;https://adamyuan.xyz/img/wenbenbianjiqi-editor/2.gif&#34;
+        alt=&#34;img1&#34;/&gt;&lt;/p&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;（pos代表光标位置）
+这题的思路十分简单粗暴，其中基本的操作是通过伸展树的splay操作得到代表一个区间的子树，对于区间[l, r]，将第l-1号节点splay成为根节点，将第r+1号节点splay成为根节点的右儿子，则根节点右儿子的左子树便是所需的子树。&lt;br&gt;
+对于插入操作，可以先处理出[pos+1, pos]这个空区间（l-1 = pos, r+1 = pos+1），根节点右儿子的左子树必然为空，将其初始化为新字符串即可。&lt;br&gt;
+对于删除和旋转操作，都需处理出[pos+1, pos+n]。删除操作可直接删除相应子树，旋转操作打上延迟标记然后pushdown。&lt;/p&gt;</description>
+      
     </item>
     
     <item>
       <title>poj2104静态区间第k大(主席树)</title>
-      <link>https://adamyuan.xyz/post/static-kth-number-hjt/</link>
+      <link>/post/static-kth-number-hjt/</link>
       <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/static-kth-number-hjt/</guid>
-      <description>题目概述 给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。 基本思</description>
+      <guid>/post/static-kth-number-hjt/</guid>
+      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。&lt;/p&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;首先我们将数列离散化。如果可以构造出任意区间的权值线段树(即线段树的下标代表区间中包含的数的值，例如数列1, 2, 2, 2, 3, 3, 4构成的权值线段树最下层为1, 3, 2, 1)，便能轻松二分出答案，同时区间[l&amp;hellip;r]的权值线段树可以由区间[1&amp;hellip;r]线段树中的值减去[1&amp;hellip;l-1]得到，所以想到构造n颗前缀权值线段树。&lt;br&gt;
+不过暴力建树空间复杂度太大，必然会mle，这时就需要用到主席树了。&lt;/p&gt;</description>
+      
     </item>
     
     <item>
       <title>配置GVim</title>
-      <link>https://adamyuan.xyz/post/configurate_gvim/</link>
+      <link>/post/configurate_gvim/</link>
       <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
-      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;quot;字体可随意更改 set guioptions=i &amp;quot;只保留图标 消除白色边框 gtk3 编辑 ~/.config/gtk</description>
+      <guid>/post/configurate_gvim/</guid>
+      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;#34;字体可随意更改set guioptions=i &amp;#34;只保留图标消除白色边框 gtk3 编辑 ~/.config/gtk</description>
+      
     </item>
     
     <item>
       <title>NetworkManager使用resolv.conf中设置的dns</title>
-      <link>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</link>
+      <link>/post/networkmanager_use_dns_in_resolv_conf/</link>
       <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</guid>
+      <guid>/post/networkmanager_use_dns_in_resolv_conf/</guid>
       <description>NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/et</description>
+      
     </item>
     
   </channel>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>NP完全问题 on AdamYuan-&gt;Blog</title>
+    <link>/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98/</link>
+    <description>Recent content in NP完全问题 on AdamYuan-&gt;Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
+    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
+    
+        <atom:link href="/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>
+      <link>/post/sasat_implementation/</link>
+      <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
+      
+      <guid>/post/sasat_implementation/</guid>
+      <description>&lt;h1 id=&#34;模拟退火求解3-sat的c程序实现&#34;&gt;模拟退火求解3-SAT的C++程序实现&lt;/h1&gt;
+&lt;h2 id=&#34;1-问题概要与求解思路&#34;&gt;1. 问题概要与求解思路&lt;/h2&gt;
+&lt;h3 id=&#34;11-3-sat问题&#34;&gt;1.1 3-SAT问题&lt;/h3&gt;
+&lt;p&gt;对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &amp;hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。&lt;/p&gt;
+&lt;p&gt;将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。&lt;/p&gt;
+&lt;p&gt;定义布尔变量数量为$$N_{var}$$，括号数量为$$N_{clause}$$，3-SAT问题的一个解$$s = (x_1, x_2, &amp;hellip;, x_{N_{var}}), x_k\in{0, 1}$$&lt;/p&gt;
+&lt;p&gt;3-SAT问题即求解一个$$s$$使布尔表达式为真。这是一个NP完全问题，作为Schaefer&amp;rsquo;s dichotomy定理的一个特例被Thomas Jerome Schaefer证明。&lt;/p&gt;
+&lt;h3 id=&#34;12-模拟退火&#34;&gt;1.2 模拟退火&lt;/h3&gt;
+&lt;p&gt;模拟退火是一个用于求解函数全局最大值的随机算法。与寻常的爬山法不同，模拟退火算法会在邻域内选取一个随机解，是否跳往随机解取决于温度和相对原解的函数值增加量。温度高时，跳转的随机程度大，温度降低后则大概率会跳向邻域内的最优，从而趋向局部最优。这种随机性使算法能够跳出局部最优，更可能寻找到全局最优。&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>线段树 on AdamYuan-&gt;Blog</title>
-    <link>https://adamyuan.xyz/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</link>
+    <link>/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/</link>
     <description>Recent content in 线段树 on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
     <lastBuildDate>Thu, 27 Sep 2018 21:21:54 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/%E7%BA%BF%E6%AE%B5%E6%A0%91/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>二逼平衡树(splay / vector &#43; 线段树)</title>
-      <link>https://adamyuan.xyz/post/2b-pin-heng-shu/</link>
+      <link>/post/2b-pin-heng-shu/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
+      <guid>/post/2b-pin-heng-shu/</guid>
       <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
-
-&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;br /&gt;
-1. 查询k在区间内的排名&lt;br /&gt;
-2. 查询区间内排名为k的值&lt;br /&gt;
-3. 修改某一位值上的数值&lt;br /&gt;
-4. 查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;br /&gt;
-5. 查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;br /&gt;
-&lt;/p&gt;</description>
+&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;查询k在区间内的排名&lt;/li&gt;
+&lt;li&gt;查询区间内排名为k的值&lt;/li&gt;
+&lt;li&gt;修改某一位值上的数值&lt;/li&gt;
+&lt;li&gt;查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;/li&gt;
+&lt;li&gt;查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;/li&gt;
+&lt;/ol&gt;</description>
+      
     </item>
     
     <item>
       <title>poj2104静态区间第k大(主席树)</title>
-      <link>https://adamyuan.xyz/post/static-kth-number-hjt/</link>
+      <link>/post/static-kth-number-hjt/</link>
       <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/static-kth-number-hjt/</guid>
-      <description>题目概述 给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。 基本思</description>
+      <guid>/post/static-kth-number-hjt/</guid>
+      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。&lt;/p&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;首先我们将数列离散化。如果可以构造出任意区间的权值线段树(即线段树的下标代表区间中包含的数的值，例如数列1, 2, 2, 2, 3, 3, 4构成的权值线段树最下层为1, 3, 2, 1)，便能轻松二分出答案，同时区间[l&amp;hellip;r]的权值线段树可以由区间[1&amp;hellip;r]线段树中的值减去[1&amp;hellip;l-1]得到，所以想到构造n颗前缀权值线段树。&lt;br&gt;
+不过暴力建树空间复杂度太大，必然会mle，这时就需要用到主席树了。&lt;/p&gt;</description>
+      
     </item>
     
   </channel>

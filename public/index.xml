@@ -1,94 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>AdamYuan-&gt;Blog</title>
-    <link>https://adamyuan.xyz/</link>
+    <link>/</link>
     <description>Recent content on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 02 Dec 2018 11:39:34 +0800</lastBuildDate>
+    <language>zh-cn</language>
+    <copyright>©2019 AdamYuan.</copyright>
+    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
-	<atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>计算3的1000000次方</title>
-      <link>https://adamyuan.xyz/post/big_pow/</link>
-      <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
-      
-      <guid>https://adamyuan.xyz/post/big_pow/</guid>
-      <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br /&gt;
-使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;
-
-&lt;h1 id=&#34;结果&#34;&gt;结果&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ g++ big_pow.cpp -o big_pow -O3
-$ time ./big_pow
-1797710116675743838039851642017955175542668535689457592096701980448789887005555782  
-5013639024539872345178584608400586756310173000789807647889087112071631584530925074  
-20576700326354687989043195055426409953164756466539259367768040........  
-9458386086558274361702868947585455272881631676228081179063417221095794868962238026  
-6186186896939896900778464988674017800809943312017921778637005646990599302975876577  
-7974690259456656823649987921344102043747756854291659736198742132526761094591717405  
-35758464159433897468478655220000001
-0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
-0inputs+0outputs (0major+4219minor)pagefaults 0swaps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
-    </item>
     
     <item>
-      <title>二逼平衡树(splay / vector &#43; 线段树)</title>
-      <link>https://adamyuan.xyz/post/2b-pin-heng-shu/</link>
-      <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
+      <title>Posts</title>
+      <link>/post/</link>
+      <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
       
-      <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
-      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
-
-&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;br /&gt;
-1. 查询k在区间内的排名&lt;br /&gt;
-2. 查询区间内排名为k的值&lt;br /&gt;
-3. 修改某一位值上的数值&lt;br /&gt;
-4. 查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;br /&gt;
-5. 查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;br /&gt;
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>文本编辑器editor(splay)</title>
-      <link>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</link>
-      <pubDate>Thu, 20 Sep 2018 21:26:53 +0800</pubDate>
+      <guid>/post/</guid>
+      <description></description>
       
-      <guid>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</guid>
-      <description>题目概述 实现一个文本编辑器，实现下列功能： 例子： 基本思路 （pos代表光标位置） 这题的思路十分简单粗暴，其中基本的操作是通过伸展树的splay</description>
-    </item>
-    
-    <item>
-      <title>poj2104静态区间第k大(主席树)</title>
-      <link>https://adamyuan.xyz/post/static-kth-number-hjt/</link>
-      <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
-      
-      <guid>https://adamyuan.xyz/post/static-kth-number-hjt/</guid>
-      <description>题目概述 给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。 基本思</description>
-    </item>
-    
-    <item>
-      <title>配置GVim</title>
-      <link>https://adamyuan.xyz/post/configurate_gvim/</link>
-      <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
-      
-      <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
-      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;quot;字体可随意更改 set guioptions=i &amp;quot;只保留图标 消除白色边框 gtk3 编辑 ~/.config/gtk</description>
-    </item>
-    
-    <item>
-      <title>NetworkManager使用resolv.conf中设置的dns</title>
-      <link>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</link>
-      <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
-      
-      <guid>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</guid>
-      <description>NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/et</description>
     </item>
     
   </channel>
