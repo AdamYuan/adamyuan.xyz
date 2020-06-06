@@ -23,9 +23,7 @@ unsafe = true  # enable raw HTML in Markdown
 
 [params]
 style = "light"  # default: auto. light: light theme, dark: dark theme, auto: based on system.
-#dateFormat = "Monday, January 2, 2006"  # if unset, default is "2006-01-02"
-logo = ""
-#slogan = "100% JavaScript-free"
+logo = "img/avatar.png"
 license = ""  # CC License
 fullRss = false # Puts entire HTML post into rss 'description' tag. If unset, default is false.
 
@@ -34,8 +32,6 @@ enable = false  # En/Disable comments globally, default: false. You can always e
 
 [params.profile]
 enable = true
-avatar = "/img/avatar.png"
-name = "AdamYuan"
 github = "AdamYuan"  # https://github.com/XXX
 email = "y13916619121@126.com"  # mailto:XXX@mail.com
 
@@ -45,7 +41,7 @@ use = "katex"  # option: "katex", "mathjax". default: "katex"
 
 [params.syntax]
 use = "none"  # builtin: "prismjs", "hljs". "none" means Chroma
-theme = "monokai"
+theme = "github"
 darkTheme = "monokai"  # apply this theme in dark mode
 
 [params.share]
