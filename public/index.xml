@@ -5,7 +5,7 @@
     <description>Recent content on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>©2020 AdamYuan.</copyright>
+    <copyright>2020 AdamYuan.</copyright>
     <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
         <atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
@@ -349,7 +349,7 @@ std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;mt19937 seed_generat
 &lt;h1 id=&#34;附录&#34;&gt;附录&lt;/h1&gt;
 &lt;p&gt;测试样例详见&lt;a href=&#34;https://github.com/AdamYuan/SATv2/tree/master/problems&#34;&gt;https://github.com/AdamYuan/SATv2/tree/master/problems&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;2.1.3优化2 + 多线程&lt;/strong&gt; 程序&lt;a href=&#34;https://github.com/AdamYuan/SATv2&#34;&gt;https://github.com/AdamYuan/SATv2&lt;/a&gt;&lt;/p&gt;
-- https://adamyuan.xyz/post/sasat_implementation/ - ©2020 AdamYuan.</description>
+- https://adamyuan.xyz/post/sasat_implementation/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -483,7 +483,7 @@ i64 buffer[N];
 	ans.Print();
 	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/big_pow/ - ©2020 AdamYuan.</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/big_pow/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -1411,7 +1411,7 @@ i64 buffer[N];
 
 	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/2b-pin-heng-shu/ - ©2020 AdamYuan.</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/2b-pin-heng-shu/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -1598,7 +1598,7 @@ Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34
 	}
 	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/wenbenbianjiqi-editor/ - ©2020 AdamYuan.</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/wenbenbianjiqi-editor/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -1712,7 +1712,7 @@ Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34
 
 	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/static-kth-number-hjt/ - ©2020 AdamYuan.</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/static-kth-number-hjt/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -1743,7 +1743,7 @@ Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34
     GtkWindow::resize-grip-width = 0
 }
 widget &amp;quot;vim-main-window.*GtkForm&amp;quot; style &amp;quot;vimfix&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;- https://adamyuan.xyz/post/configurate_gvim/ - ©2020 AdamYuan.</description>
+&lt;/code&gt;&lt;/pre&gt;- https://adamyuan.xyz/post/configurate_gvim/ - 2020 AdamYuan.</description>
         </item>
     
     
@@ -1767,7 +1767,7 @@ sudo touch /etc/resolv.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;编辑dns&#34;&gt;编辑dns&lt;/h1&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vim /etc/resolv.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;之后资料极多，不再赘述&lt;/p&gt;
-- https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/ - ©2020 AdamYuan.</description>
+- https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/ - 2020 AdamYuan.</description>
         </item>
     
     

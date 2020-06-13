@@ -3,6 +3,7 @@ title: "配置GVim"
 date: 2018-07-18T15:28:33+08:00
 tags: [ "vim" ]
 categories: [ "Linux" ]
+featured_image: "/img/configurate_gvim/feature.png"
 ---
 
 # 基本配置
