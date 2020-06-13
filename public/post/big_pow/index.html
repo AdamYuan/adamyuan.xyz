@@ -28,6 +28,9 @@
 
 
 
+<link rel="stylesheet" href="https://adamyuan.xyz/scss/dark-mode.min.b13808e7c98cd5aa981a3822fd3421e26f1015876bb15a3fbf8ed5991c382367.css" integrity="sha256-sTgI58mM1aqYGjgi/TQh4m8QFYdrsVo/v47VmRw4I2c=" media="screen">
+
+
 <script src="https://adamyuan.xyz//js/loadCSS.js"></script>
 <script>
   loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");
@@ -194,6 +197,15 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
             </i>
         </a>
         
+        <a class="pagination-action" v-on:click="toggleDarkMode">
+            <i class="material-icons pagination-action-icon" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons pagination-action-icon" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </a>
+        
         
     </div>
 </div><div class="single-column-drawer-container" ref="drawer"
@@ -308,6 +320,15 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
             AdamYuan-&gt;Blog
         </a>
         
+        <button type="button" class="nav-darkmode-toggle" v-on:click="toggleDarkMode">
+            <i class="material-icons" v-if="isDarkMode">
+                brightness_4
+            </i>
+            <i class="material-icons" v-else="isDarkMode">
+                brightness_7
+            </i>
+        </button>
+        
     </div>
 </nav>
 <div class="single-column-header-container" ref="pageHead"
@@ -364,125 +385,125 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
                     <p>无意间看到 <a href="https://www.bilibili.com/video/av21610235">https://www.bilibili.com/video/av21610235</a> ，闲来无事，便自己实现了一个<br>
 使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解</p>
 <h1 id="结果">结果</h1>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ g++ big_pow.cpp -o big_pow -O3
-$ <span style="color:#658b00">time</span> ./big_pow
-<span style="color:#b452cd">1797710116675743838039851642017955175542668535689457592096701980448789887005555782</span>  
-<span style="color:#b452cd">5013639024539872345178584608400586756310173000789807647889087112071631584530925074</span>  
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ g++ big_pow.cpp -o big_pow -O3
+$ time ./big_pow
+<span style="color:#ae81ff">1797710116675743838039851642017955175542668535689457592096701980448789887005555782</span>  
+<span style="color:#ae81ff">5013639024539872345178584608400586756310173000789807647889087112071631584530925074</span>  
 20576700326354687989043195055426409953164756466539259367768040........  
-<span style="color:#b452cd">9458386086558274361702868947585455272881631676228081179063417221095794868962238026</span>  
-<span style="color:#b452cd">6186186896939896900778464988674017800809943312017921778637005646990599302975876577</span>  
-<span style="color:#b452cd">7974690259456656823649987921344102043747756854291659736198742132526761094591717405</span>  
-<span style="color:#b452cd">35758464159433897468478655220000001</span>
-0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
-0inputs+0outputs (0major+4219minor)pagefaults 0swaps
+<span style="color:#ae81ff">9458386086558274361702868947585455272881631676228081179063417221095794868962238026</span>  
+<span style="color:#ae81ff">6186186896939896900778464988674017800809943312017921778637005646990599302975876577</span>  
+<span style="color:#ae81ff">7974690259456656823649987921344102043747756854291659736198742132526761094591717405</span>  
+<span style="color:#ae81ff">35758464159433897468478655220000001</span>
+0.26user 0.00system 0:00.33elapsed 81%CPU <span style="color:#f92672">(</span>0avgtext+0avgdata 19452maxresident<span style="color:#f92672">)</span>k
+0inputs+0outputs <span style="color:#f92672">(</span>0major+4219minor<span style="color:#f92672">)</span>pagefaults 0swaps
 </code></pre></div><h1 id="代码">代码</h1>
-<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#1e889b">#include</span> <span style="color:#1e889b">&lt;iostream&gt;</span><span style="color:#1e889b">
-</span><span style="color:#1e889b"></span>
-<span style="color:#8b008b;font-weight:bold">typedef</span> <span style="color:#00688b;font-weight:bold">long</span> <span style="color:#00688b;font-weight:bold">long</span> i64;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> i64;
 
-<span style="color:#8b008b;font-weight:bold">constexpr</span> i64 N = <span style="color:#b452cd">1</span> &lt;&lt; <span style="color:#b452cd">19</span>, K = <span style="color:#b452cd">19</span>, P = <span style="color:#b452cd">998244353ll</span>;
+<span style="color:#66d9ef">constexpr</span> i64 N <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">19</span>, K <span style="color:#f92672">=</span> <span style="color:#ae81ff">19</span>, P <span style="color:#f92672">=</span> <span style="color:#ae81ff">998244353ll</span>;
 
-<span style="color:#8b008b;font-weight:bold">class</span> <span style="color:#008b45;font-weight:bold">NTT</span> {
-	<span style="color:#8b008b;font-weight:bold">private</span>:
-		<span style="color:#8b008b;font-weight:bold">static</span> <span style="color:#8b008b;font-weight:bold">inline</span> i64 qpow(i64 a, i64 x, i64 m) {
-			i64 ret = <span style="color:#b452cd">1</span>;
-			<span style="color:#8b008b;font-weight:bold">while</span>(x) { <span style="color:#8b008b;font-weight:bold">if</span>(x &amp; <span style="color:#b452cd">1</span>) ret = (ret*a) % m; a = (a*a) % m; x &gt;&gt;= <span style="color:#b452cd">1</span>; }
-			<span style="color:#8b008b;font-weight:bold">return</span> ret;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NTT</span> {
+	<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+		<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> i64 qpow(i64 a, i64 x, i64 m) {
+			i64 ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+			<span style="color:#66d9ef">while</span>(x) { <span style="color:#66d9ef">if</span>(x <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) ret <span style="color:#f92672">=</span> (ret<span style="color:#f92672">*</span>a) <span style="color:#f92672">%</span> m; a <span style="color:#f92672">=</span> (a<span style="color:#f92672">*</span>a) <span style="color:#f92672">%</span> m; x <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">1</span>; }
+			<span style="color:#66d9ef">return</span> ret;
 		}
-		<span style="color:#8b008b;font-weight:bold">static</span> <span style="color:#8b008b;font-weight:bold">inline</span> i64 <span style="color:#008b45">to_pow2</span>(i64 x) {
-			i64 ret = <span style="color:#b452cd">1</span>; <span style="color:#8b008b;font-weight:bold">while</span>(ret &lt; x) ret &lt;&lt;= <span style="color:#b452cd">1</span>;
-			<span style="color:#8b008b;font-weight:bold">return</span> ret;
+		<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> i64 <span style="color:#a6e22e">to_pow2</span>(i64 x) {
+			i64 ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; <span style="color:#66d9ef">while</span>(ret <span style="color:#f92672">&lt;</span> x) ret <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#ae81ff">1</span>;
+			<span style="color:#66d9ef">return</span> ret;
 		}
-		<span style="color:#8b008b;font-weight:bold">static</span> <span style="color:#8b008b;font-weight:bold">inline</span> i64 <span style="color:#008b45">get_upper</span>(i64 x) {
-			i64 a = <span style="color:#b452cd">1</span>, ret = <span style="color:#b452cd">0</span>; <span style="color:#8b008b;font-weight:bold">while</span>(a &lt; x) { a &lt;&lt;= <span style="color:#b452cd">1</span>; ret ++; };
-			<span style="color:#8b008b;font-weight:bold">return</span> ret;
+		<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> i64 <span style="color:#a6e22e">get_upper</span>(i64 x) {
+			i64 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#66d9ef">while</span>(a <span style="color:#f92672">&lt;</span> x) { a <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#ae81ff">1</span>; ret <span style="color:#f92672">++</span>; };
+			<span style="color:#66d9ef">return</span> ret;
 		}
-		i64 m_wn[K+<span style="color:#b452cd">1</span>], m_iwn[K+<span style="color:#b452cd">1</span>], m_rev[N], m_inv, m_n = <span style="color:#b452cd">0</span>;
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">transform</span>(i64 *a, <span style="color:#8b008b;font-weight:bold">const</span> i64 *wn) <span style="color:#8b008b;font-weight:bold">const</span> {
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; m_n; ++i) <span style="color:#8b008b;font-weight:bold">if</span>(i &lt; m_rev[i]) std::swap(a[i], a[m_rev[i]]);
+		i64 m_wn[K<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>], m_iwn[K<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>], m_rev[N], m_inv, m_n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transform</span>(i64 <span style="color:#f92672">*</span>a, <span style="color:#66d9ef">const</span> i64 <span style="color:#f92672">*</span>wn) <span style="color:#66d9ef">const</span> {
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> m_n; <span style="color:#f92672">++</span>i) <span style="color:#66d9ef">if</span>(i <span style="color:#f92672">&lt;</span> m_rev[i]) std<span style="color:#f92672">::</span>swap(a[i], a[m_rev[i]]);
 
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 l = <span style="color:#b452cd">1</span>; (<span style="color:#b452cd">1</span> &lt;&lt; l) &lt;= m_n; l ++) {
-				i64 m = <span style="color:#b452cd">1</span> &lt;&lt; (l-<span style="color:#b452cd">1</span>);
-				<span style="color:#8b008b;font-weight:bold">for</span>(i64 *p = a; p != a + m_n; p += (<span style="color:#b452cd">1</span> &lt;&lt; l)) {
-					i64 w = <span style="color:#b452cd">1</span>;
-					<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; m; ++i) {
-						i64 t = (w * p[m+i]) % P; p[m+i] = (p[i] - t + P) % P; p[i] = (p[i] + t) % P; w = (w * wn[l]) % P;
+			<span style="color:#66d9ef">for</span>(i64 l <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> l) <span style="color:#f92672">&lt;=</span> m_n; l <span style="color:#f92672">++</span>) {
+				i64 m <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (l<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+				<span style="color:#66d9ef">for</span>(i64 <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> a; p <span style="color:#f92672">!=</span> a <span style="color:#f92672">+</span> m_n; p <span style="color:#f92672">+=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> l)) {
+					i64 w <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+					<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> m; <span style="color:#f92672">++</span>i) {
+						i64 t <span style="color:#f92672">=</span> (w <span style="color:#f92672">*</span> p[m<span style="color:#f92672">+</span>i]) <span style="color:#f92672">%</span> P; p[m<span style="color:#f92672">+</span>i] <span style="color:#f92672">=</span> (p[i] <span style="color:#f92672">-</span> t <span style="color:#f92672">+</span> P) <span style="color:#f92672">%</span> P; p[i] <span style="color:#f92672">=</span> (p[i] <span style="color:#f92672">+</span> t) <span style="color:#f92672">%</span> P; w <span style="color:#f92672">=</span> (w <span style="color:#f92672">*</span> wn[l]) <span style="color:#f92672">%</span> P;
 					}
 				}
 			}
 		}
 
-	<span style="color:#8b008b;font-weight:bold">public</span>:
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> Init() {
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 l = <span style="color:#b452cd">1</span>; (<span style="color:#b452cd">1</span> &lt;&lt; l) &lt;= N; l ++) {
-				m_wn[l] = qpow(<span style="color:#b452cd">3</span>, (P - <span style="color:#b452cd">1</span>) / (<span style="color:#b452cd">1</span> &lt;&lt; l), P);
-				m_iwn[l] = qpow(<span style="color:#b452cd">3</span>, P - <span style="color:#b452cd">1</span> - (P - <span style="color:#b452cd">1</span>) / (<span style="color:#b452cd">1</span> &lt;&lt; l), P);
+	<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> Init() {
+			<span style="color:#66d9ef">for</span>(i64 l <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> l) <span style="color:#f92672">&lt;=</span> N; l <span style="color:#f92672">++</span>) {
+				m_wn[l] <span style="color:#f92672">=</span> qpow(<span style="color:#ae81ff">3</span>, (P <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> l), P);
+				m_iwn[l] <span style="color:#f92672">=</span> qpow(<span style="color:#ae81ff">3</span>, P <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> (P <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> l), P);
 			}
-			m_rev[<span style="color:#b452cd">0</span>] = <span style="color:#b452cd">0</span>; 
+			m_rev[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; 
 		}
-		<span style="color:#8b008b;font-weight:bold">inline</span> i64 <span style="color:#008b45">SetN</span>(i64 n) {
-			n = to_pow2(n); <span style="color:#8b008b;font-weight:bold">if</span>(n == m_n) <span style="color:#8b008b;font-weight:bold">return</span> m_n;
-			m_n = n;
+		<span style="color:#66d9ef">inline</span> i64 <span style="color:#a6e22e">SetN</span>(i64 n) {
+			n <span style="color:#f92672">=</span> to_pow2(n); <span style="color:#66d9ef">if</span>(n <span style="color:#f92672">==</span> m_n) <span style="color:#66d9ef">return</span> m_n;
+			m_n <span style="color:#f92672">=</span> n;
 
-			<span style="color:#00688b;font-weight:bold">int</span> k = get_upper(n);
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">1</span>; i &lt; m_n; ++i) m_rev[i] = (m_rev[i&gt;&gt;<span style="color:#b452cd">1</span>] &gt;&gt; <span style="color:#b452cd">1</span>) | ( (i&amp;<span style="color:#b452cd">1</span>) &lt;&lt; (k - <span style="color:#b452cd">1</span>) );
-			m_inv = qpow(m_n, P - <span style="color:#b452cd">2</span>, P);
-			<span style="color:#8b008b;font-weight:bold">return</span> m_n;
+			<span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> get_upper(n);
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> m_n; <span style="color:#f92672">++</span>i) m_rev[i] <span style="color:#f92672">=</span> (m_rev[i<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">|</span> ( (i<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;&lt;</span> (k <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) );
+			m_inv <span style="color:#f92672">=</span> qpow(m_n, P <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>, P);
+			<span style="color:#66d9ef">return</span> m_n;
 		}
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Dft</span>(i64 *a) <span style="color:#8b008b;font-weight:bold">const</span> { transform(a, m_wn); }
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Idft</span>(i64 *a) <span style="color:#8b008b;font-weight:bold">const</span> { transform(a, m_iwn); <span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; m_n; ++i) a[i] = (a[i] * m_inv) % P; }
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Dft</span>(i64 <span style="color:#f92672">*</span>a) <span style="color:#66d9ef">const</span> { transform(a, m_wn); }
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Idft</span>(i64 <span style="color:#f92672">*</span>a) <span style="color:#66d9ef">const</span> { transform(a, m_iwn); <span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> m_n; <span style="color:#f92672">++</span>i) a[i] <span style="color:#f92672">=</span> (a[i] <span style="color:#f92672">*</span> m_inv) <span style="color:#f92672">%</span> P; }
 } ntt;
 
 i64 buffer[N];
 
-<span style="color:#8b008b;font-weight:bold">class</span> <span style="color:#008b45;font-weight:bold">BigNum</span> {
-	<span style="color:#8b008b;font-weight:bold">private</span>:
-		i64 m_digits[N] = {}, m_up = <span style="color:#b452cd">0</span>;
-	<span style="color:#8b008b;font-weight:bold">public</span>:
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> Set(i64 val)
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BigNum</span> {
+	<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+		i64 m_digits[N] <span style="color:#f92672">=</span> {}, m_up <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> Set(i64 val)
 		{
-			m_up = <span style="color:#b452cd">0</span>;
-			<span style="color:#8b008b;font-weight:bold">while</span>(val) {
-				m_digits[m_up++] = val % <span style="color:#b452cd">10</span>;
-				val /= <span style="color:#b452cd">10</span>;
+			m_up <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+			<span style="color:#66d9ef">while</span>(val) {
+				m_digits[m_up<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> val <span style="color:#f92672">%</span> <span style="color:#ae81ff">10</span>;
+				val <span style="color:#f92672">/=</span> <span style="color:#ae81ff">10</span>;
 			}
-			std::fill(m_digits + m_up, m_digits + N, <span style="color:#b452cd">0</span>);
+			std<span style="color:#f92672">::</span>fill(m_digits <span style="color:#f92672">+</span> m_up, m_digits <span style="color:#f92672">+</span> N, <span style="color:#ae81ff">0</span>);
 		}
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Mul</span>(<span style="color:#8b008b;font-weight:bold">const</span> BigNum &amp;bn) {
-			std::copy(bn.m_digits, bn.m_digits + N, buffer);
-			i64 kn = ntt.SetN(m_up + bn.m_up);
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Mul</span>(<span style="color:#66d9ef">const</span> BigNum <span style="color:#f92672">&amp;</span>bn) {
+			std<span style="color:#f92672">::</span>copy(bn.m_digits, bn.m_digits <span style="color:#f92672">+</span> N, buffer);
+			i64 kn <span style="color:#f92672">=</span> ntt.SetN(m_up <span style="color:#f92672">+</span> bn.m_up);
 			ntt.Dft(m_digits); ntt.Dft(buffer);
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; kn; ++i) m_digits[i] *= buffer[i];
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> kn; <span style="color:#f92672">++</span>i) m_digits[i] <span style="color:#f92672">*=</span> buffer[i];
 			ntt.Idft(m_digits);
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; kn - <span style="color:#b452cd">1</span>; ++i) { m_digits[i + <span style="color:#b452cd">1</span>] += m_digits[i] / <span style="color:#b452cd">10</span>; m_digits[i] %= <span style="color:#b452cd">10</span>; }
-			<span style="color:#8b008b;font-weight:bold">for</span>(m_up = kn; m_digits[m_up - <span style="color:#b452cd">1</span>] == <span style="color:#b452cd">0</span>; --m_up);
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> kn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#f92672">++</span>i) { m_digits[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+=</span> m_digits[i] <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>; m_digits[i] <span style="color:#f92672">%=</span> <span style="color:#ae81ff">10</span>; }
+			<span style="color:#66d9ef">for</span>(m_up <span style="color:#f92672">=</span> kn; m_digits[m_up <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; <span style="color:#f92672">--</span>m_up);
 		}
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Pow</span>() {
-			i64 kn = ntt.SetN(m_up * <span style="color:#b452cd">2</span>);
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Pow</span>() {
+			i64 kn <span style="color:#f92672">=</span> ntt.SetN(m_up <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>);
 			ntt.Dft(m_digits);
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; kn; ++i) m_digits[i] *= m_digits[i];
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> kn; <span style="color:#f92672">++</span>i) m_digits[i] <span style="color:#f92672">*=</span> m_digits[i];
 			ntt.Idft(m_digits);
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = <span style="color:#b452cd">0</span>; i &lt; kn - <span style="color:#b452cd">1</span>; ++i) { m_digits[i + <span style="color:#b452cd">1</span>] += m_digits[i] / <span style="color:#b452cd">10</span>; m_digits[i] %= <span style="color:#b452cd">10</span>; }
-			<span style="color:#8b008b;font-weight:bold">for</span>(m_up = kn - <span style="color:#b452cd">1</span>; m_digits[m_up] == <span style="color:#b452cd">0</span>; --m_up);
-			m_up ++;
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> kn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#f92672">++</span>i) { m_digits[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+=</span> m_digits[i] <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>; m_digits[i] <span style="color:#f92672">%=</span> <span style="color:#ae81ff">10</span>; }
+			<span style="color:#66d9ef">for</span>(m_up <span style="color:#f92672">=</span> kn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; m_digits[m_up] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>; <span style="color:#f92672">--</span>m_up);
+			m_up <span style="color:#f92672">++</span>;
 		}
-		<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Print</span>() <span style="color:#8b008b;font-weight:bold">const</span> {
-			<span style="color:#8b008b;font-weight:bold">for</span>(i64 i = m_up - <span style="color:#b452cd">1</span>; i &gt;= <span style="color:#b452cd">0</span>; --i)
-				putchar(m_digits[i] + <span style="color:#cd5555">&#39;0&#39;</span>);
-			putchar(<span style="color:#cd5555">&#39;\n&#39;</span>);
+		<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Print</span>() <span style="color:#66d9ef">const</span> {
+			<span style="color:#66d9ef">for</span>(i64 i <span style="color:#f92672">=</span> m_up <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#f92672">--</span>i)
+				putchar(m_digits[i] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;0&#39;</span>);
+			putchar(<span style="color:#e6db74">&#39;\n&#39;</span>);
 		}
 } base, ans;
 
-<span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">main</span>() {
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
 	ntt.Init();
-	base.Set(<span style="color:#b452cd">3</span>); ans.Set(<span style="color:#b452cd">1</span>);
-	i64 a = <span style="color:#b452cd">1000000</span>;
-	<span style="color:#8b008b;font-weight:bold">while</span>(a) {
-		<span style="color:#8b008b;font-weight:bold">if</span>(a &amp; <span style="color:#b452cd">1</span>) ans.Mul(base);
-		a &gt;&gt;= <span style="color:#b452cd">1</span>; base.Pow();
+	base.Set(<span style="color:#ae81ff">3</span>); ans.Set(<span style="color:#ae81ff">1</span>);
+	i64 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>;
+	<span style="color:#66d9ef">while</span>(a) {
+		<span style="color:#66d9ef">if</span>(a <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) ans.Mul(base);
+		a <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">1</span>; base.Pow();
 	}
 	ans.Print();
-	<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#b452cd">0</span>;
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 }
 </code></pre></div>
                     

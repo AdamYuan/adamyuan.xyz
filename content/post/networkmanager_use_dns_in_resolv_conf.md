@@ -12,7 +12,7 @@ NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/reso
 sudo vim /etc/NetworkManager/NetworkManager.conf
 ```
 在[main]模块中添加
-```config
+```
 dns=none
 ```
 
