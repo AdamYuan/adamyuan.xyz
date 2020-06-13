@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html><head>
-	<meta name="generator" content="Hugo 0.71.1" />
-<title>AdamYuan-&gt;Blog</title>
+<title></title>
 
 <meta charset="utf-8">
 <meta name="X-UA-Compatible" content="IE=edge">
@@ -37,7 +36,27 @@
 
 
 
+  <script src="https://adamyuan.xyz//js/toc.js"></script>
 
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="/vendor/js/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+  clientID: '214b3bed54d2162cf2f3',
+  clientSecret: '71543566573e2fa931b301f49339b09051e4eb61',
+  repo: 'adamyuan.xyz',
+  owner: 'AdamYuan',
+  admin: ['AdamYuan'],
+  id: md5(location.pathname),
+  distractionFreeMode: 'false'
+  });
+  window.onload = function () {
+        gitalk.render('gitalk-container')
+  }
+</script>
 
 
 
@@ -50,7 +69,7 @@
 <body>
     	<div id="app"><div ref="sideContainer" class="side-container">
     
-    <a class="a-block nav-head active" href="https://adamyuan.xyz/">
+    <a class="a-block nav-head false" href="https://adamyuan.xyz/">
     
         <div class="nav-title">
             AdamYuan-&gt;Blog
@@ -112,14 +131,17 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 </div><div ref="extraContainer" class="extra-container">
     
     
+    <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
+
+
+</div>
+    
     <div class="pagination">
         <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
             <i class="material-icons pagination-action-icon">
                 keyboard_arrow_up
             </i>
         </a>
-        
-        
         
         
     </div>
@@ -161,6 +183,11 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
                 
             
             
+            <div class="toc">
+
+
+</div>
+            
         </div>
     </div>
 </div>
@@ -190,216 +217,76 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
     </a>
 </div>
             <div id="content">
-
 <div ref="streamContainer" class="stream-container">
-    <div class="post-list-container post-list-container-no-background">
-        
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
             
-            <a href="https://adamyuan.xyz/post/sasat_implementation/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                模拟退火求解3-SAT的C&#43;&#43;程序实现
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2019-06-15
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
+            
+            
 
-                        </div>
+            <div class="post-head-wrapper-text-only"
+                
+            >
+                <div class="post-title">
+                    
+                    
+                    <div class="post-meta">
+                        
+
+                        
+
                         
                         
                     </div>
                 </div>
+            </div>
             
-        
-            
-            <a href="https://adamyuan.xyz/post/big_pow/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                计算3的1000000次方
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-12-02
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
-
-                        </div>
-                        
-                        
-                    </div>
+            <div class="post-body-wrapper">
+                
+                <div class="post-body" v-pre>
+                
+                    <div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#1e889b">#include</span> <span style="color:#1e889b">&lt;cstdio&gt;</span><span style="color:#1e889b">
+</span><span style="color:#1e889b"></span><span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">main</span>() {
+	printf(<span style="color:#cd5555">&#34;404 NOT FOUND</span><span style="color:#cd5555">\n</span><span style="color:#cd5555">&#34;</span>);
+	<span style="color:#8b008b;font-weight:bold">return</span> EXIT_FAILURE;
+}
+</code></pre></div>
+                    
                 </div>
+            </div>
             
-        
             
-            <a href="https://adamyuan.xyz/post/2b-pin-heng-shu/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                二逼平衡树(splay / vector &#43; 线段树)
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-09-27
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
+            <nav class="post-pagination">
 
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-            
-        
-            
-            <a href="https://adamyuan.xyz/post/wenbenbianjiqi-editor/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                文本编辑器editor(splay)
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-09-20
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
+                
+                <a class="newer-posts" href="https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/">
+			下回<br>NetworkManager使用resolv.conf中设置的dns
+                </a>
+                
+                
+                
+                <a class="older-posts">
+			上回<br>这是最旧的文章了。
+                </a>
+                
+            </nav>
+            <div class="post-comment-wrapper">
+                
 
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-            
-        
-            
-            <a href="https://adamyuan.xyz/post/static-kth-number-hjt/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                poj2104静态区间第k大(主席树)
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-08-30
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
 
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-            
-        
-            
-            <a href="https://adamyuan.xyz/post/configurate_gvim/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                配置GVim
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-07-18
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
+<div id="gitalk-container"></div>
 
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-            
-        
-            
-            <a href="https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/" class="a-block">
-                <div class="post-item-wrapper">
-                    <div class="post-item post-item-no-divider">
-                        <div class="post-item-info-wrapper">
-                            <div class="post-item-title">
-                                NetworkManager使用resolv.conf中设置的dns
-                            </div>
-                            <div class="post-item-summary">
-                                
-                            </div>
-                            <div class="post-item-meta">
-    2018-07-14
-    &emsp;
-    
-    
-    
-    &emsp;
-    
-</div>
 
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-            
-        
-            
-        
-        </a>
+
+
+
+
+            </div>
+        </div>
     </div>
 </div>
 
-            </div>
-
-
-<div id="single-column-footer">
+            </div><div id="single-column-footer">
 Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> by <a href="https://amazingrise.net">Rise</a>
 <br>
 移植自 <a href="https://mak1t0.cc/" target="_blank" rel="noreferrer noopener">Makito</a>'s <a href="https://github.com/SumiMakito/hexo-theme-journal/" target="_blank" rel="noreferrer noopener">Journal.</a> <br>

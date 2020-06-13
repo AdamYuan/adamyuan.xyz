@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
+            {{ $post_class := "post-head-wrapper-text-only"}}
+            <div class="{{$post_class}}">
+                <div class="post-title">
+                    {{ .Title }}
+                </div>
+            </div>
+            
+            <div class="post-body-wrapper">
+                {{ with site.GetPage "/404" }}
+                {{ .Content }}
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
