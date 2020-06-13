@@ -135,11 +135,11 @@ class Solution
 
 通过观察1.2中的伪代码，我们注意到Try函数中s的变换全部通过Flip完成，一个直观的优化是在Flip时统计SAT(s)的增减。
 
-为此我们为每个变量建立一个名为**related_clauses_vec**的列表(std::vector)，记录包含这个变量的括号，当Flip一个变量时，只需要更新列表中的括号便能计算出**SAT(s)**。(需要事先记录每个括号是否满足才能如此更新，称每个括号的满足情况为**clause_value**)
+为此我们为每个变量建立一个名为 **related_clauses_vec** 的列表(std::vector)，记录包含这个变量的括号，当Flip一个变量时，只需要更新列表中的括号便能计算出**SAT(s)**。(需要事先记录每个括号是否满足才能如此更新，称每个括号的满足情况为**clause_value**)
 
-但是直接在Flip中更新SAT(s)也有其问题，若是此变量最终没有被Flip，还得重新把这个变量Flip回来。因此，我们新增两个函数**TestFlip(s, n)**和**ApplyFlip(s)**。**TestFlip(s, n)**在单独的环境中执行修改，记录修改的信息，返回修改后的**SAT(s)**。**ApplyFlip(s)**则将**TestFlip(s, n)**所得的信息覆盖到原来s的信息(**clause_var**, SAT(s), etc..)
+但是直接在Flip中更新SAT(s)也有其问题，若是此变量最终没有被Flip，还得重新把这个变量Flip回来。因此，我们新增两个函数 **TestFlip(s, n)** 和 **ApplyFlip(s)**。**TestFlip(s, n)** 在单独的环境中执行修改，记录修改的信息，返回修改后的**SAT(s)**。**ApplyFlip(s)** 则将 **TestFlip(s, n)** 所得的信息覆盖到原来s的信息(**clause_var**, SAT(s), etc..)
 
-进一步优化，对于单个变量，其**related_clauses_vec**可以分为"在括号其中不取反的(**related_clauses_vec[0]**)"和"在括号其中取反的(**related_clauses_vec[1]**)"两个列表。假设变量从0 Flip成1，**related_clauses_vec[0]**中的括号的值可以直接设为1，而**related_clauses_vec[1]**中的括号则需要调用ClauseSAT进行更新。
+进一步优化，对于单个变量，其**related_clauses_vec**可以分为"在括号其中不取反的(**related_clauses_vec[0]**)"和"在括号其中取反的(**related_clauses_vec[1]**)"两个列表。假设变量从0 Flip成1，**related_clauses_vec[0]** 中的括号的值可以直接设为1，而**related_clauses_vec[1]** 中的括号则需要调用ClauseSAT进行更新。
 
 ```c++
 struct ElementPair { int var_index; bool nagative; };
