@@ -40,8 +40,8 @@
   loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");
 </script>
 
-{{ if .Params.enableMathJax }}
-  {{ partial "mathjax.html" . }}
+{{ if or .Params.math .Site.Params.math }}
+  {{ partial "katex.html" . }}
 {{ end }}
 
 {{ if and (not (.Params.disableToC) ) (.IsPage) }}

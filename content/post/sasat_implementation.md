@@ -4,6 +4,7 @@ date: 2019-06-15T16:04:16+08:00
 draft: false
 tags: [ "NP完全问题" ]
 categories: [ "算法" ]
+math: true
 ---
 
 # 1. 问题概要与求解思路
