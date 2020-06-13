@@ -4,10 +4,8 @@ $back-container-background: #fcfcfc;
 $front-container-background: #ffffff;
 
 $default-font-list: "Lora", "Noto Sans SC";
-$mono-font-list: "Fira Mono", "Cousine", Monaco, Menlo, "Source Code Pro",
-  monospace;
-$sans-preferred-font-list: "Roboto", "Source Sans Pro",
-  "Helvetica", $default-font-list;
+$mono-font-list: "Source Code Pro", "Noto Sans SC", monospace;
+$sans-preferred-font-list: "Roboto", "Source Sans Pro", "Helvetica", $default-font-list;
 
 $side-container-width: 25%; //280px;
 $extra-container-width: 25%;
