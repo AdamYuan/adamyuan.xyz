@@ -10,9 +10,15 @@
             </div>
             
             <div class="post-body-wrapper">
-                {{ with site.GetPage "/404" }}
-                {{ .Content }}
+                {{ if .Params.enableVue }}
+                <div class="post-body">
+                {{ else }}
+                <div class="post-body" v-pre>
                 {{ end }}
+                    {{ with site.GetPage "/404" }}
+                    {{.Content}}
+                    {{ end }}
+                </div>
             </div>
         </div>
     </div>
