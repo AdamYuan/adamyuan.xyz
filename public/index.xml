@@ -1,26 +1,1774 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>AdamYuan-&gt;Blog</title>
-    <link>/</link>
+    <link>https://adamyuan.xyz/</link>
     <description>Recent content on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>©2019 AdamYuan.</copyright>
+    <language>en-us</language>
+    <copyright>©2020 AdamYuan.</copyright>
     <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
-        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
     
     
-    <item>
-      <title>Posts</title>
-      <link>/post/</link>
-      <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
-      
-      <guid>/post/</guid>
-      <description></description>
-      
-    </item>
+    
+        <item>
+        <title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>
+        <link>https://adamyuan.xyz/post/sasat_implementation/</link>
+        <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/sasat_implementation/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/sasat_implementation/ -&lt;h1 id=&#34;1-问题概要与求解思路&#34;&gt;1. 问题概要与求解思路&lt;/h1&gt;
+&lt;h2 id=&#34;11-3-sat问题&#34;&gt;1.1 3-SAT问题&lt;/h2&gt;
+&lt;p&gt;对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &amp;hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。&lt;/p&gt;
+&lt;p&gt;将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。&lt;/p&gt;
+&lt;p&gt;定义布尔变量数量为$$N_{var}$$，括号数量为$$N_{clause}$$，3-SAT问题的一个解$$s = (x_1, x_2, &amp;hellip;, x_{N_{var}}), x_k\in{0, 1}$$&lt;/p&gt;
+&lt;p&gt;3-SAT问题即求解一个$$s$$使布尔表达式为真。这是一个NP完全问题，作为Schaefer&amp;rsquo;s dichotomy定理的一个特例被Thomas Jerome Schaefer证明。&lt;/p&gt;
+&lt;h2 id=&#34;12-模拟退火&#34;&gt;1.2 模拟退火&lt;/h2&gt;
+&lt;p&gt;模拟退火是一个用于求解函数全局最大值的随机算法。与寻常的爬山法不同，模拟退火算法会在邻域内选取一个随机解，是否跳往随机解取决于温度和相对原解的函数值增加量。温度高时，跳转的随机程度大，温度降低后则大概率会跳向邻域内的最优，从而趋向局部最优。这种随机性使算法能够跳出局部最优，更可能寻找到全局最优。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;Solution &lt;span style=&#34;color:#008b45&#34;&gt;SimulatedAnnealing&lt;/span&gt;(Solution s0)
+{
+	Solution s = s0; &lt;span style=&#34;color:#228b22&#34;&gt;//s表示当前解，s0为其初始值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;double&lt;/span&gt; T = MAX_TEMP; &lt;span style=&#34;color:#228b22&#34;&gt;//T为温度
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt; (T &amp;gt; MIN_TEMP)
+	{
+		T = UpdateTemp(T); &lt;span style=&#34;color:#228b22&#34;&gt;//更新(减小)温度
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		Solution s_new = s.RandomNeighbour(); &lt;span style=&#34;color:#228b22&#34;&gt;//从当前解邻域随机选取一个解
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; ( P( Func(s), Func(s_new), T ) &amp;gt; Random(&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)) &lt;span style=&#34;color:#228b22&#34;&gt;//P()计算接受随机解的概率
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			s = s_new;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; s;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;13-sasat算法&#34;&gt;1.3 SASAT算法&lt;/h2&gt;
+&lt;p&gt;本文使用了&lt;strong&gt;SASAT&lt;/strong&gt;算法(&lt;strong&gt;William M. Spears, Simulated Annealing for Hard Satisfiability Problems&lt;/strong&gt;)。&lt;/p&gt;
+&lt;p&gt;定义一个3-SAT解的价值$$SAT(s)$$为其能够满足的括号数量，显然若$$SAT(s) = N_{clause}$$，$$s$$则满足了布尔表达式。&lt;/p&gt;
+&lt;p&gt;对于一个解$$s$$，定义$$Flip(s, n) = (x_1, x_2, &amp;hellip;,\overline{x_n},&amp;hellip;,x_{N_{var}})$$，变换得到的新解构成$$s$$的邻域。&lt;/p&gt;
+&lt;p&gt;SASAT算法会进行多次模拟退火的尝试，若一次失败，下一次尝试温度下降速率将会变慢，这会降低程序的运行速度，但会增大寻找到满足布尔表达式的解的概率。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;Solution &lt;span style=&#34;color:#008b45&#34;&gt;Try&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; try_id)
+{
+	Solution s = RandomSolution(); &lt;span style=&#34;color:#228b22&#34;&gt;//随机初始化解
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;double&lt;/span&gt; T = MAX_TEMP;
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;double&lt;/span&gt; D = N_VAR * try_id; &lt;span style=&#34;color:#228b22&#34;&gt;//D决定了温度的下降速率
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; step = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(T &amp;gt; MIN_TEMP)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(SAT(s) == N_CLAUSE) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+		step ++;
+		T = UpdateTemp(step, D);
+		
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= N_VAR; ++i)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt; ( P(s, Flip(s, n), T) &amp;gt; Random(&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)) &lt;span style=&#34;color:#228b22&#34;&gt;//P()计算接受随机解的概率
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				s = Flip(s, n);
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; s;
+}
+Solution &lt;span style=&#34;color:#008b45&#34;&gt;SASAT&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; try_id = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(&lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;)
+	{
+		try_id ++;
+		Solution s = Try(try_id);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(SAT(s) == N_CLAUSE) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; s;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中$$UpdateTemp(step, D) = {MAX_TEMP}\cdot e^{{-step} \over D}$$，$$P(s, s_{flip}, T) = ({1 + e^{{SAT(s) - SAT(s_{flip})} \over T} })^{-1}$$&lt;/p&gt;
+&lt;p&gt;本文侧重于程序的实现，对SASAT算法不继续深究。&lt;/p&gt;
+&lt;h1 id=&#34;2-c程序实现与优化&#34;&gt;2. C++程序实现与优化&lt;/h1&gt;
+&lt;p&gt;(正式进入c++模式)&lt;/p&gt;
+&lt;h2 id=&#34;21-优化sats&#34;&gt;2.1 优化SAT(s)&lt;/h2&gt;
+&lt;h3 id=&#34;211-naive&#34;&gt;2.1.1 Naive&lt;/h3&gt;
+&lt;p&gt;SASAT算法的高效执行主要取决于$$SAT(s)$$的运行效率，在$$N_{clause} = 1065$$时，若直接暴力枚举每个括号进行计算，无疑会使运行效率极为低下。$$Flip(s, n)$$在计算机中仅为简单的布尔运算，不会产生这个问题。&lt;/p&gt;
+&lt;p&gt;暴力枚举的$$SAT(s)$$如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;ElementPair&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; var_index; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; nagative; };
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Clause&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; clause_index; ElementPair elements[&lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;]; };
+
+Clause clauses[MAX_CLAUSE_NUM];&lt;span style=&#34;color:#228b22&#34;&gt;//所有的括号
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Solution&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; var_value[MAX_VAR_NUM]; &lt;span style=&#34;color:#228b22&#34;&gt;//解中每个变量的取值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; satisfied_cnt; &lt;span style=&#34;color:#228b22&#34;&gt;//即SAT(s)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	
+	&lt;span style=&#34;color:#228b22&#34;&gt;//以下的函数默认为Solution类的成员函数，即省去了s参数
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Flip&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n)
+	{
+		var_value[n] = !var_value[n];
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;ClauseSAT&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause &amp;amp;c)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;; ++i)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(c.element[i].nagative != var_value[ c.element[i].var_index ]) &lt;span style=&#34;color:#228b22&#34;&gt;//nagative表示括号中元素对变量取反，var_value为解中各变量的值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;false&lt;/span&gt;;
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;SAT&lt;/span&gt;()
+	{
+		satisfied_cnt = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause &amp;amp;c : clauses)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(ClauseSAT(c)) ++satisfied_cnt;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; satisfied_cnt;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;212-在flip函数中计算sats增减&#34;&gt;2.1.2 在Flip函数中计算SAT(s)增减&lt;/h3&gt;
+&lt;p&gt;通过观察1.2中的伪代码，我们注意到Try函数中s的变换全部通过Flip完成，一个直观的优化是在Flip时统计SAT(s)的增减。&lt;/p&gt;
+&lt;p&gt;为此我们为每个变量建立一个名为&lt;strong&gt;related_clauses_vec&lt;/strong&gt;的列表(std::vector)，记录包含这个变量的括号，当Flip一个变量时，只需要更新列表中的括号便能计算出&lt;strong&gt;SAT(s)&lt;/strong&gt;。(需要事先记录每个括号是否满足才能如此更新，称每个括号的满足情况为&lt;strong&gt;clause_value&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;但是直接在Flip中更新SAT(s)也有其问题，若是此变量最终没有被Flip，还得重新把这个变量Flip回来。因此，我们新增两个函数&lt;strong&gt;TestFlip(s, n)&lt;strong&gt;和&lt;/strong&gt;ApplyFlip(s)&lt;/strong&gt;。&lt;strong&gt;TestFlip(s, n)&lt;strong&gt;在单独的环境中执行修改，记录修改的信息，返回修改后的&lt;/strong&gt;SAT(s)&lt;/strong&gt;。**ApplyFlip(s)&lt;strong&gt;则将&lt;/strong&gt;TestFlip(s, n)**所得的信息覆盖到原来s的信息(&lt;strong&gt;clause_var&lt;/strong&gt;, SAT(s), etc..)&lt;/p&gt;
+&lt;p&gt;进一步优化，对于单个变量，其&lt;strong&gt;related_clauses_vec&lt;/strong&gt;可以分为&amp;quot;在括号其中不取反的(&lt;strong&gt;related_clauses_vec[0]&lt;/strong&gt;)&amp;ldquo;和&amp;quot;在括号其中取反的(&lt;strong&gt;related_clauses_vec[1]&lt;/strong&gt;)&amp;ldquo;两个列表。假设变量从0 Flip成1，**related_clauses_vec[0]&lt;strong&gt;中的括号的值可以直接设为1，而&lt;/strong&gt;related_clauses_vec[1]**中的括号则需要调用ClauseSAT进行更新。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;ElementPair&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; var_index; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; nagative; };
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Clause&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; clause_index; ElementPair elements[&lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;]; };
+
+Clause clauses[MAX_CLAUSE_NUM];&lt;span style=&#34;color:#228b22&#34;&gt;//所有的括号
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;ModifyInfo&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; clause_index; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; value; }; &lt;span style=&#34;color:#228b22&#34;&gt;//新增，为了保存括号值的修改
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Solution&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; var_value[MAX_VAR_NUM]; &lt;span style=&#34;color:#228b22&#34;&gt;//解中每个变量的取值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; clause_value[MAX_CLAUSE_NUM]; &lt;span style=&#34;color:#228b22&#34;&gt;//括号是否得到满足
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; satisfied_cnt; &lt;span style=&#34;color:#228b22&#34;&gt;//即SAT(s)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; satisfied_cnt_tmp; &lt;span style=&#34;color:#228b22&#34;&gt;//备份的SAT(s)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	std::vector&amp;lt;ModifyInfo&amp;gt; clause_modifications;
+	
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;ClauseSAT&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause &amp;amp;c)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;; ++i)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(c.element[i].nagative != var_value[ c.element[i].var_index ]) &lt;span style=&#34;color:#228b22&#34;&gt;//nagative表示括号中元素对变量取反，var_value为解中各变量的值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;false&lt;/span&gt;;
+	}
+	
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;TestFlip&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n)
+	{
+		satisfied_cnt_tmp = satisfied_cnt;
+		clause_modifications.clear();
+		
+		std::vector&amp;lt;Clause*&amp;gt; &amp;amp;related_clauses0 = GetRelatedClause(var_value[n], n);
+		std::vector&amp;lt;Clause*&amp;gt; &amp;amp;related_clauses1 = GetRelatedClause(!var_value[n], n);
+		&lt;span style=&#34;color:#228b22&#34;&gt;//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause* c : related_clauses0)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(clause_value[c-&amp;gt;clause_index] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;)&lt;span style=&#34;color:#228b22&#34;&gt;//从0变1,才需要更新SAT(s)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			{
+				clause_modifications.push_back({c-&amp;gt;clause_index, &lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;});
+				&lt;span style=&#34;color:#228b22&#34;&gt;//保存修改
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				satisfied_cnt_tmp ++;
+			}
+		
+		var_value[n] = !var_value[n];
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause* c : related_clauses1)
+		{
+			&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; new_clause_value = ClauseSAT(*c); &lt;span style=&#34;color:#228b22&#34;&gt;//Flip(n)后括号的值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(clause_value[c-&amp;gt;clause_index] != new_clause_value)&lt;span style=&#34;color:#228b22&#34;&gt;//括号值改变则执行修改
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			{
+				clause_modifications.push_back({c-&amp;gt;clause_index, new_clause_value});
+				satisfied_cnt_tmp --;
+			}
+		}
+		var_value[n] = !var_value[n];
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; satisfied_cnt_tmp;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;ApplyFlip&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n) &lt;span style=&#34;color:#228b22&#34;&gt;//应用TestFlip的修改
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		var_value[n] = !var_value[n];
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!clause_modifications.empty())
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; ModifyInfo &amp;amp;m = clause_modifications.back();
+			clause_value[ m.clause_index ] = m.value;
+			clause_modifications.pop_back();
+		}
+		satisfied_cnt = satisfied_cnt_tmp;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;SAT&lt;/span&gt;()
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; satisfied_cnt;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;213-统计括号中为1的元素个数&#34;&gt;2.1.3 统计括号中为1的元素个数&lt;/h3&gt;
+&lt;p&gt;2.1.2的代码中，&lt;strong&gt;clause_value&lt;/strong&gt;数组为布尔类型，仅仅储存括号是否满足，这使得&lt;strong&gt;TestFlip&lt;/strong&gt;时能够用到的信息十分有限。为此，我们重新定义&lt;strong&gt;clause_value&lt;/strong&gt;为&lt;strong&gt;int&lt;/strong&gt;类型，储存括号中为1的元素个数。&lt;/p&gt;
+&lt;p&gt;假设括号$$c = (x_1 \lor x_2 \lor \overline{x_3})，x_1 = 0, x_2 = 1, x_3 = 0$$，则其&lt;strong&gt;clause_value&lt;/strong&gt;为2($$x_2, x_3$$在c中为真)&lt;/p&gt;
+&lt;p&gt;这样以后，我们可以直接用加、减运算更新&lt;strong&gt;clause_value&lt;/strong&gt;，避免了一切&lt;strong&gt;ClauseSAT&lt;/strong&gt;调用&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;ModifyInfo&lt;/span&gt; { &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; clause_index, value; }; &lt;span style=&#34;color:#228b22&#34;&gt;//成员value改为int类型
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Solution&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; var_value[MAX_VAR_NUM];
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; clause_value[MAX_CLAUSE_NUM]; &lt;span style=&#34;color:#228b22&#34;&gt;//clause_val改为int类型
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; satisfied_cnt;
+	
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; satisfied_cnt_tmp;
+	std::vector&amp;lt;ModifyInfo&amp;gt; clause_modifications;
+	
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;TestFlip&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n)
+	{
+		satisfied_cnt_tmp = satisfied_cnt;
+		clause_modifications.clear();
+		
+		std::vector&amp;lt;Clause*&amp;gt; &amp;amp;related_clauses0 = GetRelatedClause(var_value[n], n);
+		std::vector&amp;lt;Clause*&amp;gt; &amp;amp;related_clauses1 = GetRelatedClause(!var_value[n], n);
+		&lt;span style=&#34;color:#228b22&#34;&gt;//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause* c : related_clauses0)
+		{
+			clause_modifications.push_back({c-&amp;gt;clause_index, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;}); &lt;span style=&#34;color:#228b22&#34;&gt;//给clause_value加1
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(clause_value[c-&amp;gt;clause_index] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;)&lt;span style=&#34;color:#228b22&#34;&gt;//从0变1,才需要更新SAT(s)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				satisfied_cnt_tmp ++;
+		}
+		
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; Clause* c : related_clauses1)
+		{
+			clause_modifications.push_back({c-&amp;gt;clause_index, -&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;});
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(clause_value[c-&amp;gt;clause_index] == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//从1变0
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				satisfied_cnt_tmp --;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; satisfied_cnt_tmp;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;ApplyFlip&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n) &lt;span style=&#34;color:#228b22&#34;&gt;//应用TestFlip的修改
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		var_value[n] = !var_value[n];
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(!clause_modifications.empty())
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; ModifyInfo &amp;amp;m = clause_modifications.back();
+			clause_value[ m.clause_index ] += m.value; &lt;span style=&#34;color:#228b22&#34;&gt;//&amp;#34;=&amp;#34;改为&amp;#34;+=&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			clause_modifications.pop_back();
+		}
+		satisfied_cnt = satisfied_cnt_tmp;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;22-多线程&#34;&gt;2.2 多线程&lt;/h2&gt;
+&lt;p&gt;整个SASAT算法包括多次模拟退火的尝试(Try)，很自然的想到将这些尝试并行。可以发现每个Try之间不需要任何数据交换，因此并行十分容易实现。&lt;/p&gt;
+&lt;p&gt;这是原来的算法框架&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;std::mt19937 generator(seed); &lt;span style=&#34;color:#228b22&#34;&gt;//这只是个随机数生成器
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;Solution &lt;span style=&#34;color:#008b45&#34;&gt;solution&lt;/span&gt;(file);
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= max_tries; ++i)
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(Try(generator, solution, i))
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我们使用了c++11中的&lt;strong&gt;std::future&lt;/strong&gt;，&lt;strong&gt;std::async&lt;/strong&gt;特性来实现并行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;unsigned&lt;/span&gt; cores = std::&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;thread&lt;/span&gt;::hardware_concurrency();
+std::vector&amp;lt;std::future&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt;&amp;gt;&amp;gt; future_vector;
+future_vector.reserve(cores);
+
+std::atomic_int try_id(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+std::mt19937 seed_generator(seed);
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(cores --) &lt;span style=&#34;color:#228b22&#34;&gt;//为每个cpu核心创建线程
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	future_vector.push_back(std::async(
+				[&amp;amp;](&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;long&lt;/span&gt; thread_seed) -&amp;gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt;
+				{
+					std::mt19937 generator(thread_seed);
+					Solution &lt;span style=&#34;color:#008b45&#34;&gt;solution&lt;/span&gt;(file);
+
+					&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(&lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;)
+					{
+						&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; index = try_id ++; &lt;span style=&#34;color:#228b22&#34;&gt;//领取一个Try任务
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;						&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(index &amp;gt; max_tries)
+							&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+	
+						&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(Try(generator, solution, index))
+						{
+							try_id = max_tries + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;//找到满足的解便结束线程
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;							&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+						}
+					}
+				}, seed_generator() &lt;span style=&#34;color:#228b22&#34;&gt;//为每个线程传入随机种子
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;23-分析与比较&#34;&gt;2.3 分析与比较&lt;/h2&gt;
+&lt;p&gt;测试数据中$$N_{var} = 250, N_{clause} = 1065$$&lt;/p&gt;
+&lt;p&gt;测试环境为Manjaro 18.0.4 Illyria，x86_64 Linux 5.0.21-1-MANJARO，Intel Xeon E3-1505M v6 @ 8x 4GHz，gcc (GCC) 8.3.0&lt;/p&gt;
+&lt;p&gt;编译参数为-Ofast -funsafe-loop-optimizations -lpthread&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;3-SAT数据&lt;/th&gt;
+&lt;th&gt;随机种子&lt;/th&gt;
+&lt;th&gt;Try次数&lt;/th&gt;
+&lt;th&gt;2.1.1 Naive&lt;/th&gt;
+&lt;th&gt;2.1.2 优化1&lt;/th&gt;
+&lt;th&gt;2.1.3 优化2&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;uf250-03.cnf&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;25&lt;/td&gt;
+&lt;td&gt;460.137443秒&lt;/td&gt;
+&lt;td&gt;4.6562805秒&lt;/td&gt;
+&lt;td&gt;3.0755805秒&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;uf250-07.cnf&lt;/td&gt;
+&lt;td&gt;3643878294&lt;/td&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;47.531635秒&lt;/td&gt;
+&lt;td&gt;0.509907秒&lt;/td&gt;
+&lt;td&gt;0.343409秒&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;多线程由于各线程的竞争关系，引入了更多的随机性，同一随机种子的运行时间可能大不相同，这里通过相同Try次数的运行时间进行比较。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;3-SAT数据&lt;/th&gt;
+&lt;th&gt;Try次数&lt;/th&gt;
+&lt;th&gt;2.1.2优化1&lt;/th&gt;
+&lt;th&gt;2.1.2优化1 + 8线程&lt;/th&gt;
+&lt;th&gt;2.1.3优化2&lt;/th&gt;
+&lt;th&gt;2.1.3优化2 + 8线程&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;uf250-03.cnf&lt;/td&gt;
+&lt;td&gt;25&lt;/td&gt;
+&lt;td&gt;4.6562805秒&lt;/td&gt;
+&lt;td&gt;0.690253秒(6.74倍)&lt;/td&gt;
+&lt;td&gt;3.0755805秒&lt;/td&gt;
+&lt;td&gt;0.504293秒(6.1倍)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;uf250-02.cnf&lt;/td&gt;
+&lt;td&gt;30&lt;/td&gt;
+&lt;td&gt;6.579755秒&lt;/td&gt;
+&lt;td&gt;0.967821秒(6.8倍)&lt;/td&gt;
+&lt;td&gt;4.6801452秒&lt;/td&gt;
+&lt;td&gt;0.852714秒(5.49倍)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;可见多线程对于运行效率的提升是显著的，对于&lt;strong&gt;2.1.2优化1&lt;/strong&gt;的提升会更大一些。由于SASAT算法本身的优良特性，大多数情况下Try次数都在30以内，此程序多能在1秒内求解。&lt;/p&gt;
+&lt;h1 id=&#34;附录&#34;&gt;附录&lt;/h1&gt;
+&lt;p&gt;测试样例详见&lt;a href=&#34;https://github.com/AdamYuan/SATv2/tree/master/problems&#34;&gt;https://github.com/AdamYuan/SATv2/tree/master/problems&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.1.3优化2 + 多线程&lt;/strong&gt; 程序&lt;a href=&#34;https://github.com/AdamYuan/SATv2&#34;&gt;https://github.com/AdamYuan/SATv2&lt;/a&gt;&lt;/p&gt;- https://adamyuan.xyz/post/sasat_implementation/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>计算3的1000000次方</title>
+        <link>https://adamyuan.xyz/post/big_pow/</link>
+        <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/big_pow/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/big_pow/ -&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br&gt;
+使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;
+&lt;h1 id=&#34;结果&#34;&gt;结果&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ g++ big_pow.cpp -o big_pow -O3
+$ &lt;span style=&#34;color:#658b00&#34;&gt;time&lt;/span&gt; ./big_pow
+&lt;span style=&#34;color:#b452cd&#34;&gt;1797710116675743838039851642017955175542668535689457592096701980448789887005555782&lt;/span&gt;  
+&lt;span style=&#34;color:#b452cd&#34;&gt;5013639024539872345178584608400586756310173000789807647889087112071631584530925074&lt;/span&gt;  
+20576700326354687989043195055426409953164756466539259367768040........  
+&lt;span style=&#34;color:#b452cd&#34;&gt;9458386086558274361702868947585455272881631676228081179063417221095794868962238026&lt;/span&gt;  
+&lt;span style=&#34;color:#b452cd&#34;&gt;6186186896939896900778464988674017800809943312017921778637005646990599302975876577&lt;/span&gt;  
+&lt;span style=&#34;color:#b452cd&#34;&gt;7974690259456656823649987921344102043747756854291659736198742132526761094591717405&lt;/span&gt;  
+&lt;span style=&#34;color:#b452cd&#34;&gt;35758464159433897468478655220000001&lt;/span&gt;
+0.26user 0.00system 0:00.33elapsed 81%CPU (0avgtext+0avgdata 19452maxresident)k
+0inputs+0outputs (0major+4219minor)pagefaults 0swaps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;代码&#34;&gt;代码&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;long&lt;/span&gt; i64;
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;constexpr&lt;/span&gt; i64 N = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;19&lt;/span&gt;, K = &lt;span style=&#34;color:#b452cd&#34;&gt;19&lt;/span&gt;, P = &lt;span style=&#34;color:#b452cd&#34;&gt;998244353ll&lt;/span&gt;;
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;NTT&lt;/span&gt; {
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;private&lt;/span&gt;:
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; i64 qpow(i64 a, i64 x, i64 m) {
+			i64 ret = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(x) { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;amp; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) ret = (ret*a) % m; a = (a*a) % m; x &amp;gt;&amp;gt;= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; }
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; ret;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; i64 &lt;span style=&#34;color:#008b45&#34;&gt;to_pow2&lt;/span&gt;(i64 x) {
+			i64 ret = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(ret &amp;lt; x) ret &amp;lt;&amp;lt;= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; ret;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; i64 &lt;span style=&#34;color:#008b45&#34;&gt;get_upper&lt;/span&gt;(i64 x) {
+			i64 a = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, ret = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(a &amp;lt; x) { a &amp;lt;&amp;lt;= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; ret ++; };
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; ret;
+		}
+		i64 m_wn[K+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;], m_iwn[K+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;], m_rev[N], m_inv, m_n = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;transform&lt;/span&gt;(i64 *a, &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; i64 *wn) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; {
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; m_n; ++i) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(i &amp;lt; m_rev[i]) std::swap(a[i], a[m_rev[i]]);
+
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 l = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; (&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; l) &amp;lt;= m_n; l ++) {
+				i64 m = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; (l-&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 *p = a; p != a + m_n; p += (&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; l)) {
+					i64 w = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+					&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; m; ++i) {
+						i64 t = (w * p[m+i]) % P; p[m+i] = (p[i] - t + P) % P; p[i] = (p[i] + t) % P; w = (w * wn[l]) % P;
+					}
+				}
+			}
+		}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt;:
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; Init() {
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 l = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; (&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; l) &amp;lt;= N; l ++) {
+				m_wn[l] = qpow(&lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;, (P - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) / (&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; l), P);
+				m_iwn[l] = qpow(&lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;, P - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; - (P - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) / (&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; &amp;lt;&amp;lt; l), P);
+			}
+			m_rev[&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;] = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; 
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; i64 &lt;span style=&#34;color:#008b45&#34;&gt;SetN&lt;/span&gt;(i64 n) {
+			n = to_pow2(n); &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(n == m_n) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; m_n;
+			m_n = n;
+
+			&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; k = get_upper(n);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt; m_n; ++i) m_rev[i] = (m_rev[i&amp;gt;&amp;gt;&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) | ( (i&amp;amp;&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &amp;lt;&amp;lt; (k - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) );
+			m_inv = qpow(m_n, P - &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;, P);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; m_n;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Dft&lt;/span&gt;(i64 *a) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; { transform(a, m_wn); }
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Idft&lt;/span&gt;(i64 *a) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; { transform(a, m_iwn); &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; m_n; ++i) a[i] = (a[i] * m_inv) % P; }
+} ntt;
+
+i64 buffer[N];
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;BigNum&lt;/span&gt; {
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;private&lt;/span&gt;:
+		i64 m_digits[N] = {}, m_up = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;public&lt;/span&gt;:
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; Set(i64 val)
+		{
+			m_up = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(val) {
+				m_digits[m_up++] = val % &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;;
+				val /= &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;;
+			}
+			std::fill(m_digits + m_up, m_digits + N, &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Mul&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; BigNum &amp;amp;bn) {
+			std::copy(bn.m_digits, bn.m_digits + N, buffer);
+			i64 kn = ntt.SetN(m_up + bn.m_up);
+			ntt.Dft(m_digits); ntt.Dft(buffer);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; kn; ++i) m_digits[i] *= buffer[i];
+			ntt.Idft(m_digits);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; kn - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; ++i) { m_digits[i + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] += m_digits[i] / &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;; m_digits[i] %= &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;; }
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(m_up = kn; m_digits[m_up - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; --m_up);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Pow&lt;/span&gt;() {
+			i64 kn = ntt.SetN(m_up * &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;);
+			ntt.Dft(m_digits);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; kn; ++i) m_digits[i] *= m_digits[i];
+			ntt.Idft(m_digits);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; i &amp;lt; kn - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; ++i) { m_digits[i + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] += m_digits[i] / &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;; m_digits[i] %= &lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;; }
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(m_up = kn - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; m_digits[m_up] == &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; --m_up);
+			m_up ++;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;Print&lt;/span&gt;() &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; {
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(i64 i = m_up - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;gt;= &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; --i)
+				putchar(m_digits[i] + &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;);
+			putchar(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;);
+		}
+} base, ans;
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;() {
+	ntt.Init();
+	base.Set(&lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;); ans.Set(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+	i64 a = &lt;span style=&#34;color:#b452cd&#34;&gt;1000000&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(a) {
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(a &amp;amp; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) ans.Mul(base);
+		a &amp;gt;&amp;gt;= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; base.Pow();
+	}
+	ans.Print();
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/big_pow/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>二逼平衡树(splay / vector &#43; 线段树)</title>
+        <link>https://adamyuan.xyz/post/2b-pin-heng-shu/</link>
+        <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/2b-pin-heng-shu/ -&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;查询k在区间内的排名&lt;/li&gt;
+&lt;li&gt;查询区间内排名为k的值&lt;/li&gt;
+&lt;li&gt;修改某一位值上的数值&lt;/li&gt;
+&lt;li&gt;查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;/li&gt;
+&lt;li&gt;查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;这是一道树套树（线段树套平衡树）的模板题，下面讲解一下5个操作的写法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;分别查询区间对应的每个平衡树中k元素的排名，再相加&lt;/li&gt;
+&lt;li&gt;这个是最难想的，其实就是二分答案。。。可以线段树里再维护最大最小值加速二分&lt;/li&gt;
+&lt;li&gt;就是插入+删除&lt;/li&gt;
+&lt;li&gt;分别查询每颗平衡树中k的前驱，取最大&lt;/li&gt;
+&lt;li&gt;分别查询每颗平衡树中k的后继，取最小&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;操作3的复杂度为 $$\log^3(n)$$，其它为 $$\log^2(n)$$&lt;/p&gt;
+&lt;h1 id=&#34;吐槽&#34;&gt;吐槽&lt;/h1&gt;
+&lt;p&gt;这题竟然可以线段树套std::vector水过，然而splay却会TLE 3个点。。。&lt;/p&gt;
+&lt;h1 id=&#34;代码&#34;&gt;代码&lt;/h1&gt;
+&lt;h2 id=&#34;stdvector版ac&#34;&gt;std::vector版（AC）&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;vector&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#1e889b&#34;&gt;#define N 50005
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MINV -2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MAXV 2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; arr[N];
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;vec_query_rank&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; &amp;amp;vec, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::lower_bound(vec.begin(), vec.end(), x) - vec.begin(); }
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;vec_query_prev&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; &amp;amp;vec, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+{
+	std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt;::const_iterator i = std::lower_bound(vec.begin(), vec.end(), x);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(i == vec.begin()) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MINV;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; *(i-&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+}
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;vec_query_next&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; &amp;amp;vec, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+{
+	std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt;::const_iterator i = std::upper_bound(vec.begin(), vec.end(), x);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(i == vec.end()) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MAXV;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; *i;
+}
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;vec_modify&lt;/span&gt;(std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; *vec, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; newval, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; oldval)
+{
+	vec-&amp;gt;erase(std::lower_bound(vec-&amp;gt;begin(), vec-&amp;gt;end(), oldval));
+	vec-&amp;gt;insert(std::lower_bound(vec-&amp;gt;begin(), vec-&amp;gt;end(), newval), newval);
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;namespace&lt;/span&gt; seg
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+	{
+		std::vector&amp;lt;&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt;&amp;gt; vec;
+		Node *lson, *rson;
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, r, rmin, rmax;
+	};
+
+	Node node_pool[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;], *segroot;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; p-&amp;gt;lson = p-&amp;gt;rson = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; }
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup&lt;/span&gt;(Node *node)
+	{
+		node-&amp;gt;rmax = std::max(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmax : MINV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmax : MINV);
+		node-&amp;gt;rmin = std::min(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmin : MAXV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmin : MAXV);
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; sort_tmp[N];
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;build_tree&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r)
+	{
+		Node *current; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid, sz;
+
+		current = new_node();
+		current-&amp;gt;l = l; 
+		current-&amp;gt;r = r;
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l != r)
+		{
+			mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			current-&amp;gt;lson = build_tree(l, mid);
+			current-&amp;gt;rson = build_tree(mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+			pushup(current);
+
+			sz = r-l+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+
+			&lt;span style=&#34;color:#228b22&#34;&gt;//merge sort
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			current-&amp;gt;vec.resize(sz);
+			std::merge(sort_tmp + l, sort_tmp + mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, sort_tmp + mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, sort_tmp + r + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, current-&amp;gt;vec.begin());
+			std::copy(current-&amp;gt;vec.begin(), current-&amp;gt;vec.end(), sort_tmp + l);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			sort_tmp[l] = arr[l];
+			current-&amp;gt;rmin = current-&amp;gt;rmax = arr[l];
+
+			&lt;span style=&#34;color:#228b22&#34;&gt;//create vector with 1 element
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			current-&amp;gt;vec.push_back(arr[l]);
+		}
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_bound&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmin, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmax) &lt;span style=&#34;color:#228b22&#34;&gt;//should first initialize rmin and rmax with MAXV and MINV
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+		{
+			*rmin = std::min(*rmin, node-&amp;gt;rmin);
+			*rmax = std::max(*rmax, node-&amp;gt;rmax);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			query_bound(node-&amp;gt;lson, l, r, rmin, rmax);
+			query_bound(node-&amp;gt;rson, l, r, rmin, rmax);
+		}
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_rank&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return number of value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; vec_query_rank(node-&amp;gt;vec, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; query_rank(node-&amp;gt;lson, l, r, x) + query_rank(node-&amp;gt;rson, l, r, x);
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_kth&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; k) &lt;span style=&#34;color:#228b22&#34;&gt;//k &amp;gt;= 1
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; rmin, rmax, low, high, mid, midrk;
+
+		rmin = MAXV, rmax = MINV;
+		query_bound(segroot, l, r, &amp;amp;rmin, &amp;amp;rmax);
+
+		&lt;span style=&#34;color:#228b22&#34;&gt;//binary search
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		low = rmin; high = rmax;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(low != high)
+		{
+			mid = (low + high + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; 
+			midrk = query_rank(segroot, l, r, mid) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(midrk &amp;lt;= k) low = mid;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; high = mid - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; low;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_prev&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MINV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; vec_query_prev(node-&amp;gt;vec, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::max(query_prev(node-&amp;gt;lson, l, r, x), query_prev(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_next&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MAXV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; vec_query_next(node-&amp;gt;vec, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::min(query_next(node-&amp;gt;lson, l, r, x), query_next(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;modify&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; old)
+	{
+		vec_modify(&amp;amp;node-&amp;gt;vec, x, old);
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;l != node-&amp;gt;r)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(pos &amp;lt;= ((node-&amp;gt;l + node-&amp;gt;r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;))
+				modify(node-&amp;gt;lson, pos, x, old);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; modify(node-&amp;gt;rson, pos, x, old);
+
+			pushup(node);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			node-&amp;gt;rmax = node-&amp;gt;rmin = x;
+	}
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n, m;
+	scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;n); scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;m);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; ++i) scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, arr + i);
+	seg::segroot = seg::build_tree(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, n);
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; opt, l, r, k, pos;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(m --)
+	{
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;opt);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_rank(seg::segroot, l, r, k) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_kth(l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d&amp;#34;&lt;/span&gt;, &amp;amp;pos, &amp;amp;k);
+			seg::modify(seg::segroot, pos, k, arr[pos]);
+			arr[pos] = k;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;4&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_prev(seg::segroot, l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_next(seg::segroot, l, r, k));
+		}
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;splay版tle-70&#34;&gt;splay版（TLE 70%）&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#1e889b&#34;&gt;#define N 50005
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MINV -2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MAXV 2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; arr[N];
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;namespace&lt;/span&gt; splay
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+	{
+		Node *parent;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;union&lt;/span&gt; { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; {Node *lson, *rson; }; Node *son[&lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;]; };
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; count, size, value;
+	} node_pool[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;7&lt;/span&gt;];
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; p-&amp;gt;lson = p-&amp;gt;rson = p-&amp;gt;parent = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; }
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;which_son&lt;/span&gt;(Node *node) { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; node-&amp;gt;parent-&amp;gt;rson == node; }
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup&lt;/span&gt;(Node *node)
+	{
+		node-&amp;gt;size = node-&amp;gt;count;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;lson) node-&amp;gt;size += node-&amp;gt;lson-&amp;gt;size;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;rson) node-&amp;gt;size += node-&amp;gt;rson-&amp;gt;size;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;rotate&lt;/span&gt;(Node **root, Node *node)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; a, b; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *mov, *fa, *gfa;
+		fa = node-&amp;gt;parent;
+		a = which_son(node); b = !a;
+		mov = node-&amp;gt;son[b]; fa-&amp;gt;son[a] = mov; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(mov) mov-&amp;gt;parent = fa;
+
+		gfa = fa-&amp;gt;parent;
+		(gfa ? gfa-&amp;gt;son[which_son(fa)] : *root) = node; node-&amp;gt;parent = gfa;
+
+		node-&amp;gt;son[b] = fa; fa-&amp;gt;parent = node;
+
+		pushup(fa); pushup(node);
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;splay&lt;/span&gt;(Node **root, Node *node, Node *target)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *fa, *gfa;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;((fa = node-&amp;gt;parent) != target)
+		{
+			gfa = fa-&amp;gt;parent;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(gfa != target)
+				rotate(root, which_son(node) == which_son(fa) ? fa : node);
+			rotate(root, node);
+		}
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;print&lt;/span&gt;(Node *node)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!node) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		print(node-&amp;gt;lson);
+		printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d %d; &amp;#34;&lt;/span&gt;, node-&amp;gt;value, node-&amp;gt;count);
+		print(node-&amp;gt;rson);
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;find&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *current;
+		current = *root;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(current &amp;amp;&amp;amp; current-&amp;gt;value != x)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;lt; current-&amp;gt;value) current = current-&amp;gt;lson;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; current = current-&amp;gt;rson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(current) splay(root, current, &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;find_target&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, Node ***target, Node **father) 
+		&lt;span style=&#34;color:#228b22&#34;&gt;//return pointer of node to be inserted and its parent
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		*target = root;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(**target)
+		{
+			*father = **target;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;lt; (**target)-&amp;gt;value) *target = &amp;amp;((**target)-&amp;gt;lson);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; *target = &amp;amp;((**target)-&amp;gt;rson);
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;query_max&lt;/span&gt;(Node *root) &lt;span style=&#34;color:#228b22&#34;&gt;//get max value in a tree
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(root-&amp;gt;rson)
+			root = root-&amp;gt;rson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; root;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;query_min&lt;/span&gt;(Node *root) &lt;span style=&#34;color:#228b22&#34;&gt;//get min value in a tree
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(root-&amp;gt;lson)
+			root = root-&amp;gt;lson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; root;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;insert&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *f;
+		f = find(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(f) { f-&amp;gt;count ++; f-&amp;gt;size ++; }
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			Node **target, *father;
+			find_target(root, x, &amp;amp;target, &amp;amp;father);
+			(*target) = new_node(); (*target)-&amp;gt;value = x; 
+			(*target)-&amp;gt;count = (*target)-&amp;gt;size = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; (*target)-&amp;gt;parent = father;
+			splay(root, *target, &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; *root;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;erase&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *f, *m;
+		f = find(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!f) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(--f-&amp;gt;count &amp;amp;&amp;amp; --f-&amp;gt;size) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		&lt;span style=&#34;color:#228b22&#34;&gt;//f is the root now
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(f-&amp;gt;lson)
+		{
+			m = query_max(f-&amp;gt;lson);
+			splay(root, m, f);
+			m-&amp;gt;parent = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; 
+			m-&amp;gt;rson = f-&amp;gt;rson; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(f-&amp;gt;rson) { m-&amp;gt;rson-&amp;gt;size += f-&amp;gt;rson-&amp;gt;size; f-&amp;gt;rson-&amp;gt;parent = m; }
+			*root = m;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#228b22&#34;&gt;//left son is empty, let rson be the root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			*root = (*root)-&amp;gt;rson;
+			(*root)-&amp;gt;parent = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_rank&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return number of value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; exist;
+		exist = find(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) insert(root, x);
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = (*root)-&amp;gt;lson ? (*root)-&amp;gt;lson-&amp;gt;size : &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) erase(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_prev&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return the biggest value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; exist;
+		exist = find(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) insert(root, x); &lt;span style=&#34;color:#228b22&#34;&gt;//the new node is the root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = (*root)-&amp;gt;lson ? query_max((*root)-&amp;gt;lson)-&amp;gt;value : MINV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) erase(root, x); &lt;span style=&#34;color:#228b22&#34;&gt;//the new node is the root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_next&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; exist;
+		exist = find(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) insert(root, x);
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = (*root)-&amp;gt;rson ? query_min((*root)-&amp;gt;rson)-&amp;gt;value : MAXV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!exist) erase(root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;build_tree&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *value_arr, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *cnt_arr, Node *father, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		Node *current = new_node(); 
+		current-&amp;gt;parent = father;
+		current-&amp;gt;value = value_arr[mid];
+		current-&amp;gt;count = cnt_arr[mid];
+		current-&amp;gt;lson = build_tree(value_arr, cnt_arr, current, l, mid - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+		current-&amp;gt;rson = build_tree(value_arr, cnt_arr, current, mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+
+		pushup(current);
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+	}
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;namespace&lt;/span&gt; seg
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+	{
+		splay::Node *root;
+		Node *lson, *rson;
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, r, rmin, rmax;
+	};
+
+	Node node_pool[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;], *segroot;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; p-&amp;gt;lson = p-&amp;gt;rson = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; }
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup&lt;/span&gt;(Node *node)
+	{
+		node-&amp;gt;rmax = std::max(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmax : MINV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmax : MINV);
+		node-&amp;gt;rmin = std::min(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmin : MAXV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmin : MAXV);
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; sort_tmp[N], merge_tmp[N], cnt_tmp[N];
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;build_tree&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r)
+	{
+		Node *current; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid, sz, total;
+
+		current = new_node();
+		current-&amp;gt;l = l; 
+		current-&amp;gt;r = r;
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l != r)
+		{
+			mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			current-&amp;gt;lson = build_tree(l, mid);
+			current-&amp;gt;rson = build_tree(mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+			pushup(current);
+
+			sz = r-l+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+
+			&lt;span style=&#34;color:#228b22&#34;&gt;//merge sort
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			std::merge(sort_tmp + l, sort_tmp + mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, sort_tmp + mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, sort_tmp + r + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, merge_tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+			std::copy(merge_tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, merge_tmp + sz+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, sort_tmp + l);
+
+			total = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= sz; ++i) &lt;span style=&#34;color:#228b22&#34;&gt;//make the array(for building tree) unique and get the count
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(i == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt; || merge_tmp[i] != merge_tmp[i-&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;])
+				{
+					++total;
+					merge_tmp[total] = merge_tmp[i];
+					cnt_tmp[total] = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+				}
+				&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; cnt_tmp[total] ++;
+
+			&lt;span style=&#34;color:#228b22&#34;&gt;//build balanced tree
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			current-&amp;gt;root = splay::build_tree(merge_tmp, cnt_tmp, &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, total);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			sort_tmp[l] = arr[l];
+			current-&amp;gt;rmin = current-&amp;gt;rmax = arr[l];
+
+			&lt;span style=&#34;color:#228b22&#34;&gt;//create tree with 1 element
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			current-&amp;gt;root = splay::new_node();
+			current-&amp;gt;root-&amp;gt;value = arr[l];
+			current-&amp;gt;root-&amp;gt;size = current-&amp;gt;root-&amp;gt;count = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		}
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_bound&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmin, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmax) &lt;span style=&#34;color:#228b22&#34;&gt;//should first initialize rmin and rmax with MAXV and MINV
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+		{
+			*rmin = std::min(*rmin, node-&amp;gt;rmin);
+			*rmax = std::max(*rmax, node-&amp;gt;rmax);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			query_bound(node-&amp;gt;lson, l, r, rmin, rmax);
+			query_bound(node-&amp;gt;rson, l, r, rmin, rmax);
+		}
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_rank&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return number of value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; splay::query_rank(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; query_rank(node-&amp;gt;lson, l, r, x) + query_rank(node-&amp;gt;rson, l, r, x);
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_kth&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; k) &lt;span style=&#34;color:#228b22&#34;&gt;//k &amp;gt;= 1
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; rmin, rmax, low, high, mid, midrk;
+
+		rmin = MAXV, rmax = MINV;
+		query_bound(segroot, l, r, &amp;amp;rmin, &amp;amp;rmax);
+
+		&lt;span style=&#34;color:#228b22&#34;&gt;//binary search
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		low = rmin; high = rmax;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(low != high)
+		{
+			mid = (low + high + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; 
+			midrk = query_rank(segroot, l, r, mid) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(midrk &amp;lt;= k) low = mid;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; high = mid - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; low;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_prev&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MINV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; splay::query_prev(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::max(query_prev(node-&amp;gt;lson, l, r, x), query_prev(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_next&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MAXV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; splay::query_next(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::min(query_next(node-&amp;gt;lson, l, r, x), query_next(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;modify&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; old)
+	{
+		splay::insert(&amp;amp;node-&amp;gt;root, x);
+		splay::erase(&amp;amp;node-&amp;gt;root, old);
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;l != node-&amp;gt;r)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(pos &amp;lt;= ((node-&amp;gt;l + node-&amp;gt;r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;))
+				modify(node-&amp;gt;lson, pos, x, old);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; modify(node-&amp;gt;rson, pos, x, old);
+
+			pushup(node);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			node-&amp;gt;rmax = node-&amp;gt;rmin = x;
+	}
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n, m;
+	scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;n); scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;m);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; ++i) scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, arr + i);
+	seg::segroot = seg::build_tree(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, n);
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; opt, l, r, k, pos;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(m --)
+	{
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;opt);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_rank(seg::segroot, l, r, k) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_kth(l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d&amp;#34;&lt;/span&gt;, &amp;amp;pos, &amp;amp;k);
+			seg::modify(seg::segroot, pos, k, arr[pos]);
+			arr[pos] = k;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;4&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_prev(seg::segroot, l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_next(seg::segroot, l, r, k));
+		}
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;无旋treaptle-70&#34;&gt;无旋treap（TLE 70%）&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;random&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#1e889b&#34;&gt;#define N 50005
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MINV -2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#define MAXV 2147483647
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; arr[N];
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;namespace&lt;/span&gt; treap
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;union&lt;/span&gt; { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; {Node *lson, *rson; }; Node *son[&lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;]; };
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; count, size, value, rndkey;
+	} node_pool[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;7&lt;/span&gt;];
+
+	std::random_device rd{};
+	std::mt19937 gen{rd()};
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; p-&amp;gt;lson = p-&amp;gt;rson = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; p-&amp;gt;rndkey = gen(); &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; }
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;maintain&lt;/span&gt;(Node *node)
+	{
+		node-&amp;gt;size = node-&amp;gt;count;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;lson) node-&amp;gt;size += node-&amp;gt;lson-&amp;gt;size;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;rson) node-&amp;gt;size += node-&amp;gt;rson-&amp;gt;size;
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;print&lt;/span&gt;(Node *node)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(!node) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		print(node-&amp;gt;lson);
+		printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d %d; &amp;#34;&lt;/span&gt;, node-&amp;gt;value, node-&amp;gt;count);
+		print(node-&amp;gt;rson);
+	}
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;init&lt;/span&gt;()
+	{
+		Node *l = new_node(); l-&amp;gt;size = l-&amp;gt;count = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; l-&amp;gt;value = MINV;
+		Node *r = new_node(); r-&amp;gt;size = r-&amp;gt;count = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; r-&amp;gt;value = MAXV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l-&amp;gt;rndkey &amp;lt; r-&amp;gt;rndkey) { l-&amp;gt;rson = r; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; l; } &lt;span style=&#34;color:#228b22&#34;&gt;//keep l as root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		r-&amp;gt;lson = l; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; r;
+	}
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;merge&lt;/span&gt;(Node *l, Node *r)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l == &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; r;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(r == &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; l;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l-&amp;gt;rndkey &amp;lt; r-&amp;gt;rndkey) &lt;span style=&#34;color:#228b22&#34;&gt;//keep l as root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			l-&amp;gt;rson = merge(l-&amp;gt;rson, r);
+			maintain(l); &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; l;
+		}
+		r-&amp;gt;lson = merge(l, r-&amp;gt;lson);
+		maintain(r); &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; r;
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;split&lt;/span&gt;(Node *root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, Node **l, Node **r)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(root == &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;) { *l = *r = &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;nullptr&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;; }
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(root-&amp;gt;value &amp;lt; x)
+		{
+			*l = root;
+			split(root-&amp;gt;rson, x, &amp;amp;(root-&amp;gt;rson), r);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			*r = root;
+			split(root-&amp;gt;lson, x, l, &amp;amp;(root-&amp;gt;lson));
+		}
+		maintain(root);
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;find&lt;/span&gt;(Node *root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(root &amp;amp;&amp;amp; root-&amp;gt;value != x)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;lt; root-&amp;gt;value) root = root-&amp;gt;lson;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; root = root-&amp;gt;rson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; root;
+	}
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup_size&lt;/span&gt;(Node *root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; plus) &lt;span style=&#34;color:#228b22&#34;&gt;//ensure find(root, x)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		root-&amp;gt;size += plus;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(root-&amp;gt;value != x)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;lt; root-&amp;gt;value) pushup_size(root-&amp;gt;lson, x, plus);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; pushup_size(root-&amp;gt;rson, x, plus);
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;query_max&lt;/span&gt;(Node *root) &lt;span style=&#34;color:#228b22&#34;&gt;//get max value in a tree
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(root-&amp;gt;rson)
+			root = root-&amp;gt;rson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; root;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;query_min&lt;/span&gt;(Node *root) &lt;span style=&#34;color:#228b22&#34;&gt;//get min value in a tree
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(root-&amp;gt;lson)
+			root = root-&amp;gt;lson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; root;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;insert&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return root
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		Node *f = find(*root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(f)
+		{
+			f-&amp;gt;count ++;
+			pushup_size(*root, x, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			Node *l, *r;
+			split(*root, x, &amp;amp;l, &amp;amp;r); &lt;span style=&#34;color:#228b22&#34;&gt;//[MINV, x) and [x, MAXV]
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			Node *ins = new_node();
+			ins-&amp;gt;count = ins-&amp;gt;size = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			ins-&amp;gt;value = x;
+
+			*root = merge(merge(l, ins), r);
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;erase&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		Node *f = find(*root, x);
+		f-&amp;gt;count --;
+		pushup_size(*root, x, -&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(f-&amp;gt;count) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+
+		Node *l, *r, *rl, *rr;
+		split(*root, x, &amp;amp;l, &amp;amp;r); &lt;span style=&#34;color:#228b22&#34;&gt;//[MINV, x)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		split(r, x + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, &amp;amp;rl, &amp;amp;rr);
+
+		*root = merge(l, rr);
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_rank&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return number of value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *l, *r;
+		split(*root, x, &amp;amp;l, &amp;amp;r);
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = l-&amp;gt;size;
+		*root = merge(l, r);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_prev&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return the biggest value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *l, *r;
+		split(*root, x, &amp;amp;l, &amp;amp;r);
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = query_max(l)-&amp;gt;value;
+		*root = merge(l, r);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_next&lt;/span&gt;(Node **root, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *l, *r;
+		split(*root, x + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, &amp;amp;l, &amp;amp;r);
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; val = query_min(r)-&amp;gt;value;
+		*root = merge(l, r);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; val;
+	}
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;namespace&lt;/span&gt; seg
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+	{
+		treap::Node *root;
+		Node *lson, *rson;
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, r, rmin, rmax;
+	};
+
+	Node node_pool[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;], *segroot;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; p-&amp;gt;lson = p-&amp;gt;rson = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; }
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup&lt;/span&gt;(Node *node)
+	{
+		node-&amp;gt;rmax = std::max(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmax : MINV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmax : MINV);
+		node-&amp;gt;rmin = std::min(node-&amp;gt;lson ? node-&amp;gt;lson-&amp;gt;rmin : MAXV, node-&amp;gt;rson ? node-&amp;gt;rson-&amp;gt;rmin : MAXV);
+	}
+
+	Node *&lt;span style=&#34;color:#008b45&#34;&gt;build_empty_tree&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r)
+	{
+		Node *current;
+
+		current = new_node();
+		current-&amp;gt;l = l; 
+		current-&amp;gt;r = r;
+		&lt;span style=&#34;color:#228b22&#34;&gt;//create tree with 2 element (MAXV &amp;amp; MINV)
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		current-&amp;gt;root = treap::init();
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l != r)
+		{
+			&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			current-&amp;gt;lson = build_empty_tree(l, mid);
+			current-&amp;gt;rson = build_empty_tree(mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+			pushup(current);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			current-&amp;gt;rmin = current-&amp;gt;rmax = arr[l];
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;build_tree&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r)
+	{
+		segroot = build_empty_tree(l, r);
+
+		Node *current;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = l; i &amp;lt;= r; ++i)
+		{
+			current = segroot;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(current)
+			{
+				treap::insert(&amp;amp;current-&amp;gt;root, arr[i]);
+				current = i &amp;lt;= ((current-&amp;gt;l + current-&amp;gt;r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) ? current-&amp;gt;lson : current-&amp;gt;rson;
+			}
+		}
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_bound&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmin, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; *rmax) &lt;span style=&#34;color:#228b22&#34;&gt;//should first initialize rmin and rmax with MAXV and MINV
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+		{
+			*rmin = std::min(*rmin, node-&amp;gt;rmin);
+			*rmax = std::max(*rmax, node-&amp;gt;rmax);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			query_bound(node-&amp;gt;lson, l, r, rmin, rmax);
+			query_bound(node-&amp;gt;rson, l, r, rmin, rmax);
+		}
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_rank&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) &lt;span style=&#34;color:#228b22&#34;&gt;//return number of value smaller than x
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; treap::query_rank(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; query_rank(node-&amp;gt;lson, l, r, x) + query_rank(node-&amp;gt;rson, l, r, x);
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_kth&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; k) &lt;span style=&#34;color:#228b22&#34;&gt;//k &amp;gt;= 1
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; rmin, rmax, low, high, mid, midrk;
+
+		rmin = MAXV, rmax = MINV;
+		query_bound(segroot, l, r, &amp;amp;rmin, &amp;amp;rmax);
+
+		&lt;span style=&#34;color:#228b22&#34;&gt;//binary search
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		low = rmin; high = rmax;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(low != high)
+		{
+			mid = (low + high + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; 
+			midrk = query_rank(segroot, l, r, mid) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(midrk &amp;lt;= k) low = mid;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; high = mid - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; low;
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_prev&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MINV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; treap::query_prev(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::max(query_prev(node-&amp;gt;lson, l, r, x), query_prev(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query_next&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x) 
+	{
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;r &amp;lt; l || node-&amp;gt;l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; MAXV;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;lt;= node-&amp;gt;l &amp;amp;&amp;amp; node-&amp;gt;r &amp;lt;= r)
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; treap::query_next(&amp;amp;node-&amp;gt;root, x);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; std::min(query_next(node-&amp;gt;lson, l, r, x), query_next(node-&amp;gt;rson, l, r, x));
+	}
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;modify&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; old)
+	{
+		treap::insert(&amp;amp;node-&amp;gt;root, x);
+		treap::erase(&amp;amp;node-&amp;gt;root, old);
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;l != node-&amp;gt;r)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(pos &amp;lt;= ((node-&amp;gt;l + node-&amp;gt;r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;))
+				modify(node-&amp;gt;lson, pos, x, old);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; modify(node-&amp;gt;rson, pos, x, old);
+
+			pushup(node);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+			node-&amp;gt;rmax = node-&amp;gt;rmin = x;
+	}
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n, m;
+	scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;n); scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;m);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; ++i) scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, arr + i);
+	seg::build_tree(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, n);
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; opt, l, r, k, pos;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(m --)
+	{
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;opt);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_rank(seg::segroot, l, r, k) + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_kth(l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;3&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d&amp;#34;&lt;/span&gt;, &amp;amp;pos, &amp;amp;k);
+			seg::modify(seg::segroot, pos, k, arr[pos]);
+			arr[pos] = k;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(opt == &lt;span style=&#34;color:#b452cd&#34;&gt;4&lt;/span&gt;)
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_prev(seg::segroot, l, r, k));
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+			printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, seg::query_next(seg::segroot, l, r, k));
+		}
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/2b-pin-heng-shu/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>文本编辑器editor(splay)</title>
+        <link>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</link>
+        <pubDate>Thu, 20 Sep 2018 21:26:53 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/wenbenbianjiqi-editor/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/wenbenbianjiqi-editor/ -&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;实现一个文本编辑器，实现下列功能：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/wenbenbianjiqi-editor/1.gif&#34; alt=&#34;img1&#34;&gt;&lt;br&gt;
+例子：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/wenbenbianjiqi-editor/2.gif&#34; alt=&#34;img1&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;（pos代表光标位置）
+这题的思路十分简单粗暴，其中基本的操作是通过伸展树的splay操作得到代表一个区间的子树，对于区间[l, r]，将第l-1号节点splay成为根节点，将第r+1号节点splay成为根节点的右儿子，则根节点右儿子的左子树便是所需的子树。&lt;br&gt;
+对于插入操作，可以先处理出[pos+1, pos]这个空区间（l-1 = pos, r+1 = pos+1），根节点右儿子的左子树必然为空，将其初始化为新字符串即可。&lt;br&gt;
+对于删除和旋转操作，都需处理出[pos+1, pos+n]。删除操作可直接删除相应子树，旋转操作打上延迟标记然后pushdown。&lt;/p&gt;
+&lt;h1 id=&#34;实现思路&#34;&gt;实现思路&lt;/h1&gt;
+&lt;p&gt;先建立两个节点，可以避免针对空节点的特判。&lt;br&gt;
+在查找操作时注意pushdown旋转标记，区间操作完成后注意pushup节点的size值。&lt;/p&gt;
+&lt;h1 id=&#34;代码&#34;&gt;代码&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdlib&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#1e889b&#34;&gt;#define N 2097157 &lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;//2*1024*1024
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+{
+	Node *fa;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;union&lt;/span&gt; { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; { Node *lson, *rson; }; Node *son[&lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;]; };
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;char&lt;/span&gt; value; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; size; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; rev;
+} node_pool[N], *root = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;char&lt;/span&gt; buffer[N], cmd[&lt;span style=&#34;color:#b452cd&#34;&gt;10&lt;/span&gt;];
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() 
+{ 
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *p = node_pool; 
+	p-&amp;gt;value = p-&amp;gt;rev = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;; p-&amp;gt;size = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+	p-&amp;gt;lson = p-&amp;gt;rson = p-&amp;gt;fa = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; p++; 
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;which_son&lt;/span&gt;(Node *node)
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; node-&amp;gt;fa-&amp;gt;son[&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;] == node;
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushup&lt;/span&gt;(Node *node)
+{
+	node-&amp;gt;size = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;lson) node-&amp;gt;size += node-&amp;gt;lson-&amp;gt;size;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;rson) node-&amp;gt;size += node-&amp;gt;rson-&amp;gt;size;
+}
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;pushdown&lt;/span&gt;(Node *node)
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;rev)
+	{
+		node-&amp;gt;rev = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;lson) node-&amp;gt;lson-&amp;gt;rev ^= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(node-&amp;gt;rson) node-&amp;gt;rson-&amp;gt;rev ^= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		std::swap(node-&amp;gt;lson, node-&amp;gt;rson);
+	}
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;rotate_up&lt;/span&gt;(Node *node)
+{
+	Node *fa = node-&amp;gt;fa;
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;bool&lt;/span&gt; a = which_son(node), b = !a;
+
+	Node *mov = node-&amp;gt;son[b];
+	fa-&amp;gt;son[a] = mov; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(mov) mov-&amp;gt;fa = fa;
+
+	Node *gfa = fa-&amp;gt;fa;
+	(gfa ? gfa-&amp;gt;son[which_son(fa)] : root) = node; node-&amp;gt;fa = gfa;
+
+	node-&amp;gt;son[b] = fa; fa-&amp;gt;fa = node;
+	
+	pushup(fa); pushup(node);
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;splay&lt;/span&gt;(Node *node, Node *target) &lt;span style=&#34;color:#228b22&#34;&gt;//rotate node as a son of target
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(node-&amp;gt;fa != target)
+	{
+		Node *fa = node-&amp;gt;fa, *gfa = fa-&amp;gt;fa;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(gfa != target)
+		{
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(which_son(node) == which_son(fa))
+				rotate_up(fa);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; rotate_up(node);
+		}
+		rotate_up(node);
+	}
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;find&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; x)
+{
+	Node *current = root;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(&lt;span style=&#34;color:#658b00&#34;&gt;true&lt;/span&gt;)
+	{
+		pushdown(current);
+
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; left_size = (current-&amp;gt;lson ? current-&amp;gt;lson-&amp;gt;size : &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x == left_size) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(x &amp;lt; left_size) current = current-&amp;gt;lson;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; { current = current-&amp;gt;rson; x -= left_size + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; }
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+}
+
+Node *&lt;span style=&#34;color:#008b45&#34;&gt;build_str_tree&lt;/span&gt;(&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;char&lt;/span&gt; *str, Node *father, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r) &lt;span style=&#34;color:#228b22&#34;&gt;//l &amp;gt;= 1
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l &amp;gt; r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+	Node *current = new_node();
+	current-&amp;gt;fa = father;
+	current-&amp;gt;value = str[mid];
+	current-&amp;gt;lson = build_str_tree(str, current, l, mid - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+	current-&amp;gt;rson = build_str_tree(str, current, mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+	pushup(current);
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+}
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;prepare_range&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; len) &lt;span style=&#34;color:#228b22&#34;&gt;//root-&amp;gt;rson-&amp;gt;lson is target
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *prev, *next;
+	prev = find(pos); next = find(pos + len + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+	splay(prev, &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;); splay(next, root);
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; t; scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;t);
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;, len;
+
+	&lt;span style=&#34;color:#228b22&#34;&gt;//init splay with two node
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;	root = new_node(); root-&amp;gt;value = &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;\0&amp;#39;&lt;/span&gt;; root-&amp;gt;size = &lt;span style=&#34;color:#b452cd&#34;&gt;2&lt;/span&gt;;
+	root-&amp;gt;rson = new_node(); root-&amp;gt;rson-&amp;gt;value = &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;\0&amp;#39;&lt;/span&gt;; root-&amp;gt;rson-&amp;gt;fa = root;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(t--)
+	{
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%s&amp;#34;&lt;/span&gt;, cmd);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;I&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//insert
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;len);
+			&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;/*ignore \n */&lt;/span&gt;; i &amp;lt;= len; ++i) buffer[i] = getchar();
+
+			prepare_range(pos, &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;);
+			root-&amp;gt;rson-&amp;gt;lson = build_str_tree(buffer, root-&amp;gt;rson, &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, len);
+			root-&amp;gt;rson-&amp;gt;size += len; root-&amp;gt;size += len;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;D&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//delete
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;len);
+			prepare_range(pos, len);
+			root-&amp;gt;rson-&amp;gt;lson = &lt;span style=&#34;color:#658b00&#34;&gt;NULL&lt;/span&gt;;
+			root-&amp;gt;rson-&amp;gt;size -= len; root-&amp;gt;size -= len;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;R&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//rotate
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;len);
+			prepare_range(pos, len);
+			root-&amp;gt;rson-&amp;gt;lson-&amp;gt;rev ^= &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;M&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//move
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, &amp;amp;pos);
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;N&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//next
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			pos ++;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;P&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//prev
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;			pos --;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(*cmd == &lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;G&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#228b22&#34;&gt;//get
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		{
+			putchar(find(pos+&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;)-&amp;gt;value);
+			putchar(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;);
+		}
+	}
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/wenbenbianjiqi-editor/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>poj2104静态区间第k大(主席树)</title>
+        <link>https://adamyuan.xyz/post/static-kth-number-hjt/</link>
+        <pubDate>Thu, 30 Aug 2018 14:54:03 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/static-kth-number-hjt/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/static-kth-number-hjt/ -&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
+&lt;p&gt;给定一个数列(1 - 100000)，m次询问(1 - 5000)，每个询问包含l r k，输出区间[l&amp;hellip;r]中第k大的数。&lt;/p&gt;
+&lt;h1 id=&#34;基本思路&#34;&gt;基本思路&lt;/h1&gt;
+&lt;p&gt;首先我们将数列离散化。如果可以构造出任意区间的权值线段树(即线段树的下标代表区间中包含的数的值，例如数列1, 2, 2, 2, 3, 3, 4构成的权值线段树最下层为1, 3, 2, 1)，便能轻松二分出答案，同时区间[l&amp;hellip;r]的权值线段树可以由区间[1&amp;hellip;r]线段树中的值减去[1&amp;hellip;l-1]得到，所以想到构造n颗前缀权值线段树。&lt;br&gt;
+不过暴力建树空间复杂度太大，必然会mle，这时就需要用到主席树了。&lt;/p&gt;
+&lt;h1 id=&#34;主席树&#34;&gt;主席树&lt;/h1&gt;
+&lt;p&gt;主席树是一种可持久化数据结构(即可以获取所有历史版本)。由于线段树更新时只会使一条链上的值发生改变，于是可以直接新增一条链作为改动过后的版本，减小了空间开销，详细可见http://www.cnblogs.com/zyf0163/p/4749042.html1&lt;br&gt;
+在这道题中，需要先建立一颗空的线段树(所有节点都为0)，然后将数列中的值一个接一个地添加到权值线段树中，理由主席树的特点便能轻松给出表示区间[1&amp;hellip;i]的权值线段树。&lt;/p&gt;
+&lt;h1 id=&#34;代码&#34;&gt;代码&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#1e889b&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#1e889b&#34;&gt;#define N 100005
+&lt;/span&gt;&lt;span style=&#34;color:#1e889b&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#008b45;font-weight:bold&#34;&gt;Node&lt;/span&gt;
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; value;
+	Node *lson, *rson;
+};
+
+Node tree[N &amp;lt;&amp;lt; &lt;span style=&#34;color:#b452cd&#34;&gt;5&lt;/span&gt;];
+Node *roots[N]; &lt;span style=&#34;color:#228b22&#34;&gt;//所有前缀线段树的根节点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; arr[N], tmp[N];
+
+&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;inline&lt;/span&gt; Node *&lt;span style=&#34;color:#008b45&#34;&gt;new_node&lt;/span&gt;() { &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;static&lt;/span&gt; Node *t = tree; &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; t++; }
+
+Node *&lt;span style=&#34;color:#008b45&#34;&gt;build&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r) &lt;span style=&#34;color:#228b22&#34;&gt;//构建空树，返回根节点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	Node *current = new_node();
+	current-&amp;gt;value = &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l != r)
+	{
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		current-&amp;gt;lson = build(l, mid);
+		current-&amp;gt;rson = build(mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r);
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+}
+
+Node *&lt;span style=&#34;color:#008b45&#34;&gt;update&lt;/span&gt;(Node *node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; pos) &lt;span style=&#34;color:#228b22&#34;&gt;//在pos处+1，返回更新后的根节点
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;{
+	Node *current = new_node();
+	current-&amp;gt;value = node-&amp;gt;value + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l != r)
+	{
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(pos &amp;lt;= mid)
+		{
+			current-&amp;gt;lson = update(node-&amp;gt;lson, l, mid, pos);
+			current-&amp;gt;rson = node-&amp;gt;rson;
+		}
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;else&lt;/span&gt;
+		{
+			current-&amp;gt;lson = node-&amp;gt;lson;
+			current-&amp;gt;rson = update(node-&amp;gt;rson, mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r, pos);
+		}
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; current;
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;query&lt;/span&gt;(Node *l_node, Node *r_node, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; r, &lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; k)
+{
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(l == r) &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; l;
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; mid = (l + r) &amp;gt;&amp;gt; &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, 
+		l_sum = r_node-&amp;gt;lson-&amp;gt;value - l_node-&amp;gt;lson-&amp;gt;value; &lt;span style=&#34;color:#228b22&#34;&gt;//把两颗前缀线段树的值相减得到区间线段树上的值
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;if&lt;/span&gt;(k &amp;lt;= l_sum)
+		&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; query(l_node-&amp;gt;lson, r_node-&amp;gt;lson, l, mid, k);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; query(l_node-&amp;gt;rson, r_node-&amp;gt;rson, mid + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, r, k - l_sum);
+}
+
+&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#008b45&#34;&gt;main&lt;/span&gt;()
+{
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; n, m;
+	scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d&amp;#34;&lt;/span&gt;, &amp;amp;n, &amp;amp;m);
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; ++i)
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&amp;#34;&lt;/span&gt;, arr + i);
+	std::copy(arr + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, arr + n + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+	std::sort(tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, tmp + n + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;);
+
+	&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; total = std::unique(tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, tmp + n + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;) - tmp - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;;
+	roots[&lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;] = build(&lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, total);
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;for&lt;/span&gt;(&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; i = &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;; i &amp;lt;= n; ++i)
+	{
+		arr[i] = std::lower_bound(tmp + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, tmp + total + &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, arr[i]) - tmp; &lt;span style=&#34;color:#228b22&#34;&gt;//离散化
+&lt;/span&gt;&lt;span style=&#34;color:#228b22&#34;&gt;&lt;/span&gt;		roots[i] = update(roots[i - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;], &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, total, arr[i]);
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;while&lt;/span&gt;(m --)
+	{
+		&lt;span style=&#34;color:#00688b;font-weight:bold&#34;&gt;int&lt;/span&gt; l, r, k;
+		scanf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d%d%d&amp;#34;&lt;/span&gt;, &amp;amp;l, &amp;amp;r, &amp;amp;k);
+		printf(&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;%d&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#cd5555&#34;&gt;&amp;#34;&lt;/span&gt;, tmp[query(roots[l - &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;], roots[r], &lt;span style=&#34;color:#b452cd&#34;&gt;1&lt;/span&gt;, total, k)]);
+	}
+
+	&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#b452cd&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;- https://adamyuan.xyz/post/static-kth-number-hjt/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>配置GVim</title>
+        <link>https://adamyuan.xyz/post/configurate_gvim/</link>
+        <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/configurate_gvim/ -&lt;h1 id=&#34;基本配置&#34;&gt;基本配置&lt;/h1&gt;
+&lt;p&gt;编辑~/.gvimrc
+加入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-vim&#34; data-lang=&#34;vim&#34;&gt;set guifont=Source\ Code\ Pro\ &lt;span style=&#34;color:#b452cd&#34;&gt;12&lt;/span&gt; &lt;span style=&#34;color:#228b22&#34;&gt;&amp;#34;字体可随意更改&lt;/span&gt;&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;&lt;/span&gt;set guioptions=i &lt;span style=&#34;color:#228b22&#34;&gt;&amp;#34;只保留图标&lt;/span&gt;&lt;span style=&#34;color:#a61717;background-color:#e3d2d2&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;消除白色边框&#34;&gt;消除白色边框&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;https://adamyuan.xyz/img/configurate_gvim/1.png&#34; alt=&#34;img1&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;gtk3&#34;&gt;gtk3&lt;/h2&gt;
+&lt;p&gt;编辑 ~/.config/gtk-3.0/gtk.css，加入&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;window&lt;/span&gt;#&lt;span style=&#34;color:#008b45;text-decoration:underline&#34;&gt;vim-main-window&lt;/span&gt; {
+    &lt;span style=&#34;color:#8b008b;font-weight:bold&#34;&gt;background-color&lt;/span&gt;: &lt;span style=&#34;color:#b452cd&#34;&gt;#272822&lt;/span&gt;; &lt;span style=&#34;color:#228b22&#34;&gt;/*背景色*/&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;gtk2&#34;&gt;gtk2&lt;/h2&gt;
+&lt;p&gt;编辑 ~/.gtkrc-2.0，加入&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-gtkrc&#34; data-lang=&#34;gtkrc&#34;&gt;style &amp;quot;vimfix&amp;quot; {
+    bg[NORMAL] = &amp;quot;#272822&amp;quot; #背景色
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
+}
+widget &amp;quot;vim-main-window.*GtkForm&amp;quot; style &amp;quot;vimfix&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;- https://adamyuan.xyz/post/configurate_gvim/ - ©2020 AdamYuan.</description>
+        </item>
+    
+    
+    
+        <item>
+        <title>NetworkManager使用resolv.conf中设置的dns</title>
+        <link>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</link>
+        <pubDate>Sat, 14 Jul 2018 10:10:17 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/ -&lt;p&gt;NetworkManager只能分别为每个连接设置公共dns，同时重写/etc/resolv.conf中的设置，这里提供一种让系统使用/etc/resolv.conf中dns设置的方法&lt;/p&gt;
+&lt;h1 id=&#34;修改networkmanager配置&#34;&gt;修改NetworkManager配置&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vim /etc/NetworkManager/NetworkManager.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在[main]模块中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-config&#34; data-lang=&#34;config&#34;&gt;dns=none
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;删除软链接&#34;&gt;删除软链接&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo systemctl restart NetworkManager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;重启NetworkManager后发现/etc/resolv.conf变为一个损坏的软链接&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo rm /etc/resolv.conf
+sudo touch /etc/resolv.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;编辑dns&#34;&gt;编辑dns&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vim /etc/resolv.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;之后资料极多，不再赘述&lt;/p&gt;
+- https://adamyuan.xyz/post/networkmanager_use_dns_in_resolv_conf/ - ©2020 AdamYuan.</description>
+        </item>
+    
     
   </channel>
-</rss>
+</rss> 

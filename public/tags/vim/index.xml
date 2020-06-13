@@ -1,25 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vim on AdamYuan-&gt;Blog</title>
-    <link>/tags/vim/</link>
+    <link>https://adamyuan.xyz/tags/vim/</link>
     <description>Recent content in vim on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>©2019 AdamYuan.</copyright>
+    <language>en-us</language>
+    <copyright>©2020 AdamYuan.</copyright>
     <lastBuildDate>Wed, 18 Jul 2018 15:28:33 +0800</lastBuildDate>
     
-        <atom:link href="/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://adamyuan.xyz/tags/vim/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>配置GVim</title>
-      <link>/post/configurate_gvim/</link>
+      <link>https://adamyuan.xyz/post/configurate_gvim/</link>
       <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       
-      <guid>/post/configurate_gvim/</guid>
-      <description>基本配置 编辑~/.gvimrc 加入 set guifont=Source\ Code\ Pro\ 12 &amp;#34;字体可随意更改set guioptions=i &amp;#34;只保留图标消除白色边框 gtk3 编辑 ~/.config/gtk</description>
-      
+      <guid>https://adamyuan.xyz/post/configurate_gvim/</guid>
+      <description>基本配置 编辑~/.gvimrc 加入
+set guifont=Source\ Code\ Pro\ 12 &amp;#34;字体可随意更改set guioptions=i &amp;#34;只保留图标消除白色边框 gtk3 编辑 ~/.config/gtk-3.0/gtk.css，加入
+window#vim-main-window { background-color: #272822; /*背景色*/ } gtk2 编辑 ~/.gtkrc-2.0，加入
+style &amp;quot;vimfix&amp;quot; { bg[NORMAL] = &amp;quot;#272822&amp;quot; #背景色 GtkWindow::resize-grip-height = 0 GtkWindow::resize-grip-width = 0 } widget &amp;quot;vim-main-window.*GtkForm&amp;quot; style &amp;quot;vimfix&amp;quot; </description>
     </item>
     
   </channel>

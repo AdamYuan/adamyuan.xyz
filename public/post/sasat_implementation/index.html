@@ -1,11 +1,260 @@
 <!DOCTYPE html>
-<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.71.1" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>模拟退火求解3-SAT的C&#43;&#43;程序实现&nbsp;&ndash;&nbsp;AdamYuan-&gt;Blog</title><link rel="stylesheet" href="/css/core.min.f68b5a02feeed244ab50016a1b244c5ad4c62ebaaeb4995ebbee793fa8c6f571cd3b5c2083077293b9f1d2a22ef515fd.css" integrity="sha384-9otaAv7u0kSrUAFqGyRMWtTGLrqutJleu&#43;55P6jG9XHNO1wggwdyk7nx0qIu9RX9"><meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="模拟退火求解3-SAT的C&#43;&#43;程序实现" /><body><section id="header">
-    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><img class="site logo" src="/img/avatar.png" alt /><span class="site name">AdamYuan->Blog</span></a></span>
-        <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="/categories/">Categories</a><a class="nav item" href="/tags/">Tags</a></nav></div></span></div></section><section id="content"><div class="article-container"><section class="article header">
-    <h1 class="article title">模拟退火求解3-SAT的C++程序实现</h1><p class="article date">2019-06-15</p></section><article class="article markdown-body"><h1 id="1-问题概要与求解思路">1. 问题概要与求解思路</h1>
+<html><head>
+<title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>
+
+<meta charset="utf-8">
+<meta name="X-UA-Compatible" content="IE=edge">
+<meta name="google-site-verification" content="">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta content="telephone=no" name="format-detection">
+<meta name="description" content="">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" content="#ffffff">
+
+
+
+
+<script src="/vendor/js/jquery.min.js" ></script>
+<script src="/vendor/js/popper.min.js" ></script>
+<script src="/vendor/js/bootstrap.min.js" ></script>
+<script src="/vendor/js/smooth-scroll.polyfills.min.js" ></script>
+<link type="text/css" rel="stylesheet" href="/vendor/css/bootstrap.min.css">
+<script src="/vendor/js/vue.min.js" ></script>
+
+
+
+
+<link rel="stylesheet" href="https://adamyuan.xyz/scss/journal.min.47aa1ffb60880ad8c72feecd6962a14331eca7a7a30e08354a1ca91009b8bc5b.css" integrity="sha256-R6of&#43;2CICtjHL&#43;7NaWKhQzHsp6ejDgg1ShypEAm4vFs=" media="screen">
+
+
+
+<script src="https://adamyuan.xyz//js/loadCSS.js"></script>
+<script>
+  loadCSS("https://fonts.googleapis.com/css?family=Lora|Montserrat|Fira+Mono|Noto+Serif+SC|Material+Icons");
+</script>
+
+
+
+
+  
+    <script src="https://adamyuan.xyz//js/toc-collapse.js"></script>
+  
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="/vendor/js/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+  clientID: '214b3bed54d2162cf2f3',
+  clientSecret: '71543566573e2fa931b301f49339b09051e4eb61',
+  repo: 'adamyuan.xyz',
+  owner: 'AdamYuan',
+  admin: ['AdamYuan'],
+  id: md5(location.pathname),
+  distractionFreeMode: 'false'
+  });
+  window.onload = function () {
+        gitalk.render('gitalk-container')
+  }
+</script>
+
+
+
+
+
+
+
+
+</head><body>
+    	<div id="app"><div ref="sideContainer" class="side-container">
+    
+    <a class="a-block nav-head false" href="https://adamyuan.xyz/">
+    
+        <div class="nav-title">
+            AdamYuan-&gt;Blog
+        </div>
+        
+    </a>
+
+    <div class="nav-link-list">
+        
+        
+            
+            
+            
+                
+            
+            
+            
+            <a class="a-block nav-link-item active" href="/post">
+                Archive
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/categories">
+                Categories
+            </a>
+            
+        
+            
+            
+            
+            
+            
+            <a class="a-block nav-link-item false" href="/tags">
+                Tags
+            </a>
+            
+        
+    </div>
+
+    
+
+    <div class="nav-footer">
+        
+Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> by <a href="https://amazingrise.net">Rise</a>
+<br>
+移植自 <a href="https://mak1t0.cc/" target="_blank" rel="noreferrer noopener">Makito</a>'s <a href="https://github.com/SumiMakito/hexo-theme-journal/" target="_blank" rel="noreferrer noopener">Journal.</a> <br>
+<br>
+
+&copy;
+	
+	©2020 AdamYuan.
+	
+
+    </div>
+    
+</div><div ref="extraContainer" class="extra-container">
+    
+    
+    <div class="pagination">
+        <a id="globalBackToTop" class="pagination-action animated-visibility" href="#top" :class="{ invisible: scrollY == 0 }">
+            <i class="material-icons pagination-action-icon">
+                keyboard_arrow_up
+            </i>
+        </a>
+        
+        
+    </div>
+</div><div class="single-column-drawer-container" ref="drawer"
+     v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
+    <div class="drawer-content">
+        <div class="drawer-menu">
+            
+            
+            
+                
+                
+                
+                    
+                
+                
+                
+                <a class="a-block drawer-menu-item active" href="/post">
+                    Archive
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/categories">
+                    Categories
+                </a>
+                
+            
+                
+                
+                
+                
+                
+                <a class="a-block drawer-menu-item false" href="/tags">
+                    Tags
+                </a>
+                
+            
+            
+        </div>
+    </div>
+</div>
+<transition name="fade">
+    <div v-bind:class="{ 'single-column-drawer-mask': mounted }" v-if="isDrawerOpen" v-on:click="toggleDrawer"></div>
+</transition>
+<nav ref="navBar" class="navbar sticky-top navbar-light single-column-nav-container">
+    <div ref="navBackground" class="nav-background"></div>
+    <div class="container container-narrow nav-content">
+        <button id="nav_dropdown_btn" class="nav-dropdown-toggle" type="button" v-on:click="toggleDrawer">
+            <i class="material-icons">
+                menu
+            </i>
+        </button>
+        <a ref="navTitle" class="navbar-brand" href="https://adamyuan.xyz/">
+            AdamYuan-&gt;Blog
+        </a>
+        
+    </div>
+</nav>
+<div class="single-column-header-container" ref="pageHead"
+     v-bind:style="{ transform: 'translateZ(0px) translateY('+.3*scrollY+'px)', opacity: 1-navOpacity }">
+    <a href="https://adamyuan.xyz/">
+        <div class="single-column-header-title">AdamYuan-&gt;Blog</div>
+        
+
+    </a>
+</div>
+            <div id="content">
+<div ref="streamContainer" class="stream-container">
+    <div class="post-list-container post-list-container-shadow">
+        <div class="post">
+            
+            
+            
+
+            <div class="post-head-wrapper-text-only"
+                
+            >
+                <div class="post-title">
+                    模拟退火求解3-SAT的C&#43;&#43;程序实现
+                    
+                    <div class="post-meta">
+                        
+                        <time itemprop="datePublished">
+                            2019-06-15 16:04
+                        </time>
+                        
+
+                        
+                            <i class="material-icons" style="">folder</i>
+                                <a href="/categories/">[算法]</a>
+                                &nbsp;
+                        
+
+                        
+                            <i class="material-icons" style="">label</i>
+                            
+                                <a href="/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98">NP完全问题</a>
+                                &nbsp;
+                            
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="post-body-wrapper">
+                
+                <div class="post-body" v-pre>
+                
+                    <h1 id="1-问题概要与求解思路">1. 问题概要与求解思路</h1>
 <h2 id="11-3-sat问题">1.1 3-SAT问题</h2>
 <p>对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。</p>
 <p>将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。</p>
@@ -13,54 +262,54 @@
 <p>3-SAT问题即求解一个$$s$$使布尔表达式为真。这是一个NP完全问题，作为Schaefer&rsquo;s dichotomy定理的一个特例被Thomas Jerome Schaefer证明。</p>
 <h2 id="12-模拟退火">1.2 模拟退火</h2>
 <p>模拟退火是一个用于求解函数全局最大值的随机算法。与寻常的爬山法不同，模拟退火算法会在邻域内选取一个随机解，是否跳往随机解取决于温度和相对原解的函数值增加量。温度高时，跳转的随机程度大，温度降低后则大概率会跳向邻域内的最优，从而趋向局部最优。这种随机性使算法能够跳出局部最优，更可能寻找到全局最优。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Solution</span> <span class="nf">SimulatedAnnealing</span><span class="p">(</span><span class="n">Solution</span> <span class="n">s0</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="n">Solution</span> <span class="n">s</span> <span class="o">=</span> <span class="n">s0</span><span class="p">;</span> <span class="c1">//s表示当前解，s0为其初始值
-</span><span class="c1"></span>	<span class="kt">double</span> <span class="n">T</span> <span class="o">=</span> <span class="n">MAX_TEMP</span><span class="p">;</span> <span class="c1">//T为温度
-</span><span class="c1"></span>	<span class="k">while</span> <span class="p">(</span><span class="n">T</span> <span class="o">&gt;</span> <span class="n">MIN_TEMP</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="n">T</span> <span class="o">=</span> <span class="n">UpdateTemp</span><span class="p">(</span><span class="n">T</span><span class="p">);</span> <span class="c1">//更新(减小)温度
-</span><span class="c1"></span>		<span class="n">Solution</span> <span class="n">s_new</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">RandomNeighbour</span><span class="p">();</span> <span class="c1">//从当前解邻域随机选取一个解
-</span><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">(</span> <span class="n">Func</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">Func</span><span class="p">(</span><span class="n">s_new</span><span class="p">),</span> <span class="n">T</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1">//P()计算接受随机解的概率
-</span><span class="c1"></span>			<span class="n">s</span> <span class="o">=</span> <span class="n">s_new</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Solution <span style="color:#008b45">SimulatedAnnealing</span>(Solution s0)
+{
+	Solution s = s0; <span style="color:#228b22">//s表示当前解，s0为其初始值
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">double</span> T = MAX_TEMP; <span style="color:#228b22">//T为温度
+</span><span style="color:#228b22"></span>	<span style="color:#8b008b;font-weight:bold">while</span> (T &gt; MIN_TEMP)
+	{
+		T = UpdateTemp(T); <span style="color:#228b22">//更新(减小)温度
+</span><span style="color:#228b22"></span>		Solution s_new = s.RandomNeighbour(); <span style="color:#228b22">//从当前解邻域随机选取一个解
+</span><span style="color:#228b22"></span>		<span style="color:#8b008b;font-weight:bold">if</span> ( P( Func(s), Func(s_new), T ) &gt; Random(<span style="color:#b452cd">0</span>, <span style="color:#b452cd">1</span>)) <span style="color:#228b22">//P()计算接受随机解的概率
+</span><span style="color:#228b22"></span>			s = s_new;
+	}
+	<span style="color:#8b008b;font-weight:bold">return</span> s;
+}
 </code></pre></div><h2 id="13-sasat算法">1.3 SASAT算法</h2>
 <p>本文使用了<strong>SASAT</strong>算法(<strong>William M. Spears, Simulated Annealing for Hard Satisfiability Problems</strong>)。</p>
 <p>定义一个3-SAT解的价值$$SAT(s)$$为其能够满足的括号数量，显然若$$SAT(s) = N_{clause}$$，$$s$$则满足了布尔表达式。</p>
 <p>对于一个解$$s$$，定义$$Flip(s, n) = (x_1, x_2, &hellip;,\overline{x_n},&hellip;,x_{N_{var}})$$，变换得到的新解构成$$s$$的邻域。</p>
 <p>SASAT算法会进行多次模拟退火的尝试，若一次失败，下一次尝试温度下降速率将会变慢，这会降低程序的运行速度，但会增大寻找到满足布尔表达式的解的概率。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">Solution</span> <span class="nf">Try</span><span class="p">(</span><span class="kt">int</span> <span class="n">try_id</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="n">Solution</span> <span class="n">s</span> <span class="o">=</span> <span class="n">RandomSolution</span><span class="p">();</span> <span class="c1">//随机初始化解
-</span><span class="c1"></span>	<span class="kt">double</span> <span class="n">T</span> <span class="o">=</span> <span class="n">MAX_TEMP</span><span class="p">;</span>
-	<span class="kt">double</span> <span class="n">D</span> <span class="o">=</span> <span class="n">N_VAR</span> <span class="o">*</span> <span class="n">try_id</span><span class="p">;</span> <span class="c1">//D决定了温度的下降速率
-</span><span class="c1"></span>	<span class="kt">int</span> <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="k">while</span><span class="p">(</span><span class="n">T</span> <span class="o">&gt;</span> <span class="n">MIN_TEMP</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="n">SAT</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="n">N_CLAUSE</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
-		<span class="n">step</span> <span class="o">++</span><span class="p">;</span>
-		<span class="n">T</span> <span class="o">=</span> <span class="n">UpdateTemp</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">D</span><span class="p">);</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">Solution <span style="color:#008b45">Try</span>(<span style="color:#00688b;font-weight:bold">int</span> try_id)
+{
+	Solution s = RandomSolution(); <span style="color:#228b22">//随机初始化解
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">double</span> T = MAX_TEMP;
+	<span style="color:#00688b;font-weight:bold">double</span> D = N_VAR * try_id; <span style="color:#228b22">//D决定了温度的下降速率
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">int</span> step = <span style="color:#b452cd">0</span>;
+	<span style="color:#8b008b;font-weight:bold">while</span>(T &gt; MIN_TEMP)
+	{
+		<span style="color:#8b008b;font-weight:bold">if</span>(SAT(s) == N_CLAUSE) <span style="color:#8b008b;font-weight:bold">break</span>;
+		step ++;
+		T = UpdateTemp(step, D);
 		
-		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">N_VAR</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Flip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">T</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1">//P()计算接受随机解的概率
-</span><span class="c1"></span>				<span class="n">s</span> <span class="o">=</span> <span class="n">Flip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="n">s</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="n">Solution</span> <span class="nf">SASAT</span><span class="p">()</span>
-<span class="p">{</span>
-	<span class="kt">int</span> <span class="n">try_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="n">try_id</span> <span class="o">++</span><span class="p">;</span>
-		<span class="n">Solution</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Try</span><span class="p">(</span><span class="n">try_id</span><span class="p">);</span>
-		<span class="k">if</span><span class="p">(</span><span class="n">SAT</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="n">N_CLAUSE</span><span class="p">)</span> <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#00688b;font-weight:bold">int</span> i = <span style="color:#b452cd">1</span>; i &lt;= N_VAR; ++i)
+		{
+			<span style="color:#8b008b;font-weight:bold">if</span> ( P(s, Flip(s, n), T) &gt; Random(<span style="color:#b452cd">0</span>, <span style="color:#b452cd">1</span>)) <span style="color:#228b22">//P()计算接受随机解的概率
+</span><span style="color:#228b22"></span>				s = Flip(s, n);
+		}
+	}
+	<span style="color:#8b008b;font-weight:bold">return</span> s;
+}
+Solution <span style="color:#008b45">SASAT</span>()
+{
+	<span style="color:#00688b;font-weight:bold">int</span> try_id = <span style="color:#b452cd">0</span>;
+	<span style="color:#8b008b;font-weight:bold">while</span>(<span style="color:#658b00">true</span>)
+	{
+		try_id ++;
+		Solution s = Try(try_id);
+		<span style="color:#8b008b;font-weight:bold">if</span>(SAT(s) == N_CLAUSE) <span style="color:#8b008b;font-weight:bold">return</span> s;
+	}
+}
 </code></pre></div><p>其中$$UpdateTemp(step, D) = {MAX_TEMP}\cdot e^{{-step} \over D}$$，$$P(s, s_{flip}, T) = ({1 + e^{{SAT(s) - SAT(s_{flip})} \over T} })^{-1}$$</p>
 <p>本文侧重于程序的实现，对SASAT算法不继续深究。</p>
 <h1 id="2-c程序实现与优化">2. C++程序实现与优化</h1>
@@ -69,204 +318,204 @@
 <h3 id="211-naive">2.1.1 Naive</h3>
 <p>SASAT算法的高效执行主要取决于$$SAT(s)$$的运行效率，在$$N_{clause} = 1065$$时，若直接暴力枚举每个括号进行计算，无疑会使运行效率极为低下。$$Flip(s, n)$$在计算机中仅为简单的布尔运算，不会产生这个问题。</p>
 <p>暴力枚举的$$SAT(s)$$如下</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">struct</span> <span class="nc">ElementPair</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">var_index</span><span class="p">;</span> <span class="kt">bool</span> <span class="n">nagative</span><span class="p">;</span> <span class="p">};</span>
-<span class="k">struct</span> <span class="nc">Clause</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">clause_index</span><span class="p">;</span> <span class="n">ElementPair</span> <span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span> <span class="p">};</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">ElementPair</span> { <span style="color:#00688b;font-weight:bold">int</span> var_index; <span style="color:#00688b;font-weight:bold">bool</span> nagative; };
+<span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">Clause</span> { <span style="color:#00688b;font-weight:bold">int</span> clause_index; ElementPair elements[<span style="color:#b452cd">3</span>]; };
 
-<span class="n">Clause</span> <span class="n">clauses</span><span class="p">[</span><span class="n">MAX_CLAUSE_NUM</span><span class="p">];</span><span class="c1">//所有的括号
-</span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">Solution</span>
-<span class="p">{</span>
-	<span class="kt">bool</span> <span class="n">var_value</span><span class="p">[</span><span class="n">MAX_VAR_NUM</span><span class="p">];</span> <span class="c1">//解中每个变量的取值
-</span><span class="c1"></span>	<span class="kt">int</span> <span class="n">satisfied_cnt</span><span class="p">;</span> <span class="c1">//即SAT(s)
-</span><span class="c1"></span>	
-	<span class="c1">//以下的函数默认为Solution类的成员函数，即省去了s参数
-</span><span class="c1"></span>	<span class="kt">void</span> <span class="nf">Flip</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-	<span class="p">}</span>
-	<span class="kt">bool</span> <span class="nf">ClauseSAT</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">element</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">nagative</span> <span class="o">!=</span> <span class="n">var_value</span><span class="p">[</span> <span class="n">c</span><span class="p">.</span><span class="n">element</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">var_index</span> <span class="p">])</span> <span class="c1">//nagative表示括号中元素对变量取反，var_value为解中各变量的值
-</span><span class="c1"></span>				<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="kt">int</span> <span class="nf">SAT</span><span class="p">()</span>
-	<span class="p">{</span>
-		<span class="n">satisfied_cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-		<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span> <span class="o">&amp;</span><span class="nl">c</span> <span class="p">:</span> <span class="n">clauses</span><span class="p">)</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">ClauseSAT</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="o">++</span><span class="n">satisfied_cnt</span><span class="p">;</span>
-		<span class="k">return</span> <span class="n">satisfied_cnt</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+Clause clauses[MAX_CLAUSE_NUM];<span style="color:#228b22">//所有的括号
+</span><span style="color:#228b22"></span>
+<span style="color:#8b008b;font-weight:bold">class</span> <span style="color:#008b45;font-weight:bold">Solution</span>
+{
+	<span style="color:#00688b;font-weight:bold">bool</span> var_value[MAX_VAR_NUM]; <span style="color:#228b22">//解中每个变量的取值
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">int</span> satisfied_cnt; <span style="color:#228b22">//即SAT(s)
+</span><span style="color:#228b22"></span>	
+	<span style="color:#228b22">//以下的函数默认为Solution类的成员函数，即省去了s参数
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">Flip</span>(<span style="color:#00688b;font-weight:bold">int</span> n)
+	{
+		var_value[n] = !var_value[n];
+	}
+	<span style="color:#00688b;font-weight:bold">bool</span> <span style="color:#008b45">ClauseSAT</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause &amp;c)
+	{
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#00688b;font-weight:bold">int</span> i = <span style="color:#b452cd">0</span>; i &lt; <span style="color:#b452cd">3</span>; ++i)
+			<span style="color:#8b008b;font-weight:bold">if</span>(c.element[i].nagative != var_value[ c.element[i].var_index ]) <span style="color:#228b22">//nagative表示括号中元素对变量取反，var_value为解中各变量的值
+</span><span style="color:#228b22"></span>				<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#658b00">true</span>;
+		<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#658b00">false</span>;
+	}
+	<span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">SAT</span>()
+	{
+		satisfied_cnt = <span style="color:#b452cd">0</span>;
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause &amp;c : clauses)
+			<span style="color:#8b008b;font-weight:bold">if</span>(ClauseSAT(c)) ++satisfied_cnt;
+		<span style="color:#8b008b;font-weight:bold">return</span> satisfied_cnt;
+	}
+}
 </code></pre></div><h3 id="212-在flip函数中计算sats增减">2.1.2 在Flip函数中计算SAT(s)增减</h3>
 <p>通过观察1.2中的伪代码，我们注意到Try函数中s的变换全部通过Flip完成，一个直观的优化是在Flip时统计SAT(s)的增减。</p>
 <p>为此我们为每个变量建立一个名为<strong>related_clauses_vec</strong>的列表(std::vector)，记录包含这个变量的括号，当Flip一个变量时，只需要更新列表中的括号便能计算出<strong>SAT(s)</strong>。(需要事先记录每个括号是否满足才能如此更新，称每个括号的满足情况为<strong>clause_value</strong>)</p>
 <p>但是直接在Flip中更新SAT(s)也有其问题，若是此变量最终没有被Flip，还得重新把这个变量Flip回来。因此，我们新增两个函数<strong>TestFlip(s, n)<strong>和</strong>ApplyFlip(s)</strong>。<strong>TestFlip(s, n)<strong>在单独的环境中执行修改，记录修改的信息，返回修改后的</strong>SAT(s)</strong>。**ApplyFlip(s)<strong>则将</strong>TestFlip(s, n)**所得的信息覆盖到原来s的信息(<strong>clause_var</strong>, SAT(s), etc..)</p>
 <p>进一步优化，对于单个变量，其<strong>related_clauses_vec</strong>可以分为&quot;在括号其中不取反的(<strong>related_clauses_vec[0]</strong>)&ldquo;和&quot;在括号其中取反的(<strong>related_clauses_vec[1]</strong>)&ldquo;两个列表。假设变量从0 Flip成1，**related_clauses_vec[0]<strong>中的括号的值可以直接设为1，而</strong>related_clauses_vec[1]**中的括号则需要调用ClauseSAT进行更新。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">struct</span> <span class="nc">ElementPair</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">var_index</span><span class="p">;</span> <span class="kt">bool</span> <span class="n">nagative</span><span class="p">;</span> <span class="p">};</span>
-<span class="k">struct</span> <span class="nc">Clause</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">clause_index</span><span class="p">;</span> <span class="n">ElementPair</span> <span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span> <span class="p">};</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">ElementPair</span> { <span style="color:#00688b;font-weight:bold">int</span> var_index; <span style="color:#00688b;font-weight:bold">bool</span> nagative; };
+<span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">Clause</span> { <span style="color:#00688b;font-weight:bold">int</span> clause_index; ElementPair elements[<span style="color:#b452cd">3</span>]; };
 
-<span class="n">Clause</span> <span class="n">clauses</span><span class="p">[</span><span class="n">MAX_CLAUSE_NUM</span><span class="p">];</span><span class="c1">//所有的括号
-</span><span class="c1"></span>
-<span class="k">struct</span> <span class="nc">ModifyInfo</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">clause_index</span><span class="p">;</span> <span class="kt">bool</span> <span class="n">value</span><span class="p">;</span> <span class="p">};</span> <span class="c1">//新增，为了保存括号值的修改
-</span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">Solution</span>
-<span class="p">{</span>
-	<span class="kt">bool</span> <span class="n">var_value</span><span class="p">[</span><span class="n">MAX_VAR_NUM</span><span class="p">];</span> <span class="c1">//解中每个变量的取值
-</span><span class="c1"></span>	<span class="kt">bool</span> <span class="n">clause_value</span><span class="p">[</span><span class="n">MAX_CLAUSE_NUM</span><span class="p">];</span> <span class="c1">//括号是否得到满足
-</span><span class="c1"></span>	<span class="kt">int</span> <span class="n">satisfied_cnt</span><span class="p">;</span> <span class="c1">//即SAT(s)
-</span><span class="c1"></span>	
-	<span class="kt">int</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span> <span class="c1">//备份的SAT(s)
-</span><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ModifyInfo</span><span class="o">&gt;</span> <span class="n">clause_modifications</span><span class="p">;</span>
+Clause clauses[MAX_CLAUSE_NUM];<span style="color:#228b22">//所有的括号
+</span><span style="color:#228b22"></span>
+<span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">ModifyInfo</span> { <span style="color:#00688b;font-weight:bold">int</span> clause_index; <span style="color:#00688b;font-weight:bold">bool</span> value; }; <span style="color:#228b22">//新增，为了保存括号值的修改
+</span><span style="color:#228b22"></span>
+<span style="color:#8b008b;font-weight:bold">class</span> <span style="color:#008b45;font-weight:bold">Solution</span>
+{
+	<span style="color:#00688b;font-weight:bold">bool</span> var_value[MAX_VAR_NUM]; <span style="color:#228b22">//解中每个变量的取值
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">bool</span> clause_value[MAX_CLAUSE_NUM]; <span style="color:#228b22">//括号是否得到满足
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">int</span> satisfied_cnt; <span style="color:#228b22">//即SAT(s)
+</span><span style="color:#228b22"></span>	
+	<span style="color:#00688b;font-weight:bold">int</span> satisfied_cnt_tmp; <span style="color:#228b22">//备份的SAT(s)
+</span><span style="color:#228b22"></span>	std::vector&lt;ModifyInfo&gt; clause_modifications;
 	
-	<span class="kt">bool</span> <span class="nf">ClauseSAT</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">element</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">nagative</span> <span class="o">!=</span> <span class="n">var_value</span><span class="p">[</span> <span class="n">c</span><span class="p">.</span><span class="n">element</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">var_index</span> <span class="p">])</span> <span class="c1">//nagative表示括号中元素对变量取反，var_value为解中各变量的值
-</span><span class="c1"></span>				<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-	<span class="p">}</span>
+	<span style="color:#00688b;font-weight:bold">bool</span> <span style="color:#008b45">ClauseSAT</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause &amp;c)
+	{
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#00688b;font-weight:bold">int</span> i = <span style="color:#b452cd">0</span>; i &lt; <span style="color:#b452cd">3</span>; ++i)
+			<span style="color:#8b008b;font-weight:bold">if</span>(c.element[i].nagative != var_value[ c.element[i].var_index ]) <span style="color:#228b22">//nagative表示括号中元素对变量取反，var_value为解中各变量的值
+</span><span style="color:#228b22"></span>				<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#658b00">true</span>;
+		<span style="color:#8b008b;font-weight:bold">return</span> <span style="color:#658b00">false</span>;
+	}
 	
-	<span class="kt">int</span> <span class="nf">TestFlip</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="n">satisfied_cnt_tmp</span> <span class="o">=</span> <span class="n">satisfied_cnt</span><span class="p">;</span>
-		<span class="n">clause_modifications</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">TestFlip</span>(<span style="color:#00688b;font-weight:bold">int</span> n)
+	{
+		satisfied_cnt_tmp = satisfied_cnt;
+		clause_modifications.clear();
 		
-		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Clause</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">related_clauses0</span> <span class="o">=</span> <span class="n">GetRelatedClause</span><span class="p">(</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">);</span>
-		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Clause</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">related_clauses1</span> <span class="o">=</span> <span class="n">GetRelatedClause</span><span class="p">(</span><span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">);</span>
-		<span class="c1">//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
-</span><span class="c1"></span>
-		<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span><span class="o">*</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">related_clauses0</span><span class="p">)</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">clause_value</span><span class="p">[</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="c1">//从0变1,才需要更新SAT(s)
-</span><span class="c1"></span>			<span class="p">{</span>
-				<span class="n">clause_modifications</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">,</span> <span class="nb">true</span><span class="p">});</span>
-				<span class="c1">//保存修改
-</span><span class="c1"></span>				<span class="n">satisfied_cnt_tmp</span> <span class="o">++</span><span class="p">;</span>
-			<span class="p">}</span>
+		std::vector&lt;Clause*&gt; &amp;related_clauses0 = GetRelatedClause(var_value[n], n);
+		std::vector&lt;Clause*&gt; &amp;related_clauses1 = GetRelatedClause(!var_value[n], n);
+		<span style="color:#228b22">//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
+</span><span style="color:#228b22"></span>
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause* c : related_clauses0)
+			<span style="color:#8b008b;font-weight:bold">if</span>(clause_value[c-&gt;clause_index] == <span style="color:#b452cd">0</span>)<span style="color:#228b22">//从0变1,才需要更新SAT(s)
+</span><span style="color:#228b22"></span>			{
+				clause_modifications.push_back({c-&gt;clause_index, <span style="color:#658b00">true</span>});
+				<span style="color:#228b22">//保存修改
+</span><span style="color:#228b22"></span>				satisfied_cnt_tmp ++;
+			}
 		
-		<span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-		<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span><span class="o">*</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">related_clauses1</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="kt">int</span> <span class="n">new_clause_value</span> <span class="o">=</span> <span class="n">ClauseSAT</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">);</span> <span class="c1">//Flip(n)后括号的值
-</span><span class="c1"></span>			<span class="k">if</span><span class="p">(</span><span class="n">clause_value</span><span class="p">[</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">]</span> <span class="o">!=</span> <span class="n">new_clause_value</span><span class="p">)</span><span class="c1">//括号值改变则执行修改
-</span><span class="c1"></span>			<span class="p">{</span>
-				<span class="n">clause_modifications</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">,</span> <span class="n">new_clause_value</span><span class="p">});</span>
-				<span class="n">satisfied_cnt_tmp</span> <span class="o">--</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
-		<span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-		<span class="k">return</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">ApplyFlip</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="c1">//应用TestFlip的修改
-</span><span class="c1"></span>	<span class="p">{</span>
-		<span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-		<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">clause_modifications</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
-		<span class="p">{</span>
-			<span class="k">const</span> <span class="n">ModifyInfo</span> <span class="o">&amp;</span><span class="n">m</span> <span class="o">=</span> <span class="n">clause_modifications</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
-			<span class="n">clause_value</span><span class="p">[</span> <span class="n">m</span><span class="p">.</span><span class="n">clause_index</span> <span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
-			<span class="n">clause_modifications</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
-		<span class="p">}</span>
-		<span class="n">satisfied_cnt</span> <span class="o">=</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span>
-	<span class="p">}</span>
+		var_value[n] = !var_value[n];
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause* c : related_clauses1)
+		{
+			<span style="color:#00688b;font-weight:bold">int</span> new_clause_value = ClauseSAT(*c); <span style="color:#228b22">//Flip(n)后括号的值
+</span><span style="color:#228b22"></span>			<span style="color:#8b008b;font-weight:bold">if</span>(clause_value[c-&gt;clause_index] != new_clause_value)<span style="color:#228b22">//括号值改变则执行修改
+</span><span style="color:#228b22"></span>			{
+				clause_modifications.push_back({c-&gt;clause_index, new_clause_value});
+				satisfied_cnt_tmp --;
+			}
+		}
+		var_value[n] = !var_value[n];
+		<span style="color:#8b008b;font-weight:bold">return</span> satisfied_cnt_tmp;
+	}
+	<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">ApplyFlip</span>(<span style="color:#00688b;font-weight:bold">int</span> n) <span style="color:#228b22">//应用TestFlip的修改
+</span><span style="color:#228b22"></span>	{
+		var_value[n] = !var_value[n];
+		<span style="color:#8b008b;font-weight:bold">while</span>(!clause_modifications.empty())
+		{
+			<span style="color:#8b008b;font-weight:bold">const</span> ModifyInfo &amp;m = clause_modifications.back();
+			clause_value[ m.clause_index ] = m.value;
+			clause_modifications.pop_back();
+		}
+		satisfied_cnt = satisfied_cnt_tmp;
+	}
 
-	<span class="kt">int</span> <span class="nf">SAT</span><span class="p">()</span>
-	<span class="p">{</span>
-		<span class="k">return</span> <span class="n">satisfied_cnt</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+	<span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">SAT</span>()
+	{
+		<span style="color:#8b008b;font-weight:bold">return</span> satisfied_cnt;
+	}
+}
 </code></pre></div><h3 id="213-统计括号中为1的元素个数">2.1.3 统计括号中为1的元素个数</h3>
 <p>2.1.2的代码中，<strong>clause_value</strong>数组为布尔类型，仅仅储存括号是否满足，这使得<strong>TestFlip</strong>时能够用到的信息十分有限。为此，我们重新定义<strong>clause_value</strong>为<strong>int</strong>类型，储存括号中为1的元素个数。</p>
 <p>假设括号$$c = (x_1 \lor x_2 \lor \overline{x_3})，x_1 = 0, x_2 = 1, x_3 = 0$$，则其<strong>clause_value</strong>为2($$x_2, x_3$$在c中为真)</p>
 <p>这样以后，我们可以直接用加、减运算更新<strong>clause_value</strong>，避免了一切<strong>ClauseSAT</strong>调用</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">struct</span> <span class="nc">ModifyInfo</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">clause_index</span><span class="p">,</span> <span class="n">value</span><span class="p">;</span> <span class="p">};</span> <span class="c1">//成员value改为int类型
-</span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">Solution</span>
-<span class="p">{</span>
-	<span class="kt">bool</span> <span class="n">var_value</span><span class="p">[</span><span class="n">MAX_VAR_NUM</span><span class="p">];</span>
-	<span class="kt">int</span> <span class="n">clause_value</span><span class="p">[</span><span class="n">MAX_CLAUSE_NUM</span><span class="p">];</span> <span class="c1">//clause_val改为int类型
-</span><span class="c1"></span>	<span class="kt">int</span> <span class="n">satisfied_cnt</span><span class="p">;</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#8b008b;font-weight:bold">struct</span> <span style="color:#008b45;font-weight:bold">ModifyInfo</span> { <span style="color:#00688b;font-weight:bold">int</span> clause_index, value; }; <span style="color:#228b22">//成员value改为int类型
+</span><span style="color:#228b22"></span>
+<span style="color:#8b008b;font-weight:bold">class</span> <span style="color:#008b45;font-weight:bold">Solution</span>
+{
+	<span style="color:#00688b;font-weight:bold">bool</span> var_value[MAX_VAR_NUM];
+	<span style="color:#00688b;font-weight:bold">int</span> clause_value[MAX_CLAUSE_NUM]; <span style="color:#228b22">//clause_val改为int类型
+</span><span style="color:#228b22"></span>	<span style="color:#00688b;font-weight:bold">int</span> satisfied_cnt;
 	
-	<span class="kt">int</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span>
-	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ModifyInfo</span><span class="o">&gt;</span> <span class="n">clause_modifications</span><span class="p">;</span>
+	<span style="color:#00688b;font-weight:bold">int</span> satisfied_cnt_tmp;
+	std::vector&lt;ModifyInfo&gt; clause_modifications;
 	
-	<span class="kt">int</span> <span class="nf">TestFlip</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
-	<span class="p">{</span>
-		<span class="n">satisfied_cnt_tmp</span> <span class="o">=</span> <span class="n">satisfied_cnt</span><span class="p">;</span>
-		<span class="n">clause_modifications</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span style="color:#00688b;font-weight:bold">int</span> <span style="color:#008b45">TestFlip</span>(<span style="color:#00688b;font-weight:bold">int</span> n)
+	{
+		satisfied_cnt_tmp = satisfied_cnt;
+		clause_modifications.clear();
 		
-		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Clause</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">related_clauses0</span> <span class="o">=</span> <span class="n">GetRelatedClause</span><span class="p">(</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">);</span>
-		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Clause</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">related_clauses1</span> <span class="o">=</span> <span class="n">GetRelatedClause</span><span class="p">(</span><span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">n</span><span class="p">);</span>
-		<span class="c1">//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
-</span><span class="c1"></span>
-		<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span><span class="o">*</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">related_clauses0</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="n">clause_modifications</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">});</span> <span class="c1">//给clause_value加1
-</span><span class="c1"></span>			<span class="k">if</span><span class="p">(</span><span class="n">clause_value</span><span class="p">[</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="c1">//从0变1,才需要更新SAT(s)
-</span><span class="c1"></span>				<span class="n">satisfied_cnt_tmp</span> <span class="o">++</span><span class="p">;</span>
-		<span class="p">}</span>
+		std::vector&lt;Clause*&gt; &amp;related_clauses0 = GetRelatedClause(var_value[n], n);
+		std::vector&lt;Clause*&gt; &amp;related_clauses1 = GetRelatedClause(!var_value[n], n);
+		<span style="color:#228b22">//获取与变量相关的括号，Flip后related_clauses0中的括号可以直接设为1，而related_clauses1中的括号需要调用ClauseSAT更新
+</span><span style="color:#228b22"></span>
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause* c : related_clauses0)
+		{
+			clause_modifications.push_back({c-&gt;clause_index, <span style="color:#b452cd">1</span>}); <span style="color:#228b22">//给clause_value加1
+</span><span style="color:#228b22"></span>			<span style="color:#8b008b;font-weight:bold">if</span>(clause_value[c-&gt;clause_index] == <span style="color:#b452cd">0</span>)<span style="color:#228b22">//从0变1,才需要更新SAT(s)
+</span><span style="color:#228b22"></span>				satisfied_cnt_tmp ++;
+		}
 		
-		<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">Clause</span><span class="o">*</span> <span class="nl">c</span> <span class="p">:</span> <span class="n">related_clauses1</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="n">clause_modifications</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">clause_value</span><span class="p">[</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">clause_index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">//从1变0
-</span><span class="c1"></span>				<span class="n">satisfied_cnt_tmp</span> <span class="o">--</span><span class="p">;</span>
-		<span class="p">}</span>
-		<span class="k">return</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">ApplyFlip</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="c1">//应用TestFlip的修改
-</span><span class="c1"></span>	<span class="p">{</span>
-		<span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">var_value</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-		<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">clause_modifications</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
-		<span class="p">{</span>
-			<span class="k">const</span> <span class="n">ModifyInfo</span> <span class="o">&amp;</span><span class="n">m</span> <span class="o">=</span> <span class="n">clause_modifications</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
-			<span class="n">clause_value</span><span class="p">[</span> <span class="n">m</span><span class="p">.</span><span class="n">clause_index</span> <span class="p">]</span> <span class="o">+=</span> <span class="n">m</span><span class="p">.</span><span class="n">value</span><span class="p">;</span> <span class="c1">//&#34;=&#34;改为&#34;+=&#34;
-</span><span class="c1"></span>			<span class="n">clause_modifications</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
-		<span class="p">}</span>
-		<span class="n">satisfied_cnt</span> <span class="o">=</span> <span class="n">satisfied_cnt_tmp</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+		<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#8b008b;font-weight:bold">const</span> Clause* c : related_clauses1)
+		{
+			clause_modifications.push_back({c-&gt;clause_index, -<span style="color:#b452cd">1</span>});
+			<span style="color:#8b008b;font-weight:bold">if</span>(clause_value[c-&gt;clause_index] == <span style="color:#b452cd">1</span>) <span style="color:#228b22">//从1变0
+</span><span style="color:#228b22"></span>				satisfied_cnt_tmp --;
+		}
+		<span style="color:#8b008b;font-weight:bold">return</span> satisfied_cnt_tmp;
+	}
+	<span style="color:#8b008b;font-weight:bold">inline</span> <span style="color:#00688b;font-weight:bold">void</span> <span style="color:#008b45">ApplyFlip</span>(<span style="color:#00688b;font-weight:bold">int</span> n) <span style="color:#228b22">//应用TestFlip的修改
+</span><span style="color:#228b22"></span>	{
+		var_value[n] = !var_value[n];
+		<span style="color:#8b008b;font-weight:bold">while</span>(!clause_modifications.empty())
+		{
+			<span style="color:#8b008b;font-weight:bold">const</span> ModifyInfo &amp;m = clause_modifications.back();
+			clause_value[ m.clause_index ] += m.value; <span style="color:#228b22">//&#34;=&#34;改为&#34;+=&#34;
+</span><span style="color:#228b22"></span>			clause_modifications.pop_back();
+		}
+		satisfied_cnt = satisfied_cnt_tmp;
+	}
+}
 </code></pre></div><h2 id="22-多线程">2.2 多线程</h2>
 <p>整个SASAT算法包括多次模拟退火的尝试(Try)，很自然的想到将这些尝试并行。可以发现每个Try之间不需要任何数据交换，因此并行十分容易实现。</p>
 <p>这是原来的算法框架</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">std</span><span class="o">::</span><span class="n">mt19937</span> <span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span> <span class="c1">//这只是个随机数生成器
-</span><span class="c1"></span><span class="n">Solution</span> <span class="nf">solution</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
-<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_tries</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="k">if</span><span class="p">(</span><span class="n">Try</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
-		<span class="k">break</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std::mt19937 generator(seed); <span style="color:#228b22">//这只是个随机数生成器
+</span><span style="color:#228b22"></span>Solution <span style="color:#008b45">solution</span>(file);
+<span style="color:#8b008b;font-weight:bold">for</span>(<span style="color:#00688b;font-weight:bold">int</span> i = <span style="color:#b452cd">1</span>; i &lt;= max_tries; ++i)
+{
+	<span style="color:#8b008b;font-weight:bold">if</span>(Try(generator, solution, i))
+		<span style="color:#8b008b;font-weight:bold">break</span>;
+}
 </code></pre></div><p>我们使用了c++11中的<strong>std::future</strong>，<strong>std::async</strong>特性来实现并行</p>
-<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">unsigned</span> <span class="n">cores</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">hardware_concurrency</span><span class="p">();</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;&gt;</span> <span class="n">future_vector</span><span class="p">;</span>
-<span class="n">future_vector</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">cores</span><span class="p">);</span>
+<div class="highlight"><pre style="background-color:#eed;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#00688b;font-weight:bold">unsigned</span> cores = std::<span style="color:#8b008b;font-weight:bold">thread</span>::hardware_concurrency();
+std::vector&lt;std::future&lt;<span style="color:#00688b;font-weight:bold">void</span>&gt;&gt; future_vector;
+future_vector.reserve(cores);
 
-<span class="n">std</span><span class="o">::</span><span class="n">atomic_int</span> <span class="n">try_id</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">mt19937</span> <span class="n">seed_generator</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span>
+std::atomic_int try_id(<span style="color:#b452cd">1</span>);
+std::mt19937 seed_generator(seed);
 
-<span class="k">while</span><span class="p">(</span><span class="n">cores</span> <span class="o">--</span><span class="p">)</span> <span class="c1">//为每个cpu核心创建线程
-</span><span class="c1"></span><span class="p">{</span>
-	<span class="n">future_vector</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span>
-				<span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">thread_seed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
-				<span class="p">{</span>
-					<span class="n">std</span><span class="o">::</span><span class="n">mt19937</span> <span class="n">generator</span><span class="p">(</span><span class="n">thread_seed</span><span class="p">);</span>
-					<span class="n">Solution</span> <span class="nf">solution</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+<span style="color:#8b008b;font-weight:bold">while</span>(cores --) <span style="color:#228b22">//为每个cpu核心创建线程
+</span><span style="color:#228b22"></span>{
+	future_vector.push_back(std::async(
+				[&amp;](<span style="color:#00688b;font-weight:bold">unsigned</span> <span style="color:#00688b;font-weight:bold">long</span> thread_seed) -&gt; <span style="color:#00688b;font-weight:bold">void</span>
+				{
+					std::mt19937 generator(thread_seed);
+					Solution <span style="color:#008b45">solution</span>(file);
 
-					<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
-					<span class="p">{</span>
-						<span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">try_id</span> <span class="o">++</span><span class="p">;</span> <span class="c1">//领取一个Try任务
-</span><span class="c1"></span>						<span class="k">if</span><span class="p">(</span><span class="n">index</span> <span class="o">&gt;</span> <span class="n">max_tries</span><span class="p">)</span>
-							<span class="k">break</span><span class="p">;</span>
+					<span style="color:#8b008b;font-weight:bold">while</span>(<span style="color:#658b00">true</span>)
+					{
+						<span style="color:#00688b;font-weight:bold">int</span> index = try_id ++; <span style="color:#228b22">//领取一个Try任务
+</span><span style="color:#228b22"></span>						<span style="color:#8b008b;font-weight:bold">if</span>(index &gt; max_tries)
+							<span style="color:#8b008b;font-weight:bold">break</span>;
 	
-						<span class="k">if</span><span class="p">(</span><span class="n">Try</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">index</span><span class="p">))</span>
-						<span class="p">{</span>
-							<span class="n">try_id</span> <span class="o">=</span> <span class="n">max_tries</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//找到满足的解便结束线程
-</span><span class="c1"></span>							<span class="k">break</span><span class="p">;</span>
-						<span class="p">}</span>
-					<span class="p">}</span>
-				<span class="p">},</span> <span class="n">seed_generator</span><span class="p">()</span> <span class="c1">//为每个线程传入随机种子
-</span><span class="c1"></span>	<span class="p">));</span>
-<span class="p">}</span>
+						<span style="color:#8b008b;font-weight:bold">if</span>(Try(generator, solution, index))
+						{
+							try_id = max_tries + <span style="color:#b452cd">1</span>; <span style="color:#228b22">//找到满足的解便结束线程
+</span><span style="color:#228b22"></span>							<span style="color:#8b008b;font-weight:bold">break</span>;
+						}
+					}
+				}, seed_generator() <span style="color:#228b22">//为每个线程传入随机种子
+</span><span style="color:#228b22"></span>	));
+}
 </code></pre></div><h2 id="23-分析与比较">2.3 分析与比较</h2>
 <p>测试数据中$$N_{var} = 250, N_{clause} = 1065$$</p>
 <p>测试环境为Manjaro 18.0.4 Illyria，x86_64 Linux 5.0.21-1-MANJARO，Intel Xeon E3-1505M v6 @ 8x 4GHz，gcc (GCC) 8.3.0</p>
@@ -335,14 +584,157 @@
 <p>可见多线程对于运行效率的提升是显著的，对于<strong>2.1.2优化1</strong>的提升会更大一些。由于SASAT算法本身的优良特性，大多数情况下Try次数都在30以内，此程序多能在1秒内求解。</p>
 <h1 id="附录">附录</h1>
 <p>测试样例详见<a href="https://github.com/AdamYuan/SATv2/tree/master/problems">https://github.com/AdamYuan/SATv2/tree/master/problems</a></p>
-<p><strong>2.1.3优化2 + 多线程</strong> 程序<a href="https://github.com/AdamYuan/SATv2">https://github.com/AdamYuan/SATv2</a></p></article><section class="article labels"><a class="category" href=/categories/%E7%AE%97%E6%B3%95/>算法</a><a class="tag" href=/tags/np%E5%AE%8C%E5%85%A8%E9%97%AE%E9%A2%98/>NP完全问题</a></section><section class="article author"><div class="details"><a class="item" href="https://github.com/AdamYuan" target="_blank"><span class="iconfont icon-github"></span>&nbsp;AdamYuan</a><a class="item" href="mailto:y13916619121@126.com" target="_blank"><span class="iconfont icon-email"></span>&nbsp;y13916619121@126.com</a></div>
-</section></div>
-<div class="article bottom"><section class="article navigation"><p><a class="link" href="/post/big_pow/"><span class="iconfont icon-article"></span>计算3的1000000次方</a></p></section></div></section><section id="footer"><div class="footer-wrap">
-    <p class="copyright">©2019 AdamYuan.</p>
-    <p class="powerby"><span>Powered by </span><a href="https://gohugo.io" 
-        target="_blank">Hugo</a><span> and the </span><a href="https://themes.gohugo.io/hugo-notepadium/" 
-        target="_blank">Notepadium</a></p>
-</div></section><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-            onload="renderMathInElement(document.body);"></script></body>
+<p><strong>2.1.3优化2 + 多线程</strong> 程序<a href="https://github.com/AdamYuan/SATv2">https://github.com/AdamYuan/SATv2</a></p>
+                    
+                    <HR width="100%" id="EOF">
+		    <p style="color:#777;">最后修改于 2019-06-15</p>
+                    
+                </div>
+            </div>
+            
+            
+            <nav class="post-pagination">
 
+                
+                <a class="newer-posts">
+			下回<br>已经到头啦。
+                </a>
+                
+                
+                
+                <a class="older-posts" href="https://adamyuan.xyz/post/big_pow/">
+			上回<br>计算3的1000000次方
+                </a>
+                
+            </nav>
+            <div class="post-comment-wrapper">
+                
+
+
+<div id="gitalk-container"></div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div><div id="single-column-footer">
+Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> by <a href="https://amazingrise.net">Rise</a>
+<br>
+移植自 <a href="https://mak1t0.cc/" target="_blank" rel="noreferrer noopener">Makito</a>'s <a href="https://github.com/SumiMakito/hexo-theme-journal/" target="_blank" rel="noreferrer noopener">Journal.</a> <br>
+<br>
+
+&copy;
+	
+	©2020 AdamYuan.
+	
+</div>
+            </div>
+    <script>
+let app;
+
+app = new Vue({
+    el: '#app',
+    data: {
+        scrollY: 0,
+        navOpacity: 0,
+        isDrawerOpen: false,
+        mounted: false,
+        isDarkMode: false
+    },
+    methods: {
+            sgn(t, x) {
+                let k = 1. / (1. - 2 * t);
+                if (x <= t) return 0;
+                else if (x >= 1 - t) return 1;
+                else {
+                    return k * (x - t);
+                }
+            },
+            handleScroll() {
+                this.scrollY = window.scrollY;
+                this.navOpacity = this.sgn(.0, Math.min(1, Math.max(0, window.scrollY / (this.pageHeadHeight() - this.navBarHeight() * 0.8))));
+                const {navBar, navBackground, navTitle, extraContainer, streamContainer} = this.$refs;
+
+                if (this.navOpacity >= 1) {
+                    navBackground.style.opacity = 1;
+                    navTitle.style.opacity = 1;
+                } else {
+                    navBackground.style.opacity = 0;
+                    navTitle.style.opacity = 0;
+                }
+            },
+            handleResize() {
+                const {navBar, navBackground, navTitle, extraContainer, streamContainer} = this.$refs;
+                extraContainer.style.left = (streamContainer.offsetWidth - extraContainer.offsetWidth) + 'px';
+            },
+            navBarHeight() {
+                return this.$refs.navBar.offsetHeight;
+            },
+            pageHeadHeight() {
+                return this.$refs.pageHead.offsetHeight;
+            },
+            toggleDrawer() {
+                this.isDrawerOpen = !this.isDrawerOpen;
+                document.getElementsByTagName('html')[0].style.overflow = this.isDrawerOpen ? 'hidden' : 'unset';
+            },
+            closeDrawer() {
+                this.isDrawerOpen = false;
+                document.getElementsByTagName('html')[0].style.overflow = this.isDrawerOpen ? 'hidden' : 'unset';
+            },
+            toggleDarkMode() {
+                this.isDarkMode = !this.isDarkMode;
+                if (this.isDarkMode==true){
+                    document.cookie = "night=1;path=/";
+                    document.body.classList.add("night");
+                } else {
+                    document.cookie = "night=0;path=/";
+                    document.body.classList.remove("night");
+                }
+            }
+    },
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('resize', this.handleResize);
+        window._nonDesktop = function () {
+            let check = false;
+            (function (a) {
+                if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true;
+            })(navigator.userAgent || navigator.vendor || window.opera);
+            return check;
+        };
+        
+        var night = document.cookie.replace(/(?:(?:^|.*;\s*)night\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if (night==""){
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                
+            }
+        }else{
+            
+            if (night=="1") {
+                this.toggleDarkMode();
+            }
+        }
+    },
+    mounted() {
+        this.handleScroll();
+        this.handleResize();
+        this.mounted = true;
+
+        
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
+    }
+});
+</script>
+
+<script src="https://adamyuan.xyz//js/journal.js"></script>
+    </body>
 </html>

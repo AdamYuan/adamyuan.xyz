@@ -1,55 +1,51 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on AdamYuan-&gt;Blog</title>
-    <link>/categories/</link>
+    <link>https://adamyuan.xyz/categories/</link>
     <description>Recent content in Categories on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>©2019 AdamYuan.</copyright>
+    <language>en-us</language>
+    <copyright>©2020 AdamYuan.</copyright>
     <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
     
-        <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://adamyuan.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>算法</title>
-      <link>/categories/%E7%AE%97%E6%B3%95/</link>
+      <link>https://adamyuan.xyz/categories/%E7%AE%97%E6%B3%95/</link>
       <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
       
-      <guid>/categories/%E7%AE%97%E6%B3%95/</guid>
+      <guid>https://adamyuan.xyz/categories/%E7%AE%97%E6%B3%95/</guid>
       <description></description>
-      
     </item>
     
     <item>
       <title>日常</title>
-      <link>/categories/%E6%97%A5%E5%B8%B8/</link>
+      <link>https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/</link>
       <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
       
-      <guid>/categories/%E6%97%A5%E5%B8%B8/</guid>
+      <guid>https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/</guid>
       <description></description>
-      
     </item>
     
     <item>
       <title>OI</title>
-      <link>/categories/oi/</link>
+      <link>https://adamyuan.xyz/categories/oi/</link>
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
-      <guid>/categories/oi/</guid>
+      <guid>https://adamyuan.xyz/categories/oi/</guid>
       <description></description>
-      
     </item>
     
     <item>
       <title>Linux</title>
-      <link>/categories/linux/</link>
+      <link>https://adamyuan.xyz/categories/linux/</link>
       <pubDate>Wed, 18 Jul 2018 15:28:33 +0800</pubDate>
       
-      <guid>/categories/linux/</guid>
+      <guid>https://adamyuan.xyz/categories/linux/</guid>
       <description></description>
-      
     </item>
     
   </channel>

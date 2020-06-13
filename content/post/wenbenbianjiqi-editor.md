@@ -6,7 +6,7 @@ categories: [ "OI" ]
 ---
 
 # 题目概述
-实现一个文本编辑器，实现下列功能：
+实现一个文本编辑器，实现下列功能：  
 ![img1](/img/wenbenbianjiqi-editor/1.gif)  
 例子：  
 ![img1](/img/wenbenbianjiqi-editor/2.gif)  

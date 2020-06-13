@@ -1,26 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>日常 on AdamYuan-&gt;Blog</title>
-    <link>/categories/%E6%97%A5%E5%B8%B8/</link>
+    <link>https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/</link>
     <description>Recent content in 日常 on AdamYuan-&gt;Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>©2019 AdamYuan.</copyright>
+    <language>en-us</language>
+    <copyright>©2020 AdamYuan.</copyright>
     <lastBuildDate>Sun, 02 Dec 2018 11:39:34 +0800</lastBuildDate>
     
-        <atom:link href="/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://adamyuan.xyz/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>计算3的1000000次方</title>
-      <link>/post/big_pow/</link>
+      <link>https://adamyuan.xyz/post/big_pow/</link>
       <pubDate>Sun, 02 Dec 2018 11:39:34 +0800</pubDate>
       
-      <guid>/post/big_pow/</guid>
+      <guid>https://adamyuan.xyz/post/big_pow/</guid>
       <description>&lt;p&gt;无意间看到 &lt;a href=&#34;https://www.bilibili.com/video/av21610235&#34;&gt;https://www.bilibili.com/video/av21610235&lt;/a&gt; ，闲来无事，便自己实现了一个&lt;br&gt;
 使用了快速幂和NTT，c++11，-O3优化，0.3秒内可得解&lt;/p&gt;</description>
-      
     </item>
     
   </channel>
