@@ -4,6 +4,7 @@ date: 2018-09-27T21:21:54+08:00
 draft: false
 tags: [ "树套树", "splay", "线段树" , "vector"]
 categories: [ "OI" ]
+math: true
 ---
 
 # 题目概述
