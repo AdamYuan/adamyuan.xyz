@@ -348,7 +348,8 @@ std::mt19937 seed_generator(seed);
 &lt;p&gt;可见多线程对于运行效率的提升是显著的，对于&lt;strong&gt;2.1.2优化1&lt;/strong&gt;的提升会更大一些。由于SASAT算法本身的优良特性，大多数情况下Try次数都在30以内，此程序多能在1秒内求解。&lt;/p&gt;
 &lt;h1 id=&#34;附录&#34;&gt;附录&lt;/h1&gt;
 &lt;p&gt;测试样例详见&lt;a href=&#34;https://github.com/AdamYuan/SATv2/tree/master/problems&#34;&gt;https://github.com/AdamYuan/SATv2/tree/master/problems&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2.1.3优化2 + 多线程&lt;/strong&gt; 程序&lt;a href=&#34;https://github.com/AdamYuan/SATv2&#34;&gt;https://github.com/AdamYuan/SATv2&lt;/a&gt;&lt;/p&gt;- https://adamyuan.xyz/post/sasat_implementation/ - ©2020 AdamYuan.</description>
+&lt;p&gt;&lt;strong&gt;2.1.3优化2 + 多线程&lt;/strong&gt; 程序&lt;a href=&#34;https://github.com/AdamYuan/SATv2&#34;&gt;https://github.com/AdamYuan/SATv2&lt;/a&gt;&lt;/p&gt;
+- https://adamyuan.xyz/post/sasat_implementation/ - ©2020 AdamYuan.</description>
         </item>
     
     

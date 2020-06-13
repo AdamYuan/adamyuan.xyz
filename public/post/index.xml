@@ -18,9 +18,12 @@
       <pubDate>Sat, 15 Jun 2019 16:04:16 +0800</pubDate>
       
       <guid>https://adamyuan.xyz/post/sasat_implementation/</guid>
-      <description>&lt;h1 id=&#34;1-问题概要与求解思路&#34;&gt;1. 问题概要与求解思路&lt;/h1&gt;
-&lt;h2 id=&#34;11-3-sat问题&#34;&gt;1.1 3-SAT问题&lt;/h2&gt;
-&lt;p&gt;对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &amp;hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。&lt;/p&gt;</description>
+      <description>1. 问题概要与求解思路 1.1 3-SAT问题 对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land &amp;hellip; \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。
+将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。
+定义布尔变量数量为$$N_{var}$$，括号数量为$$N_{clause}$$，3-SAT问题的一个解$$s = (x_1, x_2, &amp;hellip;, x_{N_{var}}), x_k\in{0, 1}$$
+3-SAT问题即求解一个$$s$$使布尔表达式为真。这是一个NP完全问题，作为Schaefer&amp;rsquo;s dichotomy定理的一个特例被Thomas Jerome Schaefer证明。
+1.2 模拟退火 模拟退火是一个用于求解函数全局最大值的随机算法。与寻常的爬山法不同，模拟退火算法会在邻域内选取一个随机解，是否跳往随机解取决于温度和相对原解的函数值增加量。温度高时，跳转的随机程度大，温度降低后则大概率会跳向邻域内的最优，从而趋向局部最优。这种随机性使算法能够跳出局部最优，更可能寻找到全局最优。
+Solution SimulatedAnnealing(Solution s0) { Solution s = s0; //s表示当前解，s0为其初始值 	double T = MAX_TEMP; //T为温度 	while (T &amp;gt; MIN_TEMP) { T = UpdateTemp(T); //更新(减小)温度 	Solution s_new = s.</description>
     </item>
     
     <item>
@@ -39,15 +42,11 @@
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
       <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
-      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
-&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;查询k在区间内的排名&lt;/li&gt;
-&lt;li&gt;查询区间内排名为k的值&lt;/li&gt;
-&lt;li&gt;修改某一位值上的数值&lt;/li&gt;
-&lt;li&gt;查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;/li&gt;
-&lt;li&gt;查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <description>题目概述 您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：
+ 查询k在区间内的排名 查询区间内排名为k的值 修改某一位值上的数值 查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647） 查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）  基本思路 这是一道树套树（线段树套平衡树）的模板题，下面讲解一下5个操作的写法：
+ 分别查询区间对应的每个平衡树中k元素的排名，再相加 这个是最难想的，其实就是二分答案。。。可以线段树里再维护最大最小值加速二分 就是插入+删除 分别查询每颗平衡树中k的前驱，取最大 分别查询每颗平衡树中k的后继，取最小  操作3的复杂度为 $$\log^3(n)$$，其它为 $$\log^2(n)$$
+吐槽 这题竟然可以线段树套std::vector水过，然而splay却会TLE 3个点。。。
+代码 std::vector版（AC） #include &amp;lt;cstdio&amp;gt;#include &amp;lt;algorithm&amp;gt;#include &amp;lt;vector&amp;gt; #define N 50005 #define MINV -2147483647 #define MAXV 2147483647  int arr[N]; inline int vec_query_rank(const std::vector&amp;lt;int&amp;gt; &amp;amp;vec, int x) { return std::lower_bound(vec.begin(), vec.end(), x) - vec.begin(); } inline int vec_query_prev(const std::vector&amp;lt;int&amp;gt; &amp;amp;vec, int x) { std::vector&amp;lt;int&amp;gt;::const_iterator i = std::lower_bound(vec.begin(), vec.end(), x); if(i == vec.</description>
     </item>
     
     <item>

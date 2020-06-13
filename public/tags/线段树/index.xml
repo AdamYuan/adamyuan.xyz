@@ -18,15 +18,11 @@
       <pubDate>Thu, 27 Sep 2018 21:21:54 +0800</pubDate>
       
       <guid>https://adamyuan.xyz/post/2b-pin-heng-shu/</guid>
-      <description>&lt;h1 id=&#34;题目概述&#34;&gt;题目概述&lt;/h1&gt;
-&lt;p&gt;您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;查询k在区间内的排名&lt;/li&gt;
-&lt;li&gt;查询区间内排名为k的值&lt;/li&gt;
-&lt;li&gt;修改某一位值上的数值&lt;/li&gt;
-&lt;li&gt;查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647）&lt;/li&gt;
-&lt;li&gt;查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）&lt;/li&gt;
-&lt;/ol&gt;</description>
+      <description>题目概述 您需要写一种数据结构（可参考题目标题），来维护一个有序数列，其中需要提供以下操作：
+ 查询k在区间内的排名 查询区间内排名为k的值 修改某一位值上的数值 查询k在区间内的前驱（前驱定义为严格小于x，且最大的数，若不存在输出-2147483647） 查询k在区间内的后继（后继定义为严格大于x，且最小的数，若不存在输出2147483647）  基本思路 这是一道树套树（线段树套平衡树）的模板题，下面讲解一下5个操作的写法：
+ 分别查询区间对应的每个平衡树中k元素的排名，再相加 这个是最难想的，其实就是二分答案。。。可以线段树里再维护最大最小值加速二分 就是插入+删除 分别查询每颗平衡树中k的前驱，取最大 分别查询每颗平衡树中k的后继，取最小  操作3的复杂度为 $$\log^3(n)$$，其它为 $$\log^2(n)$$
+吐槽 这题竟然可以线段树套std::vector水过，然而splay却会TLE 3个点。。。
+代码 std::vector版（AC） #include &amp;lt;cstdio&amp;gt;#include &amp;lt;algorithm&amp;gt;#include &amp;lt;vector&amp;gt; #define N 50005 #define MINV -2147483647 #define MAXV 2147483647  int arr[N]; inline int vec_query_rank(const std::vector&amp;lt;int&amp;gt; &amp;amp;vec, int x) { return std::lower_bound(vec.begin(), vec.end(), x) - vec.begin(); } inline int vec_query_prev(const std::vector&amp;lt;int&amp;gt; &amp;amp;vec, int x) { std::vector&amp;lt;int&amp;gt;::const_iterator i = std::lower_bound(vec.begin(), vec.end(), x); if(i == vec.</description>
     </item>
     
     <item>

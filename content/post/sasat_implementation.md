@@ -13,8 +13,6 @@ math: true
 
 对于一个形如$$(\overline{x_1} \lor x_2 \lor x_3) \land(x_3 \lor \overline{x_2} \lor \overline{x_4}) \land (x_1 \lor x_2 \lor x_5) \land ... \land (x_{10} \lor \overline{x_{12}} \lor x_{23})$$的布尔表达式。
 
-<!--more-->
-
 将布尔条件中一个形如$$(x_1 \lor \overline{x_2} \lor x_4)$$的表达式称为一个括号。对于3-SAT问题，每个括号中只能有3个元素。
 
 定义布尔变量数量为$$N_{var}$$，括号数量为$$N_{clause}$$，3-SAT问题的一个解$$s = (x_1, x_2, ..., x_{N_{var}}), x_k\in\{0, 1\}$$ 
