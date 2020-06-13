@@ -4,6 +4,7 @@ date: 2019-06-15T16:04:16+08:00
 draft: false
 tags: [ "NP完全问题" ]
 categories: [ "算法" ]
+featured_image: "/img/sasat_implementation/feature.svg"
 math: true
 ---
 
