@@ -2,6 +2,9 @@
 <html><head>
 <title>文本编辑器editor(splay)</title>
 
+
+
+
 <meta charset="utf-8">
 <meta name="X-UA-Compatible" content="IE=edge">
 <meta name="google-site-verification" content="">
@@ -14,12 +17,21 @@
 
 
 
+
+
+
+
+
+
+
 <script src="/vendor/js/jquery.min.js" ></script>
 <script src="/vendor/js/popper.min.js" ></script>
 <script src="/vendor/js/bootstrap.min.js" ></script>
 <script src="/vendor/js/smooth-scroll.polyfills.min.js" ></script>
 <link type="text/css" rel="stylesheet" href="/vendor/css/bootstrap.min.css">
 <script src="/vendor/js/vue.min.js" ></script>
+
+
 
 
 <link rel="icon" href="/favicon.png">
@@ -37,9 +49,27 @@
 </script>
 
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		renderMathInElement(document.body, {
+			delimiters: [
+				{left: "$$", right: "$$", display: false},
+				{left: "\\(", right: "\\)", display: false},
+				{left: "\\[", right: "\\]", display: true}
+			]
+		});
+	});
+</script>
 
 
-  <script src="https://adamyuan.xyz//js/toc.js"></script>
+
+
+  
+    <script src="https://adamyuan.xyz//js/toc.js"></script>
+  
 
 
 
@@ -133,8 +163,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 
     </div>
     
-</div>
-<div ref="extraContainer" class="extra-container">
+</div><div ref="extraContainer" class="extra-container">
     
     
     <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
@@ -159,7 +188,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e9%a2%98%e7%9b%ae%e6%a6%82%e8%bf%b0" onclick="collapseOthers(`#题目概述-nav`)" id="题目概述-nav">
+								<a href="#%e9%a2%98%e7%9b%ae%e6%a6%82%e8%bf%b0" onclick="onNavClick(`#题目概述-nav`)" id="题目概述-nav">
 									题目概述
 								</a>
 							</li>
@@ -177,7 +206,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e5%9f%ba%e6%9c%ac%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#基本思路-nav`)" id="基本思路-nav">
+								<a href="#%e5%9f%ba%e6%9c%ac%e6%80%9d%e8%b7%af" onclick="onNavClick(`#基本思路-nav`)" id="基本思路-nav">
 									基本思路
 								</a>
 							</li>
@@ -195,7 +224,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e5%ae%9e%e7%8e%b0%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#实现思路-nav`)" id="实现思路-nav">
+								<a href="#%e5%ae%9e%e7%8e%b0%e6%80%9d%e8%b7%af" onclick="onNavClick(`#实现思路-nav`)" id="实现思路-nav">
 									实现思路
 								</a>
 							</li>
@@ -213,7 +242,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e4%bb%a3%e7%a0%81" onclick="collapseOthers(`#代码-nav`)" id="代码-nav">
+								<a href="#%e4%bb%a3%e7%a0%81" onclick="onNavClick(`#代码-nav`)" id="代码-nav">
 									代码
 								</a>
 							</li>
@@ -236,8 +265,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
         
         
     </div>
-</div>
-<div class="single-column-drawer-container" ref="drawer"
+</div><div class="single-column-drawer-container" ref="drawer"
      v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
     <div class="drawer-content">
         <div class="drawer-menu">
@@ -299,7 +327,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e9%a2%98%e7%9b%ae%e6%a6%82%e8%bf%b0" onclick="collapseOthers(`#题目概述-nav`)" id="题目概述-nav">
+								<a href="#%e9%a2%98%e7%9b%ae%e6%a6%82%e8%bf%b0" onclick="onNavClick(`#题目概述-nav`)" id="题目概述-nav">
 									题目概述
 								</a>
 							</li>
@@ -317,7 +345,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e5%9f%ba%e6%9c%ac%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#基本思路-nav`)" id="基本思路-nav">
+								<a href="#%e5%9f%ba%e6%9c%ac%e6%80%9d%e8%b7%af" onclick="onNavClick(`#基本思路-nav`)" id="基本思路-nav">
 									基本思路
 								</a>
 							</li>
@@ -335,7 +363,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e5%ae%9e%e7%8e%b0%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#实现思路-nav`)" id="实现思路-nav">
+								<a href="#%e5%ae%9e%e7%8e%b0%e6%80%9d%e8%b7%af" onclick="onNavClick(`#实现思路-nav`)" id="实现思路-nav">
 									实现思路
 								</a>
 							</li>
@@ -353,7 +381,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e4%bb%a3%e7%a0%81" onclick="collapseOthers(`#代码-nav`)" id="代码-nav">
+								<a href="#%e4%bb%a3%e7%a0%81" onclick="onNavClick(`#代码-nav`)" id="代码-nav">
 									代码
 								</a>
 							</li>
@@ -395,7 +423,6 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 
     </a>
 </div>
-
             <div id="content">
 <div ref="streamContainer" class="stream-container">
     <div class="post-list-container post-list-container-shadow">

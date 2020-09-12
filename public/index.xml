@@ -1737,7 +1737,7 @@ Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;gtk2&#34;&gt;gtk2&lt;/h2&gt;
 &lt;p&gt;编辑 ~/.gtkrc-2.0，加入&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-gtkrc&#34; data-lang=&#34;gtkrc&#34;&gt;style &amp;quot;vimfix&amp;quot; {
+&lt;pre&gt;&lt;code&gt;style &amp;quot;vimfix&amp;quot; {
     bg[NORMAL] = &amp;quot;#272822&amp;quot; #背景色
     GtkWindow::resize-grip-height = 0
     GtkWindow::resize-grip-width = 0

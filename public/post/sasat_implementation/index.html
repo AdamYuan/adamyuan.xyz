@@ -2,6 +2,9 @@
 <html><head>
 <title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>
 
+
+
+
 <meta charset="utf-8">
 <meta name="X-UA-Compatible" content="IE=edge">
 <meta name="google-site-verification" content="">
@@ -14,12 +17,21 @@
 
 
 
+
+
+
+
+
+
+
 <script src="/vendor/js/jquery.min.js" ></script>
 <script src="/vendor/js/popper.min.js" ></script>
 <script src="/vendor/js/bootstrap.min.js" ></script>
 <script src="/vendor/js/smooth-scroll.polyfills.min.js" ></script>
 <link type="text/css" rel="stylesheet" href="/vendor/css/bootstrap.min.css">
 <script src="/vendor/js/vue.min.js" ></script>
+
+
 
 
 <link rel="icon" href="/favicon.png">
@@ -55,7 +67,9 @@
 
 
 
-  <script src="https://adamyuan.xyz//js/toc.js"></script>
+  
+    <script src="https://adamyuan.xyz//js/toc.js"></script>
+  
 
 
 
@@ -149,8 +163,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 
     </div>
     
-</div>
-<div ref="extraContainer" class="extra-container">
+</div><div ref="extraContainer" class="extra-container">
     
     
     <div class="toc animated-visibility" :class="{ invisible: scrollY <= 140 }">
@@ -175,7 +188,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#1-%e9%97%ae%e9%a2%98%e6%a6%82%e8%a6%81%e4%b8%8e%e6%b1%82%e8%a7%a3%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#1-问题概要与求解思路-nav`)" id="1-问题概要与求解思路-nav">
+								<a href="#1-%e9%97%ae%e9%a2%98%e6%a6%82%e8%a6%81%e4%b8%8e%e6%b1%82%e8%a7%a3%e6%80%9d%e8%b7%af" onclick="onNavClick(`#1-问题概要与求解思路-nav`)" id="1-问题概要与求解思路-nav">
 									1. 问题概要与求解思路
 								</a>
 							</li>
@@ -197,7 +210,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#11-3-sat%e9%97%ae%e9%a2%98" onclick="collapseOthers(`#11-3-sat问题-nav`)" id="11-3-sat问题-nav">
+								<a href="#11-3-sat%e9%97%ae%e9%a2%98" onclick="onNavClick(`#11-3-sat问题-nav`)" id="11-3-sat问题-nav">
 									1.1 3-SAT问题
 								</a>
 							</li>
@@ -215,7 +228,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#12-%e6%a8%a1%e6%8b%9f%e9%80%80%e7%81%ab" onclick="collapseOthers(`#12-模拟退火-nav`)" id="12-模拟退火-nav">
+								<a href="#12-%e6%a8%a1%e6%8b%9f%e9%80%80%e7%81%ab" onclick="onNavClick(`#12-模拟退火-nav`)" id="12-模拟退火-nav">
 									1.2 模拟退火
 								</a>
 							</li>
@@ -233,7 +246,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#13-sasat%e7%ae%97%e6%b3%95" onclick="collapseOthers(`#13-sasat算法-nav`)" id="13-sasat算法-nav">
+								<a href="#13-sasat%e7%ae%97%e6%b3%95" onclick="onNavClick(`#13-sasat算法-nav`)" id="13-sasat算法-nav">
 									1.3 SASAT算法
 								</a>
 							</li>
@@ -255,7 +268,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#2-c%e7%a8%8b%e5%ba%8f%e5%ae%9e%e7%8e%b0%e4%b8%8e%e4%bc%98%e5%8c%96" onclick="collapseOthers(`#2-c程序实现与优化-nav`)" id="2-c程序实现与优化-nav">
+								<a href="#2-c%e7%a8%8b%e5%ba%8f%e5%ae%9e%e7%8e%b0%e4%b8%8e%e4%bc%98%e5%8c%96" onclick="onNavClick(`#2-c程序实现与优化-nav`)" id="2-c程序实现与优化-nav">
 									2. C&#43;&#43;程序实现与优化
 								</a>
 							</li>
@@ -277,7 +290,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#21-%e4%bc%98%e5%8c%96sats" onclick="collapseOthers(`#21-优化sats-nav`)" id="21-优化sats-nav">
+								<a href="#21-%e4%bc%98%e5%8c%96sats" onclick="onNavClick(`#21-优化sats-nav`)" id="21-优化sats-nav">
 									2.1 优化SAT(s)
 								</a>
 							</li>
@@ -299,7 +312,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#211-naive" onclick="collapseOthers(`#211-naive-nav`)" id="211-naive-nav">
+								<a href="#211-naive" onclick="onNavClick(`#211-naive-nav`)" id="211-naive-nav">
 									2.1.1 Naive
 								</a>
 							</li>
@@ -317,7 +330,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#212-%e5%9c%a8flip%e5%87%bd%e6%95%b0%e4%b8%ad%e8%ae%a1%e7%ae%97sats%e5%a2%9e%e5%87%8f" onclick="collapseOthers(`#212-在flip函数中计算sats增减-nav`)" id="212-在flip函数中计算sats增减-nav">
+								<a href="#212-%e5%9c%a8flip%e5%87%bd%e6%95%b0%e4%b8%ad%e8%ae%a1%e7%ae%97sats%e5%a2%9e%e5%87%8f" onclick="onNavClick(`#212-在flip函数中计算sats增减-nav`)" id="212-在flip函数中计算sats增减-nav">
 									2.1.2 在Flip函数中计算SAT(s)增减
 								</a>
 							</li>
@@ -335,7 +348,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#213-%e7%bb%9f%e8%ae%a1%e6%8b%ac%e5%8f%b7%e4%b8%ad%e4%b8%ba1%e7%9a%84%e5%85%83%e7%b4%a0%e4%b8%aa%e6%95%b0" onclick="collapseOthers(`#213-统计括号中为1的元素个数-nav`)" id="213-统计括号中为1的元素个数-nav">
+								<a href="#213-%e7%bb%9f%e8%ae%a1%e6%8b%ac%e5%8f%b7%e4%b8%ad%e4%b8%ba1%e7%9a%84%e5%85%83%e7%b4%a0%e4%b8%aa%e6%95%b0" onclick="onNavClick(`#213-统计括号中为1的元素个数-nav`)" id="213-统计括号中为1的元素个数-nav">
 									2.1.3 统计括号中为1的元素个数
 								</a>
 							</li>
@@ -357,7 +370,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#22-%e5%a4%9a%e7%ba%bf%e7%a8%8b" onclick="collapseOthers(`#22-多线程-nav`)" id="22-多线程-nav">
+								<a href="#22-%e5%a4%9a%e7%ba%bf%e7%a8%8b" onclick="onNavClick(`#22-多线程-nav`)" id="22-多线程-nav">
 									2.2 多线程
 								</a>
 							</li>
@@ -375,7 +388,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#23-%e5%88%86%e6%9e%90%e4%b8%8e%e6%af%94%e8%be%83" onclick="collapseOthers(`#23-分析与比较-nav`)" id="23-分析与比较-nav">
+								<a href="#23-%e5%88%86%e6%9e%90%e4%b8%8e%e6%af%94%e8%be%83" onclick="onNavClick(`#23-分析与比较-nav`)" id="23-分析与比较-nav">
 									2.3 分析与比较
 								</a>
 							</li>
@@ -397,7 +410,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e9%99%84%e5%bd%95" onclick="collapseOthers(`#附录-nav`)" id="附录-nav">
+								<a href="#%e9%99%84%e5%bd%95" onclick="onNavClick(`#附录-nav`)" id="附录-nav">
 									附录
 								</a>
 							</li>
@@ -420,8 +433,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
         
         
     </div>
-</div>
-<div class="single-column-drawer-container" ref="drawer"
+</div><div class="single-column-drawer-container" ref="drawer"
      v-bind:class="{ 'single-column-drawer-container-active': isDrawerOpen }">
     <div class="drawer-content">
         <div class="drawer-menu">
@@ -483,7 +495,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#1-%e9%97%ae%e9%a2%98%e6%a6%82%e8%a6%81%e4%b8%8e%e6%b1%82%e8%a7%a3%e6%80%9d%e8%b7%af" onclick="collapseOthers(`#1-问题概要与求解思路-nav`)" id="1-问题概要与求解思路-nav">
+								<a href="#1-%e9%97%ae%e9%a2%98%e6%a6%82%e8%a6%81%e4%b8%8e%e6%b1%82%e8%a7%a3%e6%80%9d%e8%b7%af" onclick="onNavClick(`#1-问题概要与求解思路-nav`)" id="1-问题概要与求解思路-nav">
 									1. 问题概要与求解思路
 								</a>
 							</li>
@@ -505,7 +517,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#11-3-sat%e9%97%ae%e9%a2%98" onclick="collapseOthers(`#11-3-sat问题-nav`)" id="11-3-sat问题-nav">
+								<a href="#11-3-sat%e9%97%ae%e9%a2%98" onclick="onNavClick(`#11-3-sat问题-nav`)" id="11-3-sat问题-nav">
 									1.1 3-SAT问题
 								</a>
 							</li>
@@ -523,7 +535,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#12-%e6%a8%a1%e6%8b%9f%e9%80%80%e7%81%ab" onclick="collapseOthers(`#12-模拟退火-nav`)" id="12-模拟退火-nav">
+								<a href="#12-%e6%a8%a1%e6%8b%9f%e9%80%80%e7%81%ab" onclick="onNavClick(`#12-模拟退火-nav`)" id="12-模拟退火-nav">
 									1.2 模拟退火
 								</a>
 							</li>
@@ -541,7 +553,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#13-sasat%e7%ae%97%e6%b3%95" onclick="collapseOthers(`#13-sasat算法-nav`)" id="13-sasat算法-nav">
+								<a href="#13-sasat%e7%ae%97%e6%b3%95" onclick="onNavClick(`#13-sasat算法-nav`)" id="13-sasat算法-nav">
 									1.3 SASAT算法
 								</a>
 							</li>
@@ -563,7 +575,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#2-c%e7%a8%8b%e5%ba%8f%e5%ae%9e%e7%8e%b0%e4%b8%8e%e4%bc%98%e5%8c%96" onclick="collapseOthers(`#2-c程序实现与优化-nav`)" id="2-c程序实现与优化-nav">
+								<a href="#2-c%e7%a8%8b%e5%ba%8f%e5%ae%9e%e7%8e%b0%e4%b8%8e%e4%bc%98%e5%8c%96" onclick="onNavClick(`#2-c程序实现与优化-nav`)" id="2-c程序实现与优化-nav">
 									2. C&#43;&#43;程序实现与优化
 								</a>
 							</li>
@@ -585,7 +597,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#21-%e4%bc%98%e5%8c%96sats" onclick="collapseOthers(`#21-优化sats-nav`)" id="21-优化sats-nav">
+								<a href="#21-%e4%bc%98%e5%8c%96sats" onclick="onNavClick(`#21-优化sats-nav`)" id="21-优化sats-nav">
 									2.1 优化SAT(s)
 								</a>
 							</li>
@@ -607,7 +619,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#211-naive" onclick="collapseOthers(`#211-naive-nav`)" id="211-naive-nav">
+								<a href="#211-naive" onclick="onNavClick(`#211-naive-nav`)" id="211-naive-nav">
 									2.1.1 Naive
 								</a>
 							</li>
@@ -625,7 +637,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#212-%e5%9c%a8flip%e5%87%bd%e6%95%b0%e4%b8%ad%e8%ae%a1%e7%ae%97sats%e5%a2%9e%e5%87%8f" onclick="collapseOthers(`#212-在flip函数中计算sats增减-nav`)" id="212-在flip函数中计算sats增减-nav">
+								<a href="#212-%e5%9c%a8flip%e5%87%bd%e6%95%b0%e4%b8%ad%e8%ae%a1%e7%ae%97sats%e5%a2%9e%e5%87%8f" onclick="onNavClick(`#212-在flip函数中计算sats增减-nav`)" id="212-在flip函数中计算sats增减-nav">
 									2.1.2 在Flip函数中计算SAT(s)增减
 								</a>
 							</li>
@@ -643,7 +655,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#213-%e7%bb%9f%e8%ae%a1%e6%8b%ac%e5%8f%b7%e4%b8%ad%e4%b8%ba1%e7%9a%84%e5%85%83%e7%b4%a0%e4%b8%aa%e6%95%b0" onclick="collapseOthers(`#213-统计括号中为1的元素个数-nav`)" id="213-统计括号中为1的元素个数-nav">
+								<a href="#213-%e7%bb%9f%e8%ae%a1%e6%8b%ac%e5%8f%b7%e4%b8%ad%e4%b8%ba1%e7%9a%84%e5%85%83%e7%b4%a0%e4%b8%aa%e6%95%b0" onclick="onNavClick(`#213-统计括号中为1的元素个数-nav`)" id="213-统计括号中为1的元素个数-nav">
 									2.1.3 统计括号中为1的元素个数
 								</a>
 							</li>
@@ -665,7 +677,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#22-%e5%a4%9a%e7%ba%bf%e7%a8%8b" onclick="collapseOthers(`#22-多线程-nav`)" id="22-多线程-nav">
+								<a href="#22-%e5%a4%9a%e7%ba%bf%e7%a8%8b" onclick="onNavClick(`#22-多线程-nav`)" id="22-多线程-nav">
 									2.2 多线程
 								</a>
 							</li>
@@ -683,7 +695,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#23-%e5%88%86%e6%9e%90%e4%b8%8e%e6%af%94%e8%be%83" onclick="collapseOthers(`#23-分析与比较-nav`)" id="23-分析与比较-nav">
+								<a href="#23-%e5%88%86%e6%9e%90%e4%b8%8e%e6%af%94%e8%be%83" onclick="onNavClick(`#23-分析与比较-nav`)" id="23-分析与比较-nav">
 									2.3 分析与比较
 								</a>
 							</li>
@@ -705,7 +717,7 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 						
 						
 							<li>
-								<a href="#%e9%99%84%e5%bd%95" onclick="collapseOthers(`#附录-nav`)" id="附录-nav">
+								<a href="#%e9%99%84%e5%bd%95" onclick="onNavClick(`#附录-nav`)" id="附录-nav">
 									附录
 								</a>
 							</li>
@@ -747,7 +759,6 @@ Hugo Theme <a href="https://github.com/amazingrise/hugo-theme-diary">Diary</a> b
 
     </a>
 </div>
-
             <div id="content">
 <div ref="streamContainer" class="stream-container">
     <div class="post-list-container post-list-container-shadow">
