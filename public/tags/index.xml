@@ -7,10 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2020 AdamYuan.</copyright>
-    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
-    
-	<atom:link href="https://adamyuan.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 23 Jun 2021 13:43:26 +0800</lastBuildDate><atom:link href="https://adamyuan.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>dwm</title>
+      <link>https://adamyuan.xyz/tags/dwm/</link>
+      <pubDate>Wed, 23 Jun 2021 13:43:26 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/tags/dwm/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>NP完全问题</title>

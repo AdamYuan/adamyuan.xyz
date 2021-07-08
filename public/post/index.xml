@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2020 AdamYuan.</copyright>
-    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
-    
-	<atom:link href="https://adamyuan.xyz/post/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 23 Jun 2021 13:43:26 +0800</lastBuildDate><atom:link href="https://adamyuan.xyz/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>为DWM添加窗口图标</title>
+      <link>https://adamyuan.xyz/post/dwm_window_icon/</link>
+      <pubDate>Wed, 23 Jun 2021 13:43:26 +0800</pubDate>
+      
+      <guid>https://adamyuan.xyz/post/dwm_window_icon/</guid>
+      <description>前言 最近几天高考结束，分(huang)数(de)没(yi)出(pi)，闲在家里，于是折腾了一下DWM。DWM的动态平铺方式简单有效，无需I3WM那样繁琐的操作(对小屏幕尤其友好)。同时3000行左右的代码层次分明，简单易懂，其中dwm.c负责窗口的管理逻辑与界面更新、drw.c/.h提供基础绘制、config.h作为配置文件，只要有C语言基础便能轻松地根据自身需求进行修改，可拓展性极高。
+原生的DWM不会在title bar显示窗口图标，总感觉缺了点味道。恰好DWM的底层Xlib中也有XImage类型、XCreateImage、XPutImage及XGetWindowProperty等函数可以获取窗口图标并储存、绘制，于是决定自己实现。
+本人之前从未接触过Xlib相关的程序编写，对于一些概念的使用可能有误区，实现方式也未必最优，欢迎大家指正。
+内存管理 在DWM中，每个窗口的数据是由结构体Client管理的，要想实现窗口图标，便要在Client结构体中添加图标的数据(直接加入一个XImage指针即可)，如图：
+icon使用动态内存的方式管理，因此需要妥善进行分配与释放，防止内存泄露。
+显然，窗口图标和窗口标题的处理方式十分相似，都要在窗口创建时初始化，也都可能触发更新，可以仿照DWM管理窗口标题的方式来处理窗口图标。
+freeicon和updateicon 窗口图标使用了动态内存，于是首先在dwm.c新增一个freeicon函数用于释放，如下：
+void freeicon(Client *c) { if (c-&amp;gt;icon) { XDestroyImage(c-&amp;gt;icon); c-&amp;gt;icon = NULL; } } 同时在dwm.c中，窗口标题的获取使用updatetitle函数实现，于是我们也添加一个updateicon函数，如下：
+void updateicon(Client *c) { freeicon(c); // 都更新了当然要把旧图标先释放掉啊 	// 后面再写 } 修改manage和unmanage函数 dwm.c中，manage函数的功能为将新创建的窗口列入DWM的管理下，具体包括为窗口alloc一个Client，初始其标题、大小等信息。manage函数中调用了updatetitle，我们也照葫芦画瓢调用updateicon，如下：
+void manage(Window w, XWindowAttributes *wa) { // ... 	c-&amp;gt;icon = NULL; updateicon(c); updatetitle(c); // ... } 而unmanage函数在窗口关闭或退出DWM时调用，负责销毁窗口的Client，我们在其中加入freeicon，如下：
+void unmanage(Client *c, int destroyed) { // ... 	detachstack(c); freeicon(c); if (!destroyed) { // .</description>
+    </item>
     
     <item>
       <title>模拟退火求解3-SAT的C&#43;&#43;程序实现</title>

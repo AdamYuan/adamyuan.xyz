@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2020 AdamYuan.</copyright>
-    <lastBuildDate>Thu, 27 Sep 2018 21:21:54 +0800</lastBuildDate>
-    
-	<atom:link href="https://adamyuan.xyz/tags/vector/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 27 Sep 2018 21:21:54 +0800</lastBuildDate><atom:link href="https://adamyuan.xyz/tags/vector/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>二逼平衡树(splay / vector &#43; 线段树)</title>
       <link>https://adamyuan.xyz/post/2b-pin-heng-shu/</link>

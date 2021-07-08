@@ -6,9 +6,303 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2020 AdamYuan.</copyright>
-    <lastBuildDate>Sat, 15 Jun 2019 16:04:16 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Jun 2021 13:43:26 +0800</lastBuildDate>
     
         <atom:link href="https://adamyuan.xyz/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+        <item>
+        <title>为DWM添加窗口图标</title>
+        <link>https://adamyuan.xyz/post/dwm_window_icon/</link>
+        <pubDate>Wed, 23 Jun 2021 13:43:26 +0800</pubDate>
+        
+        <guid>https://adamyuan.xyz/post/dwm_window_icon/</guid>
+        <description>AdamYuan-&gt;Blog https://adamyuan.xyz/post/dwm_window_icon/ -&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
+&lt;p&gt;最近几天高考结束，分(huang)数(de)没(yi)出(pi)，闲在家里，于是折腾了一下DWM。DWM的动态平铺方式简单有效，无需I3WM那样繁琐的操作(对小屏幕尤其友好)。同时3000行左右的代码层次分明，简单易懂，其中&lt;strong&gt;dwm.c&lt;/strong&gt;负责窗口的管理逻辑与界面更新、&lt;strong&gt;drw.c/.h&lt;/strong&gt;提供基础绘制、&lt;strong&gt;config.h&lt;/strong&gt;作为配置文件，只要有C语言基础便能轻松地根据自身需求进行修改，可拓展性极高。&lt;br&gt;
+原生的DWM不会在title bar显示窗口图标，总感觉缺了点味道。恰好DWM的底层Xlib中也有XImage类型、XCreateImage、XPutImage及XGetWindowProperty等函数可以获取窗口图标并储存、绘制，于是决定自己实现。&lt;br&gt;
+本人之前从未接触过Xlib相关的程序编写，对于一些概念的使用可能有误区，实现方式也未必最优，欢迎大家指正。&lt;/p&gt;
+&lt;h1 id=&#34;内存管理&#34;&gt;内存管理&lt;/h1&gt;
+&lt;p&gt;在DWM中，每个窗口的数据是由结构体Client管理的，要想实现窗口图标，便要在Client结构体中添加图标的数据(直接加入一个XImage指针即可)，如图：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/client.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+icon使用动态内存的方式管理，因此需要妥善进行分配与释放，防止内存泄露。&lt;br&gt;
+显然，窗口图标和窗口标题的处理方式十分相似，都要在窗口创建时初始化，也都可能触发更新，可以仿照DWM管理窗口标题的方式来处理窗口图标。&lt;/p&gt;
+&lt;h2 id=&#34;freeicon和updateicon&#34;&gt;freeicon和updateicon&lt;/h2&gt;
+&lt;p&gt;窗口图标使用了动态内存，于是首先在&lt;strong&gt;dwm.c&lt;/strong&gt;新增一个freeicon函数用于释放，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;freeicon&lt;/span&gt;(Client &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;c) {
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;icon) {
+		XDestroyImage(c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;icon);
+		c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;icon &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;同时在&lt;strong&gt;dwm.c&lt;/strong&gt;中，窗口标题的获取使用updatetitle函数实现，于是我们也添加一个updateicon函数，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;updateicon&lt;/span&gt;(Client &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;c) {
+	freeicon(c); &lt;span style=&#34;color:#75715e&#34;&gt;// 都更新了当然要把旧图标先释放掉啊
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#75715e&#34;&gt;// 后面再写
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;修改manage和unmanage函数&#34;&gt;修改manage和unmanage函数&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;dwm.c&lt;/strong&gt;中，manage函数的功能为将新创建的窗口列入DWM的管理下，具体包括为窗口alloc一个Client，初始其标题、大小等信息。manage函数中调用了updatetitle，我们也照葫芦画瓢调用updateicon，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;manage&lt;/span&gt;(Window w, XWindowAttributes &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;wa) {
+	&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;icon &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+	updateicon(c);
+	updatetitle(c);
+	&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而unmanage函数在窗口关闭或退出DWM时调用，负责销毁窗口的Client，我们在其中加入freeicon，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;unmanage&lt;/span&gt;(Client &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;c, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; destroyed) {
+	&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	detachstack(c);
+	freeicon(c);
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;destroyed) {
+	&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;捕获图标更新事件&#34;&gt;捕获图标更新事件&lt;/h2&gt;
+&lt;p&gt;(Xlib相关，其实我也不大懂)首先在&lt;strong&gt;dwm.c&lt;/strong&gt;中加入以下两处代码：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/netwmicon.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+而后将propertynotify函数修改如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;propertynotify&lt;/span&gt;(XEvent &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;e)
+{
+	&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; XA_WM_HINTS:
+			updatewmhints(c);
+			drawbars();
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+		}
+
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; ub &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, rdb &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;mon&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;sel;
+		&lt;span style=&#34;color:#75715e&#34;&gt;// 保存是否调用drawbar函数的状态，防止重复调用drawbar函数
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ev&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;atom &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; XA_WM_NAME &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; ev&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;atom &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; netatom[NetWMName]) {
+			updatetitle(c);
+			ub &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdb;
+		}
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ev&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;atom &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; netatom[NetWMIcon]) { &lt;span style=&#34;color:#75715e&#34;&gt;// [新增]在图标更新时调用updateicon函数
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;			updateicon(c);
+			ub &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdb;
+		}
+
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ub) drawbar(c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;mon);
+
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ev&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;atom &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; netatom[NetWMWindowType])
+			updatewindowtype(c);
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样便完成了图标的内存管理，接下来便要完善updateicon函数以获取并创建图标。&lt;/p&gt;
+&lt;h1 id=&#34;图标获取与创建&#34;&gt;图标获取与创建&lt;/h1&gt;
+&lt;h2 id=&#34;xgetwindowproperty真tm难用&#34;&gt;XGetWindowProperty真TM难用&lt;/h2&gt;
+&lt;p&gt;在Xlib中，窗口图标的获取可以通过XGetWindowProperty函数完成。&lt;br&gt;
+首先创建一个函数，该函数目的为从一个窗口获取图标并返回一个XImage指针(若没有图标则返回NULL)，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;XImage &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;geticonprop&lt;/span&gt;(Window win)
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; format;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; n, extra, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+	Atom real;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (XGetWindowProperty(dpy, win, netatom[NetWMIcon], &lt;span style=&#34;color:#ae81ff&#34;&gt;0L&lt;/span&gt;, LONG_MAX, False, AnyPropertyType, 
+						   &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;real, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;format, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;n, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;extra, (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;p) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; Success) { 
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; 
+	}
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (n &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; }
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;// 后面再写...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;该函数的开头部分调用XGetWindowProperty，返回的主要数据为包含窗口图标大小和RGBA数据的unsigned long数组&lt;strong&gt;p&lt;/strong&gt;，以及表示数组长度的整数&lt;strong&gt;n&lt;/strong&gt;，接下来需要解析这些数据。&lt;br&gt;
+众所周知，一个窗口通常会提供不同大小的图标以适应不同的缩放(dpi?)。数组&lt;strong&gt;p&lt;/strong&gt;中的数据也不例外，包含的多组图标，其数据组成十分简单粗暴：所有图标的数据紧密排布；每个图标数据的其前两项包含一个图表的长宽，即w和h，后面w*h项为图标中每个像素点的RGBA数据。&lt;/p&gt;
+&lt;h2 id=&#34;选择最优图标&#34;&gt;选择最优图标&lt;/h2&gt;
+&lt;p&gt;在window manager中，我们希望显示出的窗口图标维持在一个固定、不变的尺寸，而窗口提供的多个图标未必能正好满足该尺寸要求，因此需要选择一个最优的图标进行缩放。&lt;br&gt;
+于是首先在&lt;strong&gt;config.h&lt;/strong&gt;中加入一行：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define ICONSIZE 20 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 图标的目标尺寸，可修改
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;由于图像处理中down sampling(缩小)通常比up sampling(放大)效果更佳，我们希望选择大于目标尺寸的图标，又因为(根据常识)目标尺寸与原尺寸相差越大的down sampling计算量越大，因此，我们认为所有图标中大于等于目标尺寸的最小图标为最优。&lt;br&gt;
+当然有一种特殊情况，即所有图表的尺寸都小于目标尺寸，这时只能选择最接近目标尺寸的图标。&lt;br&gt;
+根据这个思路，很容易写出如下代码(geticonprop函数中)：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL, w, h;
+
+{ &lt;span style=&#34;color:#75715e&#34;&gt;// 选择最优图标，bstp指针表示最优图标的数据位置
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;end &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; n;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; INT_MAX, d, m;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; end; ) { &lt;span style=&#34;color:#75715e&#34;&gt;// 首选大于等于ICONSIZE的最小图标
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+		m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; w : h;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (m &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; m &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; ICONSIZE) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; bstd) { bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d; bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i; }
+		i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h);
+	}
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;bstp) { &lt;span style=&#34;color:#75715e&#34;&gt;// 若没有，则选择最接近ICONSIZE的图标
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; end; ) {
+			w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+			m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; w : h;
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; m) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; bstd) { bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d; bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i; }
+			i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h);
+		}
+	}
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;bstp) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; } &lt;span style=&#34;color:#75715e&#34;&gt;// 再没有，躺平，返回NULL
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+
+w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(bstp &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(bstp &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 从bstp中读取最优图标的长宽
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; icw, ich; &lt;span style=&#34;color:#75715e&#34;&gt;// 根据ICONSIZE、w、h，计算缩放后的图标长宽icw、ich
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; h) {
+	ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE; icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; h;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;if&lt;/span&gt; (icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ICONSIZE) icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE;
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+	icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE; ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; w;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;if&lt;/span&gt; (ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ICONSIZE) ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;使用stb_image_resizeh缩放图标&#34;&gt;使用stb_image_resize.h缩放图标&lt;/h2&gt;
+&lt;p&gt;获得了最优图标并计算出目标长宽后，我们就需要缩放图标。&lt;br&gt;
+图像的缩放并不是一件容易的工作，需要不少复杂算法，简便起见，我直接使用了计算机图形学代码常用的&lt;a href=&#34;https://github.com/nothings/stb/blob/master/stb_image_resize.h&#34;&gt;stb_image_resize.h&lt;/a&gt;，其中的stbir_resize_uint8函数可以较为高效地完成这个任务。&lt;br&gt;
+首先我们下载stb_image_resize.h到DWM的代码目录，而后将其include，如图：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/include_stbir.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+stbir_resize_uint8函数需要传入紧密排布的32位rgba图像数据，而我们选定的图标数组&lt;strong&gt;bstp&lt;/strong&gt;为unsigned long数组。在一些平台(32位?)中unsigned long为32位整数，此时&lt;strong&gt;bstp&lt;/strong&gt;恰好满足要求；而现代多数64位平台中unsigned long为64位整数，于是&lt;strong&gt;bstp&lt;/strong&gt;数组便有间隔空缺，无法满足要求。由于Xlib的该历史包袱，在实现中需要根据情况对&lt;strong&gt;bstp&lt;/strong&gt;数组进行转换。&lt;br&gt;
+根据上述思路，容易写出如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 申请缩放后的图标的内存空间
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;icbuf &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; malloc(icw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;icbuf) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; }
+
+&lt;span style=&#34;color:#75715e&#34;&gt;#if ULONG_MAX &amp;gt; UINT32_MAX &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 如果unsigned long长度大于32位，对bstp数组进行转换(c语言标准保证unsigned long长度至少为32位)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i, sz &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h;
+uint32_t &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bstp32 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (uint32_t &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)bstp;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; sz; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) bstp32[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bstp[i];
+&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; ich) memcpy(icbuf, bstp, icw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 如果无需缩放，直接复制
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;stbir_resize_uint8&lt;/span&gt;((&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)bstp, w, h, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, icbuf, icw, ich, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 否则，调用stbir_resize_uint8进行缩放
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;XFree(p);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后只需从&lt;strong&gt;icbuf&lt;/strong&gt;数组创建并返回XImage指针，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;XCreateImage&lt;/span&gt;(dpy, DefaultVisual(dpy, screen), DefaultDepth(dpy, screen), ZPixmap, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)icbuf, icw, ich, &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;善后&#34;&gt;善后&lt;/h2&gt;
+&lt;p&gt;最终的geticonprop函数如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define STB_IMAGE_RESIZE_IMPLEMENTATION
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define STBIR_DEFAULT_FILTER_DOWNSAMPLE STBIR_FILTER_BOX
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;stb_image_resize.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+XImage &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;geticonprop&lt;/span&gt;(Window win)
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; format;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; n, extra, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+	Atom real;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (XGetWindowProperty(dpy, win, netatom[NetWMIcon], &lt;span style=&#34;color:#ae81ff&#34;&gt;0L&lt;/span&gt;, LONG_MAX, False, AnyPropertyType, 
+						   &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;real, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;format, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;n, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;extra, (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;p) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; Success)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; 
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (n &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; }
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL, w, h;
+
+	{
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;end &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; n;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; INT_MAX, d, m;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; end; ) {
+			w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+			m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; w : h;
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (m &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; m &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; ICONSIZE) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; bstd) { bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d; bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i; }
+			i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h);
+		}
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;bstp) {
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; end; ) {
+				w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+				m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; w : h;
+				&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; m) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; bstd) { bstd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; d; bstp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i; }
+				i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h);
+			}
+		}
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;bstp) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; }
+	}
+
+	w &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(bstp &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); h &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(bstp &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; icw, ich;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; h) {
+		ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE; icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; h;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ICONSIZE) icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE;
+	}
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+		icw &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE; ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ICONSIZE &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; w;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ICONSIZE) ich &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ICONSIZE;
+	}
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;icbuf &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; malloc(icw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;icbuf) { XFree(p); &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL; }
+&lt;span style=&#34;color:#75715e&#34;&gt;#if ULONG_MAX &amp;gt; UINT32_MAX
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i, sz &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; w &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; h;
+	uint32_t &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bstp32 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (uint32_t &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)bstp;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; sz; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) bstp32[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bstp[i];
+&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (w &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; icw &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; h &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; ich) memcpy(icbuf, bstp, icw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ich &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; stbir_resize_uint8((&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)bstp, w, h, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, icbuf, icw, ich, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+	XFree(p);
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; XCreateImage(dpy, DefaultVisual(dpy, screen), DefaultDepth(dpy, screen), ZPixmap, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)icbuf, icw, ich, &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;之后只需在updateicon函数中调用geticonprop，即可完成图标从创建、更新到销毁的完整生命周期，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;updateicon&lt;/span&gt;(Client &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;c)
+{
+	freeicon(c);
+	c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;icon &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; geticonprop(c&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;win);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;绘制&#34;&gt;绘制&lt;/h1&gt;
+&lt;p&gt;完成了图标资源的管理，最后的任务便是将图标绘制出来。&lt;/p&gt;
+&lt;h2 id=&#34;为图标腾出空间&#34;&gt;为图标腾出空间&lt;/h2&gt;
+&lt;p&gt;显然在图标绘制过程当中，我们希望图标与标题文字间隔一定距离，于是首先在&lt;strong&gt;config.h&lt;/strong&gt;中加入一行：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iconspacing &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而后修改&lt;strong&gt;dwm.c&lt;/strong&gt;中的drawbar函数，做如下修改:&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/icon_spacing.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;使用xputimage&#34;&gt;使用XPutImage&lt;/h2&gt;
+&lt;p&gt;之后的任务便是使用Xlib中的XPutImage函数在空出的区域绘制图标。为此，首先在&lt;strong&gt;drw.h&lt;/strong&gt;中加入以下函数定义(其中tmp参数的作用之后说明)：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;drw_img&lt;/span&gt;(Drw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;drw, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y, XImage &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;img, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;该函数在&lt;strong&gt;drw.c&lt;/strong&gt;中的实现十分简单，只需调用XPutImage，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;drw_img&lt;/span&gt;(Drw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;drw, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y, XImage &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;img, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp) 
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;drw &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;scheme)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+	XPutImage(drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;dpy, drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;drawable, drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;gc, img, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, x, y, img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;width, img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;height);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后在drawbar函数中恰当调用drw_img函数，即可完成图标的绘制，如图：&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/call_drw_img.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;手动alpha-blend&#34;&gt;手动Alpha Blend&lt;/h2&gt;
+&lt;p&gt;上述步骤虽然完成了图标的绘制，但并没有考虑其alpha channel，于是图标周围显示了一圈黑边，效果不理想。&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/no_blend.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+由于原生的Xlib没有alpha blend功能，若使用XRender又过于繁琐，因此我选择自己实现一个简单的alpha blend。&lt;br&gt;
+alpha blend原理简单，这里不再追述，将drw_img函数修改如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; 
+&lt;span style=&#34;color:#a6e22e&#34;&gt;blend&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; a, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; y) { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ((&lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;a)&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; a&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;y) &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;; }
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;drw_img&lt;/span&gt;(Drw &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;drw, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y, XImage &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;img, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp) 
+{
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;drw &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;scheme)
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; icsz &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;width &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;height, bt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;scheme[ColBg].pixel, i;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;data;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (bt &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x000000ff&lt;/span&gt;), g &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (bt &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0000ff00&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (bt &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00ff0000&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;;
+	memcpy(tmp, data, icsz &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 首先使用tmp数组备份img的数据
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; icsz; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) { &lt;span style=&#34;color:#75715e&#34;&gt;// 在img的数据上执行alpha blend，混入当前背景色
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;];
+		data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)  ] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blend(a, r, data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)  ]);
+		data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blend(a, g, data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]);
+		data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blend(a, b, data[(i&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]);
+	}
+	XPutImage(drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;dpy, drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;drawable, drw&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;gc, img, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, x, y, img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;width, img&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;height);
+
+	memcpy(data, tmp, icsz &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 绘制完成后使用tmp复原img的数据
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样之后drw_img函数能够根据当前scheme的背景色对图标进行alpha blend，并借由之前提到的静态&lt;strong&gt;tmp&lt;/strong&gt;数组实现alpha blend后的数据还原工作。图标与背景色融为一体，再无违和感。&lt;br&gt;
+&lt;img src=&#34;https://adamyuan.xyz/img/dwm_window_icon/blend.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+于此，我们为DWM增加窗口图标的工作正式完结。撒花～～&lt;/p&gt;
+- https://adamyuan.xyz/post/dwm_window_icon/ - 2020 AdamYuan.</description>
+        </item>
     
     
     
